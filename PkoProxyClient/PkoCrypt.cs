@@ -4,18 +4,30 @@ using System.Text;
 
 namespace PkoProxyClient
 {
+    /// <summary>
+    /// Cryptographic direction type for packet encryption/decryption.
+    /// CS = Client to Server, SC = Server to Client.
+    /// </summary>
     public enum EncryptType
     {
         CS = 0,
         SC = 1
     }
 
+    /// <summary>
+    /// Cryptographic direction type for packet encryption/decryption.
+    /// CS = Client to Server, SC = Server to Client.
+    /// </summary>
     public enum DecryptType
     {
         CS = 0,
         SC = 1
     }
 
+    /// <summary>
+    /// Custom DES/TripleDES implementation matched exactly to PKO's custom CDES C++ class.
+    /// Supports standard DES ECB and CBC modes with 1-key (8-byte), 2-key (16-byte), or 3-key (24-byte) keys.
+    /// </summary>
     public static class PkoDes
     {
         public const bool ENCRYPT = false;
@@ -23,51 +35,58 @@ namespace PkoProxyClient
         public const bool ECB = false;
         public const bool CBC = true;
 
-        // initial permutation IP
+        // Standard DES Initial Permutation (IP) Table
         private static readonly sbyte[] IP_Table = new sbyte[64] {
             58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4,
             62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
             57, 49, 41, 33, 25, 17,  9, 1, 59, 51, 43, 35, 27, 19, 11, 3,
             61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7
         };
-        // final permutation IP^-1
+
+        // Standard DES Final/Inverse Initial Permutation (IP^-1) Table
         private static readonly sbyte[] IPR_Table = new sbyte[64] {
             40, 8, 48, 16, 56, 24, 64, 32, 39, 7, 47, 15, 55, 23, 63, 31,
             38, 6, 46, 14, 54, 22, 62, 30, 37, 5, 45, 13, 53, 21, 61, 29,
             36, 4, 44, 12, 52, 20, 60, 28, 35, 3, 43, 11, 51, 19, 59, 27,
             34, 2, 42, 10, 50, 18, 58, 26, 33, 1, 41,  9, 49, 17, 57, 25
         };
-        // expansion operation matrix
+
+        // Standard DES Expansion Permutation (E) Table
         private static readonly sbyte[] E_Table = new sbyte[48] {
             32,  1,  2,  3,  4,  5,  4,  5,  6,  7,  8,  9,
             8,  9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
             16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25,
             24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32,  1
         };
-        // 32-bit permutation function P used on the output of the S-boxes
+
+        // Standard DES 32-bit permutation P table (applied to the S-Box outputs)
         private static readonly sbyte[] P_Table = new sbyte[32] {
             16, 7, 20, 21, 29, 12, 28, 17, 1,  15, 23, 26, 5,  18, 31, 10,
             2,  8, 24, 14, 32, 27, 3,  9,  19, 13, 30, 6,  22, 11, 4,  25
         };
-        // permuted choice table (key)
+
+        // Standard DES Permuted Choice 1 (PC-1) Table
         private static readonly sbyte[] PC1_Table = new sbyte[56] {
             57, 49, 41, 33, 25, 17,  9,  1, 58, 50, 42, 34, 26, 18,
             10,  2, 59, 51, 43, 35, 27, 19, 11,  3, 60, 52, 44, 36,
             63, 55, 47, 39, 31, 23, 15,  7, 62, 54, 46, 38, 30, 22,
             14,  6, 61, 53, 45, 37, 29, 21, 13,  5, 28, 20, 12,  4
         };
-        // permuted choice key (table)
+
+        // Standard DES Permuted Choice 2 (PC-2) Table
         private static readonly sbyte[] PC2_Table = new sbyte[48] {
             14, 17, 11, 24,  1,  5,  3, 28, 15,  6, 21, 10,
             23, 19, 12,  4, 26,  8, 16,  7, 27, 20, 13,  2,
             41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48,
             44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32
         };
-        // number left rotations of pc1
+
+        // Standard DES round-key rotation schedule
         private static readonly sbyte[] LOOP_Table = new sbyte[16] {
             1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1
         };
-        // The S-boxes
+
+        // Standard DES S-Boxes (Substitution Boxes)
         private static readonly byte[,,] S_Box = new byte[8, 4, 16] {
             {
                 // S1
@@ -127,12 +146,18 @@ namespace PkoProxyClient
             }
         };
 
+        /// <summary>
+        /// Converts an array of bytes to an array of booleans (representing individual bits).
+        /// </summary>
         private static void ByteToBit(bool[] Out, byte[] In, int bits)
         {
             for (int i = 0; i < bits; ++i)
                 Out[i] = ((In[i >> 3] >> ((7 - i) & 7)) & 1) != 0;
         }
 
+        /// <summary>
+        /// Converts an array of bits (booleans) back into an array of bytes.
+        /// </summary>
         private static void BitToByte(byte[] Out, bool[] In, int bits)
         {
             Array.Clear(Out, 0, bits >> 3);
@@ -145,6 +170,9 @@ namespace PkoProxyClient
             }
         }
 
+        /// <summary>
+        /// Shifts a boolean array left circularly by the specified number of loops.
+        /// </summary>
         private static void RotateL(bool[] In, int len, int loop)
         {
             bool[] tmp = new bool[256];
@@ -153,12 +181,18 @@ namespace PkoProxyClient
             Array.Copy(tmp, 0, In, len - loop, loop);
         }
 
+        /// <summary>
+        /// Computes bitwise XOR between two boolean bit arrays.
+        /// </summary>
         private static void Xor(bool[] InA, bool[] InB, int len)
         {
             for (int i = 0; i < len; ++i)
                 InA[i] ^= InB[i];
         }
 
+        /// <summary>
+        /// Permutes/transforms a bit array according to a standard DES selection table.
+        /// </summary>
         private static void Transform(bool[] Out, bool[] In, sbyte[] Table, int len)
         {
             bool[] tmp = new bool[256];
@@ -167,6 +201,10 @@ namespace PkoProxyClient
             Array.Copy(tmp, Out, len);
         }
 
+        /// <summary>
+        /// Core substitution function. Applies 8 parallel S-Box substitutions.
+        /// Each S-Box maps a 6-bit input to a 4-bit output.
+        /// </summary>
         private static void S_func(bool[] Out, int outOff, bool[] In, int inOff)
         {
             for (int i = 0; i < 8; ++i)
@@ -183,6 +221,13 @@ namespace PkoProxyClient
             }
         }
 
+        /// <summary>
+        /// Standard DES Feistel function F(R, K).
+        /// - Expands 32-bit right half to 48 bits using E-table.
+        /// - XORs expanded half with 48-bit subkey.
+        /// - Passes through the S-boxes to reduce back to 32 bits.
+        /// - Applies 32-bit permutation table P.
+        /// </summary>
         private static void F_func(bool[] In, bool[] Ki)
         {
             bool[] MR = new bool[48];
@@ -192,6 +237,9 @@ namespace PkoProxyClient
             Transform(In, In, P_Table, 32);
         }
 
+        /// <summary>
+        /// Derives the 16 48-bit round subkeys from the 64-bit raw key using PC1, circular shifts, and PC2.
+        /// </summary>
         private static void SetSubKey(bool[,][] pSubKey, int keyIdx, byte[] Key, int keyOff)
         {
             bool[] K = new bool[64];
@@ -215,6 +263,9 @@ namespace PkoProxyClient
             }
         }
 
+        /// <summary>
+        /// Executes standard single-block (8-byte) DES encryption or decryption.
+        /// </summary>
         private static void DES(byte[] Out, int outOff, byte[] In, int inOff, bool[,][] pSubKey, int keyIdx, bool Type)
         {
             bool[] M = new bool[64];
@@ -260,6 +311,10 @@ namespace PkoProxyClient
             Array.Copy(blockOut, 0, Out, outOff, 8);
         }
 
+        /// <summary>
+        /// Formats and pads an input byte buffer with null bytes to make its length a multiple of 8,
+        /// ensuring it is ready for block cipher encryption.
+        /// </summary>
         public static byte[] RunPad(byte[] In)
         {
             int datalen = In.Length;
@@ -270,6 +325,19 @@ namespace PkoProxyClient
             return Out;
         }
 
+        /// <summary>
+        /// Performs PKO matched CDES.
+        /// Automatically handles TripleDES 2-key/3-key cascades based on key length:
+        /// - Key >= 24 bytes: 3-key TripleDES (Encrypt = E1 -> D2 -> E3, Decrypt = D3 -> E2 -> D1).
+        /// - Key >= 16 bytes: 2-key TripleDES (Encrypt = E1 -> D2 -> E1, Decrypt = D1 -> E2 -> D1).
+        /// - Key >= 8 bytes: Standard 1-key DES.
+        /// </summary>
+        /// <param name="bType">True for decryption, False for encryption.</param>
+        /// <param name="bMode">True for CBC (Cipher Block Chaining), False for ECB (Electronic Codebook).</param>
+        /// <param name="In">The input buffer to encrypt/decrypt.</param>
+        /// <param name="Out">The output buffer to place the result.</param>
+        /// <param name="Key">The raw password or secret bytes used to derive round keys.</param>
+        /// <returns>True if processing succeeded, false otherwise.</returns>
         public static bool RunDes(bool bType, bool bMode, byte[] In, byte[] Out, byte[] Key)
         {
             int datalen = In.Length;
@@ -278,7 +346,7 @@ namespace PkoProxyClient
             if (datalen == 0 || (datalen & 7) != 0 || keylen < 8)
                 return false;
 
-            // Allocate m_SubKey: [3 keys, 16 rounds, 48 subkey bits]
+            // Allocate m_SubKey: [Up to 3 keys, 16 rounds, 48 subkey bits]
             bool[,][] m_SubKey = new bool[3, 16][];
             for (int i = 0; i < 3; i++)
             {
@@ -325,7 +393,7 @@ namespace PkoProxyClient
             }
             else
             {
-                // CBC Mode (if ever needed, translated for completeness)
+                // CBC Mode implementation matched to PKO server internals
                 byte[] cvec = new byte[8];
                 byte[] cvin = new byte[8];
                 int blocks = datalen >> 3;
@@ -424,8 +492,24 @@ namespace PkoProxyClient
         }
     }
 
+    /// <summary>
+    /// Implements lower-level PKO specific stream encoding and pseudo-random noise encryption blocks.
+    /// Matched to PKO's EncLib.dll C++ core.
+    /// </summary>
     public static class PacketEncoder
     {
+        /// <summary>
+        /// Implements standard PKO "B" Algorithm.
+        /// It is a sliding, stateful XOR-with-bit-rotation mechanism.
+        /// Encryption cycle:
+        ///   For each byte, XOR with corresponding byte in session key `k`,
+        ///   then circularly rotate left by `(k % key_length) + 1` bits.
+        /// Decryption cycle:
+        ///   Circularly rotate right by the same number of bits, then XOR with key byte `k`.
+        /// </summary>
+        /// <param name="src">The data buffer to encode/decode in place.</param>
+        /// <param name="key">The derived session key (typically 6 bytes).</param>
+        /// <param name="en">True for encryption, False for decryption.</param>
         public static bool encrypt_B(byte[] src, byte[] key, bool en = true)
         {
             int src_len = src.Length;
@@ -502,6 +586,9 @@ namespace PkoProxyClient
             return true;
         }
 
+        /// <summary>
+        /// Initializes the 4-byte noise table derived from a seed.
+        /// </summary>
         public static void init_Noise(int nNoise, byte[] szKey)
         {
             szKey[0] = (byte)(nNoise & 0x01);
@@ -510,6 +597,12 @@ namespace PkoProxyClient
             szKey[3] = (byte)(nNoise & 0x08);
         }
 
+        /// <summary>
+        /// Adds a dynamic rolling pseudo-random noise layer on top of a payload.
+        /// Processes up to 32 bytes (8 blocks of 4 bytes) by XORing with the noise key.
+        /// Afterwards, if the ciphertext is at least 8 bytes long, it derives a new noise key
+        /// state dynamically from the generated ciphertext values.
+        /// </summary>
         public static bool encrypt_Noise(byte[] szKey, byte[] src)
         {
             int src_len = src.Length;
@@ -538,6 +631,12 @@ namespace PkoProxyClient
             return true;
         }
 
+        /// <summary>
+        /// Removes the dynamic sliding pseudo-random noise layer from a ciphertext.
+        /// Because the noise key advances based on ciphertext state, the algorithm caches the
+        /// ciphertext bytes BEFORE they are un-XORed, performs decryption, and then safely loads
+        /// those cached ciphertext bytes to reconstruct the synchronized noise key state.
+        /// </summary>
         public static bool decrypt_Noise(byte[] szKey, byte[] src)
         {
             int src_len = src.Length;
@@ -576,14 +675,19 @@ namespace PkoProxyClient
         }
     }
 
+    /// <summary>
+    /// Controls the dynamic packet encryption pipeline.
+    /// Maintains session keys, noise keys, and supports automatic "session key candidate testing"
+    /// for proxies when passwords are not known in advance.
+    /// </summary>
     public class PacketEncryptor
     {
         private bool m_enabled = false;
-        private byte[] m_session_key = new byte[16];
+        private readonly byte[] m_session_key = new byte[16];
         private ushort m_session_key_length = 0;
-        private byte[][] m_keys = new byte[4][];
+        private readonly byte[][] m_keys = new byte[4][];
 
-        private List<byte[]> _candidateSessionKeys = new List<byte[]>();
+        private readonly List<byte[]> _candidateSessionKeys = new List<byte[]>();
         private bool _candidateSelected = false;
         private ushort _cachedVersion = 0;
         private string _cachedChapString = "";
@@ -598,12 +702,18 @@ namespace PkoProxyClient
 
         public bool Enabled => m_enabled;
 
+        /// <summary>
+        /// Explicitly initializes the cryptographic pipeline when credentials and keys are fully known.
+        /// Match C++ readString() password truncation, computes the noise seed from the CHAP and version,
+        /// decrypts the raw randomized session key using DES ECB, and loads key states.
+        /// </summary>
         public void Init(bool enabled, ushort version, string chap_string, byte[] password, byte[] key)
         {
             m_enabled = enabled;
             if (m_enabled)
             {
-                // MSVC C++ short int is 16-bit signed integer
+                // MSVC C++ short int is 16-bit signed integer.
+                // key_data math matches the exact C++ server binary assembly logic.
                 short key_data = (short)(version * version * 0x1232222);
 
                 // Grab last 4 bytes of chap_string
@@ -624,7 +734,7 @@ namespace PkoProxyClient
                     passwordKey = truncated;
                 }
 
-                // CDES::RunDes (DECRYPT, ECB)
+                // Decrypt session key using standard PKO DES (ECB mode, Decryption)
                 byte[] decryptedSessionKey = new byte[key.Length];
                 PkoDes.RunDes(PkoDes.DECRYPT, PkoDes.ECB, key, decryptedSessionKey, passwordKey);
 
@@ -637,12 +747,16 @@ namespace PkoProxyClient
             }
         }
 
+        /// <summary>
+        /// Stores multiple derived session key candidates (based on different variations of captured
+        /// passwords or plaintext hashes) to dynamically resolve which candidate is correct on the first encrypted packet.
+        /// </summary>
         public void SetCandidates(List<byte[]> passwordCandidates, ushort version, string chapString, byte[] key)
         {
             _candidateSessionKeys.Clear();
             _candidateSelected = false;
             _cachedVersion = version;
-            _cachedChapString = chapString;
+            _cachedChapString = chapString ?? "";
 
             foreach (var pwd in passwordCandidates)
             {
@@ -654,11 +768,16 @@ namespace PkoProxyClient
             // Default to first candidate
             if (_candidateSessionKeys.Count > 0)
             {
-                InitWithSessionKey(version, chapString, _candidateSessionKeys[0]);
+                InitWithSessionKey(version, _cachedChapString, _candidateSessionKeys[0]);
             }
             m_enabled = true;
         }
 
+        /// <summary>
+        /// Sets up the active session key and generates initial state for all four noise keys
+        /// (m_keys[0]=CS Decrypt, m_keys[1]=SC Decrypt, m_keys[2]=CS Encrypt, m_keys[3]=SC Encrypt).
+        /// Seed logic is: seed = (version * version * 0x1232222) * last_4_bytes_of_CHAP.
+        /// </summary>
         private void InitWithSessionKey(ushort version, string chapString, byte[] sessionKey)
         {
             Array.Copy(sessionKey, m_session_key, Math.Min(m_session_key.Length, sessionKey.Length));
@@ -682,6 +801,10 @@ namespace PkoProxyClient
             }
         }
 
+        /// <summary>
+        /// Encrypts a packet payload in place.
+        /// Process: First applies the dynamic pseudo-random noise encryption, then standard B-algorithm stream encryption.
+        /// </summary>
         public void Encrypt(byte[] data, EncryptType type)
         {
             byte[] key = type == EncryptType.CS ? m_keys[2] : m_keys[3];
@@ -692,11 +815,16 @@ namespace PkoProxyClient
             PacketEncoder.encrypt_B(data, actualSessionKey, true);
         }
 
+        /// <summary>
+        /// Decrypts a packet payload in place.
+        /// Process: First removes B-algorithm stream encryption, then removes the dynamic noise layer.
+        /// Supports JIT session key selection if multiple candidate keys exist.
+        /// </summary>
         public void Decrypt(byte[] data, DecryptType type)
         {
             if (m_enabled && !_candidateSelected && _candidateSessionKeys.Count > 1)
             {
-                // Try each candidate session key
+                // Try each candidate session key to see which one decrypts to a valid packet format
                 foreach (var sessionKey in _candidateSessionKeys)
                 {
                     byte[] testData = (byte[])data.Clone();
@@ -708,7 +836,8 @@ namespace PkoProxyClient
                     PacketEncoder.decrypt_Noise(type == DecryptType.CS ? m_keys[0] : m_keys[1], testData);
 
                     ushort packetId = (ushort)((testData[0] << 8) | testData[1]);
-                    // Valid PKO packet IDs are normally between 1 and 2000
+                    // Valid PKO packet IDs are normally between 1 and 2000.
+                    // If Packet ID matches, we have found our synchronized session key candidate!
                     if (packetId > 0 && packetId < 2000)
                     {
                         _candidateSelected = true;
@@ -728,8 +857,20 @@ namespace PkoProxyClient
         }
     }
 
+    /// <summary>
+    /// Utility encoder used exclusively during initial login handshakes.
+    /// Scrambles the client password with the challenge CHAP string using PKO standard block cipher DES (ECB).
+    /// </summary>
     public static class PasswordEncoder
     {
+        /// <summary>
+        /// Encodes the client's plaintext password.
+        /// - Pad challenge CHAP string to 8-byte block boundaries.
+        /// - Encrypt padded CHAP string using standard CDES ECB with plaintext password as key.
+        /// </summary>
+        /// <param name="password">The plaintext password.</param>
+        /// <param name="chap_string">The CHAP challenge string received from server.</param>
+        /// <returns>A block-encrypted byte array sent to server inside Packet 431.</returns>
         public static byte[] Encode(string password, string chap_string)
         {
             byte[] srcBytes = Encoding.ASCII.GetBytes(chap_string);

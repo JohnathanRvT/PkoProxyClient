@@ -11,3 +11,9 @@ Debug/
 Release/
 x64/
 ipch/
+
+# .NET / C# Build Artifacts
+bin/
+obj/
+*.log
+*.bin

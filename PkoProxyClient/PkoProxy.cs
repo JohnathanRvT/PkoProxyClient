@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace PkoProxyClient
 {
+    /// <summary>
+    /// Tracks intermediate handshake parameters intercepted by the proxy for dynamic cryptography alignment.
+    /// </summary>
     public class HandshakeState
     {
         public string ChapString { get; set; } = "";
@@ -17,6 +20,9 @@ namespace PkoProxyClient
         public string PlaintextPassword { get; set; } = "";
     }
 
+    /// <summary>
+    /// Encapsulates decrypted packet context metadata passed to intercepting proxy plugins.
+    /// </summary>
     public class ProxyPacketContext
     {
         public int ConnectionId { get; }
@@ -29,18 +35,144 @@ namespace PkoProxyClient
         public ProxyPacketContext(int connectionId, string direction, ushort packetId, uint session, byte[] decryptedPacket)
         {
             ConnectionId = connectionId;
-            Direction = direction;
+            Direction = direction ?? throw new ArgumentNullException(nameof(direction));
             PacketId = packetId;
             Session = session;
-            DecryptedPacket = decryptedPacket;
+            DecryptedPacket = decryptedPacket ?? throw new ArgumentNullException(nameof(decryptedPacket));
         }
     }
 
+    /// <summary>
+    /// Represents a plugin interface for inspecting and modifying unencrypted packets inside PkoProxy.
+    /// </summary>
     public interface IProxyPlugin
     {
+        /// <summary>
+        /// Unique identify name of the plugin.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Gets or sets whether the plugin is actively processing packets.
+        /// </summary>
+        bool Enabled { get; set; }
+
+        /// <summary>
+        /// Callback executed when a decrypted packet is intercepted by the proxy.
+        /// </summary>
+        /// <param name="context">The packet context, allowing inspection or mutation of the payload.</param>
         void OnPacket(ProxyPacketContext context);
     }
 
+    /// <summary>
+    /// Plugin responsible for logging detailed packet dumps to local .log and .bin (ImHex) files.
+    /// </summary>
+    public class LogToFilePlugin : IProxyPlugin
+    {
+        public string Name => "LogToFile";
+        public bool Enabled { get; set; } = true;
+        private readonly string _logFilePath;
+        private readonly string _binFilePath;
+
+        public LogToFilePlugin(string logFilePath)
+        {
+            _logFilePath = logFilePath ?? throw new ArgumentNullException(nameof(logFilePath));
+            _binFilePath = Path.ChangeExtension(_logFilePath, ".bin");
+        }
+
+        public void OnPacket(ProxyPacketContext context)
+        {
+            if (!Enabled) return;
+
+            ushort size = (ushort)((context.DecryptedPacket[0] << 8) | context.DecryptedPacket[1]);
+            byte[] payload = new byte[context.DecryptedPacket.Length - 8];
+            Array.Copy(context.DecryptedPacket, 8, payload, 0, payload.Length);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"=========================================================================");
+            sb.AppendLine($"[Connection #{context.ConnectionId}] {context.Direction} | Packet ID: {context.PacketId} | Size: {size} | Session: 0x{context.Session:X8}");
+            sb.AppendLine($"-------------------------------------------------------------------------");
+            sb.AppendLine(PkoProxy.HexDump(payload));
+            sb.AppendLine();
+
+            string text = sb.ToString();
+
+            // Append textual hex dump safely
+            try
+            {
+                lock (_logFilePath)
+                {
+                    File.AppendAllText(_logFilePath, text);
+                }
+            }
+            catch { }
+
+            // Append structured binary format safely
+            try
+            {
+                byte dirVal = context.Direction == "C -> S" ? (byte)0 : (byte)1;
+                lock (_binFilePath)
+                {
+                    using (var fs = new FileStream(_binFilePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    {
+                        fs.WriteByte(dirVal);
+                        fs.Write(context.DecryptedPacket, 0, context.DecryptedPacket.Length);
+                    }
+                }
+            }
+            catch { }
+        }
+    }
+
+    /// <summary>
+    /// Plugin responsible for printing beautiful colored, stylized console highlights for intercepted packets.
+    /// </summary>
+    public class ConsoleColorPacketLoggerPlugin : IProxyPlugin
+    {
+        public string Name => "ConsoleColorPacketLogger";
+        public bool Enabled { get; set; } = true;
+
+        private readonly object _consoleLock = new object();
+
+        public void OnPacket(ProxyPacketContext context)
+        {
+            if (!Enabled) return;
+
+            ushort size = (ushort)((context.DecryptedPacket[0] << 8) | context.DecryptedPacket[1]);
+
+            lock (_consoleLock)
+            {
+                var prevColor = Console.ForegroundColor;
+                if (context.Direction == "C -> S")
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+
+                // Highlight handshakes with magenta highlights
+                if (context.PacketId == 940 || context.PacketId == 931 || context.PacketId == 431)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write($"[{DateTime.Now:HH:mm:ss.fff}] [HANDSHAKE] ");
+                }
+                else
+                {
+                    Console.Write($"[{DateTime.Now:HH:mm:ss.fff}] ");
+                }
+
+                Console.WriteLine($"[Connection #{context.ConnectionId}] {context.Direction} | ID: {context.PacketId,3} | Size: {size,4} | Session: 0x{context.Session:X8}");
+                Console.ForegroundColor = prevColor;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Proxy server designed to intercept PKO client-to-server and server-to-client traffic,
+    /// decrypt packets in real-time, dump them for inspection, and optionally modify them using plugins.
+    /// </summary>
     public class PkoProxy
     {
         public static readonly System.Collections.Generic.List<IProxyPlugin> Plugins = new System.Collections.Generic.List<IProxyPlugin>();
@@ -51,17 +183,22 @@ namespace PkoProxyClient
         private readonly bool _protectionEnabled;
         private readonly string _logFilePath;
         private readonly string _plaintextPassword;
-        private TcpListener _listener;
+        private TcpListener? _listener;
         private int _connectionCounter = 0;
 
         public PkoProxy(int localPort, string remoteHost, int remotePort, bool protectionEnabled, string logFilePath = "proxy_packets.log", string plaintextPassword = "")
         {
             _localPort = localPort;
-            _remoteHost = remoteHost;
+            _remoteHost = remoteHost ?? throw new ArgumentNullException(nameof(remoteHost));
             _remotePort = remotePort;
             _protectionEnabled = protectionEnabled;
-            _logFilePath = logFilePath;
-            _plaintextPassword = plaintextPassword;
+            _logFilePath = logFilePath ?? throw new ArgumentNullException(nameof(logFilePath));
+            _plaintextPassword = plaintextPassword ?? "";
+
+            // Register default built-in plugins
+            Plugins.Clear();
+            Plugins.Add(new ConsoleColorPacketLoggerPlugin());
+            Plugins.Add(new LogToFilePlugin(_logFilePath));
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -88,7 +225,7 @@ namespace PkoProxyClient
             }
             finally
             {
-                _listener.Stop();
+                _listener?.Stop();
                 LogConsole("Proxy stopped.");
             }
         }
@@ -108,21 +245,22 @@ namespace PkoProxyClient
                     using (NetworkStream clientStream = client.GetStream())
                     using (NetworkStream serverStream = server.GetStream())
                     {
-                        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                        using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+                        {
+                            // Stateful crypto parameters for this connection
+                            HandshakeState handshakeState = new HandshakeState();
+                            handshakeState.PlaintextPassword = _plaintextPassword;
+                            PacketEncryptor encryptor = new PacketEncryptor();
 
-                        // Stateful crypto parameters for this connection
-                        HandshakeState handshakeState = new HandshakeState();
-                        handshakeState.PlaintextPassword = _plaintextPassword;
-                        PacketEncryptor encryptor = new PacketEncryptor();
+                            // Task for Client to Server direction
+                            var clientToServerTask = ForwardClientToServerAsync(clientStream, serverStream, connId, encryptor, handshakeState, cts.Token);
 
-                        // Task for Client to Server direction
-                        var clientToServerTask = ForwardClientToServerAsync(clientStream, serverStream, connId, encryptor, handshakeState, cts.Token);
+                            // Task for Server to Client direction
+                            var serverToClientTask = ForwardServerToClientAsync(serverStream, clientStream, connId, encryptor, handshakeState, cts.Token);
 
-                        // Task for Server to Client direction
-                        var serverToClientTask = ForwardServerToClientAsync(serverStream, clientStream, connId, encryptor, handshakeState, cts.Token);
-
-                        await Task.WhenAny(clientToServerTask, serverToClientTask);
-                        cts.Cancel();
+                            await Task.WhenAny(clientToServerTask, serverToClientTask);
+                            cts.Cancel();
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -142,7 +280,7 @@ namespace PkoProxyClient
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                byte[] packet = await reader.ReadPacketAsync(cancellationToken);
+                byte[]? packet = await reader.ReadPacketAsync(cancellationToken);
                 if (packet == null) break;
 
                 // Handle 2-byte heartbeat packet
@@ -152,17 +290,8 @@ namespace PkoProxyClient
                     continue;
                 }
 
-                // Log raw ciphertext header/ID bytes for diagnosis
-                StringBuilder rawHex = new StringBuilder();
-                for (int i = 0; i < Math.Min(16, packet.Length); i++)
-                {
-                    rawHex.Append($"{packet[i]:X2} ");
-                }
-                LogConsole($"[Connection #{connId}] [Raw C->S Ciphertext] Size: {packet.Length} | Bytes: {rawHex}");
-
                 // Parse/Inspect packet copy before forwarding
                 byte[] copy = (byte[])packet.Clone();
-                ushort packetSize = (ushort)((copy[0] << 8) | copy[1]);
                 uint session = (uint)((copy[2] << 24) | (copy[3] << 16) | (copy[4] << 8) | copy[5]);
 
                 // Decrypt if encryption has been enabled
@@ -183,8 +312,8 @@ namespace PkoProxyClient
                 pktReader.ReadUint32(); // Skip session
                 ushort packetId = pktReader.ReadUint16();
 
-                // Skip the 4-byte protection sequence number if it is present
-                uint sequence = pktReader.ReadUint32();
+                // Skip the 4-byte protection sequence number if it is present (which might be read by ReadUint32)
+                _ = pktReader.ReadUint32();
 
                 // Handle specific handshake packets to capture info
                 if (packetId == 431) // AccountLogin
@@ -192,17 +321,13 @@ namespace PkoProxyClient
                     try
                     {
                         // Structure of 431: string nobill, string login, ushort pwd_len, bytes password, string mac, ushort flag, ushort version
-                        string nobill = pktReader.ReadString();
+                        _ = pktReader.ReadString(); // nobill
                         string loginVal = pktReader.ReadString();
                         ushort pwdLen = pktReader.ReadUint16();
                         byte[] pwdBytes = pktReader.ReadBytes(pwdLen);
                         string mac = pktReader.ReadString();
-                        ushort flag = pktReader.ReadUint16(); // always 911
+                        _ = pktReader.ReadUint16(); // flag (always 911)
                         ushort versionVal = pktReader.ReadUint16();
-
-                        StringBuilder pwdHex = new StringBuilder();
-                        foreach (byte b in pwdBytes) pwdHex.Append($"{b:X2} ");
-                        LogConsole($"[Connection #{connId}] Captured pwdBytes ({pwdBytes.Length} bytes): {pwdHex}");
 
                         lock (state)
                         {
@@ -250,9 +375,6 @@ namespace PkoProxyClient
                     }
                 }
 
-                // Log decrypted packet
-                LogPacketDump("C -> S", connId, packetId, session, copy);
-
                 // Forward packet to server
                 await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
             }
@@ -264,7 +386,7 @@ namespace PkoProxyClient
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                byte[] packet = await reader.ReadPacketAsync(cancellationToken);
+                byte[]? packet = await reader.ReadPacketAsync(cancellationToken);
                 if (packet == null) break;
 
                 // Handle 2-byte heartbeat packet
@@ -274,17 +396,8 @@ namespace PkoProxyClient
                     continue;
                 }
 
-                // Log raw ciphertext header/ID bytes for diagnosis
-                StringBuilder rawHex = new StringBuilder();
-                for (int i = 0; i < Math.Min(16, packet.Length); i++)
-                {
-                    rawHex.Append($"{packet[i]:X2} ");
-                }
-                LogConsole($"[Connection #{connId}] [Raw S->C Ciphertext] Size: {packet.Length} | Bytes: {rawHex}");
-
                 // Parse/Inspect packet copy before forwarding
                 byte[] copy = (byte[])packet.Clone();
-                ushort packetSize = (ushort)((copy[0] << 8) | copy[1]);
                 uint session = (uint)((copy[2] << 24) | (copy[3] << 16) | (copy[4] << 8) | copy[5]);
 
                 // Decrypt if encryption has been enabled (excluding 931 which is not encrypted itself)
@@ -423,9 +536,6 @@ namespace PkoProxyClient
                     }
                 }
 
-                // Log decrypted packet
-                LogPacketDump("S -> C", connId, packetId, session, copy);
-
                 // Forward packet to client
                 await clientStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
             }
@@ -456,64 +566,7 @@ namespace PkoProxyClient
             }
         }
 
-        private void LogPacketDump(string direction, int connId, ushort packetId, uint session, byte[] decryptedPacket)
-        {
-            ushort size = (ushort)((decryptedPacket[0] << 8) | decryptedPacket[1]);
-            byte[] payload = new byte[decryptedPacket.Length - 8];
-            Array.Copy(decryptedPacket, 8, payload, 0, payload.Length);
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"=========================================================================");
-            sb.AppendLine($"[Connection #{connId}] {direction} | Packet ID: {packetId} | Size: {size} | Session: 0x{session:X8}");
-            sb.AppendLine($"-------------------------------------------------------------------------");
-            sb.AppendLine(HexDump(payload));
-            sb.AppendLine();
-
-            string text = sb.ToString();
-
-            // Print summary to console
-            LogConsole($"{direction} | ID: {packetId,3} | Size: {size,4} | Session: 0x{session:X8}");
-
-            // Write detailed dump to log file
-            try
-            {
-                lock (_logFilePath)
-                {
-                    File.AppendAllText(_logFilePath, text);
-                }
-            }
-            catch { }
-
-            // Write structured binary dump for ImHex
-            try
-            {
-                byte dirVal = direction == "C -> S" ? (byte)0 : (byte)1;
-                //byte[] connBytes = BitConverter.GetBytes(connId);
-                //byte[] ticksBytes = BitConverter.GetBytes(DateTime.Now.Ticks);
-                //byte[] lenBytes = BitConverter.GetBytes((ushort)decryptedPacket.Length);
-                //if (BitConverter.IsLittleEndian)
-                //{
-                //    Array.Reverse(lenBytes);
-                //}
-
-                string binPath = Path.ChangeExtension(_logFilePath, ".bin");
-                lock (binPath)
-                {
-                    using (var fs = new FileStream(binPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-                    {
-                        //fs.WriteByte(0xAA); // Magic separator
-                        fs.WriteByte(dirVal);
-                        //fs.Write(connBytes, 0, 4);
-                        //fs.Write(ticksBytes, 0, 8);
-                        //fs.Write(lenBytes, 0, 2);
-                        fs.Write(decryptedPacket, 0, decryptedPacket.Length);
-                    }
-                }
-            }
-            catch { }
-        }
-
-        private static bool ByteArrayCompare(byte[] a1, byte[] a2)
+        private static bool ByteArrayCompare(byte[]? a1, byte[]? a2)
         {
             if (a1 == null || a2 == null) return ReferenceEquals(a1, a2);
             if (a1.Length != a2.Length) return false;
