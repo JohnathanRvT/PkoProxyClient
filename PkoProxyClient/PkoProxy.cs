@@ -202,6 +202,7 @@ namespace PkoProxyClient
             Plugins.Clear();
             Plugins.Add(new ConsoleColorPacketLoggerPlugin());
             Plugins.Add(new LogToFilePlugin(_logFilePath));
+            Plugins.Add(new BotPlugin());
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -255,8 +256,10 @@ namespace PkoProxyClient
                             handshakeState.PlaintextPassword = _plaintextPassword;
                             PacketEncryptor encryptor = new PacketEncryptor();
 
+                            var serverWriteSemaphore = new SemaphoreSlim(1, 1);
+
                             // Task for Client to Server direction
-                            var clientToServerTask = ForwardClientToServerAsync(clientStream, serverStream, connId, encryptor, handshakeState, cts.Token);
+                            var clientToServerTask = ForwardClientToServerAsync(clientStream, serverStream, connId, encryptor, handshakeState, serverWriteSemaphore, cts.Token);
 
                             // Task for Server to Client direction
                             var serverToClientTask = ForwardServerToClientAsync(serverStream, clientStream, connId, encryptor, handshakeState, cts.Token);
@@ -277,9 +280,46 @@ namespace PkoProxyClient
             }
         }
 
-        private async Task ForwardClientToServerAsync(NetworkStream clientStream, NetworkStream serverStream, int connId, PacketEncryptor encryptor, HandshakeState state, CancellationToken cancellationToken)
+        private async Task ForwardClientToServerAsync(NetworkStream clientStream, NetworkStream serverStream, int connId, PacketEncryptor encryptor, HandshakeState state, SemaphoreSlim serverWriteSemaphore, CancellationToken cancellationToken)
         {
             var reader = new TcpStreamPacketReader(clientStream);
+
+            // Register the BotPlugin send callback once before the connection forwarding starts
+            foreach (var plugin in Plugins)
+            {
+                if (plugin is BotPlugin bot)
+                {
+                    bot.SetSendCallback(connId, (decryptedPkt) =>
+                    {
+                        try
+                        {
+                            byte[] encPkt = (byte[])decryptedPkt.Clone();
+                            if (encryptor.Enabled)
+                            {
+                                byte[] payload = new byte[encPkt.Length - 6];
+                                Array.Copy(encPkt, 6, payload, 0, payload.Length);
+                                encryptor.Encrypt(payload, EncryptType.CS);
+                                Array.Copy(payload, 0, encPkt, 6, payload.Length);
+                            }
+
+                            serverWriteSemaphore.Wait();
+                            try
+                            {
+                                serverStream.Write(encPkt, 0, encPkt.Length);
+                                serverStream.Flush();
+                            }
+                            finally
+                            {
+                                serverWriteSemaphore.Release();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            LogConsole($"[BotPlugin Callback Error] {ex.Message}");
+                        }
+                    });
+                }
+            }
 
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -289,7 +329,15 @@ namespace PkoProxyClient
                 // Handle 2-byte heartbeat packet
                 if (packet.Length == 2)
                 {
-                    await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+                    try
+                    {
+                        await serverWriteSemaphore.WaitAsync(cancellationToken);
+                        await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+                    }
+                    finally
+                    {
+                        serverWriteSemaphore.Release();
+                    }
                     continue;
                 }
 
@@ -379,7 +427,15 @@ namespace PkoProxyClient
                 }
 
                 // Forward packet to server
-                await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+                try
+                {
+                    await serverWriteSemaphore.WaitAsync(cancellationToken);
+                    await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+                }
+                finally
+                {
+                    serverWriteSemaphore.Release();
+                }
             }
         }
 

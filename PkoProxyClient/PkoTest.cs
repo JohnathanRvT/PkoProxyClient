@@ -266,9 +266,179 @@ namespace PkoProxyClient
                 }
                 LogPass("PkoPacketReader Boundary Safety and Exception Checks");
 
+                // Test 10: BotPlugin Integration and packetCount synchronization
+                var botPlugin = new BotPlugin();
+
+                // Simulate CMD_MC_CHABEGINSEE packet payload:
+                // seeType: 1, chaId: 100, worldId: 200, commId: 300, commName: "Owner", gm: 0, handle: 400, ctrlType: 1 (mob), name: "Boar", motto: "Grunt"
+                // icon: 12, guildId: 0, guildName: "", guildMotto: "", stallName: "", state: 0, x: 1500, y: 2500
+                var writerBeginSee = new PkoPacketWriter();
+                writerBeginSee.WriteUint16(0); // size placeholder
+                writerBeginSee.WriteUint32(0x80000000); // session
+                writerBeginSee.WriteUint16((ushort)PkoCommand.CMD_MC_CHABEGINSEE);
+                writerBeginSee.WriteByte(1); // seeType
+                writerBeginSee.WriteUint32(100); // chaId
+                writerBeginSee.WriteUint32(200); // worldId
+                writerBeginSee.WriteUint32(300); // commId
+                writerBeginSee.WriteString("Owner"); // commName
+                writerBeginSee.WriteByte(0); // gm
+                writerBeginSee.WriteUint32(400); // handle
+                writerBeginSee.WriteByte(1); // ctrlType
+                writerBeginSee.WriteString("Boar"); // name
+                writerBeginSee.WriteString("Grunt"); // motto
+                writerBeginSee.WriteUint16(12); // icon
+                writerBeginSee.WriteUint32(0); // guildId
+                writerBeginSee.WriteString(""); // guildName
+                writerBeginSee.WriteString(""); // guildMotto
+                writerBeginSee.WriteString(""); // stallName
+                writerBeginSee.WriteUint16(0); // state
+                writerBeginSee.WriteUint32(1500); // x
+                writerBeginSee.WriteUint32(2500); // y
+
+                byte[] beginSeeData = writerBeginSee.ToArray();
+                ushort beginSeeSize = (ushort)beginSeeData.Length;
+                beginSeeData[0] = (byte)(beginSeeSize >> 8);
+                beginSeeData[1] = (byte)(beginSeeSize & 0xFF);
+
+                var contextBeginSee = new ProxyPacketContext(1, "S -> C", (ushort)PkoCommand.CMD_MC_CHABEGINSEE, 0x80000000, beginSeeData);
+                botPlugin.OnPacket(contextBeginSee);
+
+                if (botPlugin.Mobs.Count != 1 || !botPlugin.Mobs.ContainsKey(200) || botPlugin.Mobs[200].Name != "Boar")
+                {
+                    LogFail("BotPlugin failed to track CMD_MC_CHABEGINSEE");
+                    return false;
+                }
+
+                // Simulate CMD_MC_ITEMBEGINSEE packet payload:
+                // worldId: 500, handle: 600, itemId: 1001, x: 1510, y: 2510, angle: 0, num: 1, appeType: 1, fromId: 0
+                var writerItemSee = new PkoPacketWriter();
+                writerItemSee.WriteUint16(0); // size placeholder
+                writerItemSee.WriteUint32(0x80000000); // session
+                writerItemSee.WriteUint16((ushort)PkoCommand.CMD_MC_ITEMBEGINSEE);
+                writerItemSee.WriteUint32(500); // worldId
+                writerItemSee.WriteUint32(600); // handle
+                writerItemSee.WriteUint32(1001); // itemId
+                writerItemSee.WriteUint32(1510); // x
+                writerItemSee.WriteUint32(2510); // y
+                writerItemSee.WriteUint16(0); // angle
+                writerItemSee.WriteUint16(1); // num
+                writerItemSee.WriteByte(1); // appeType
+                writerItemSee.WriteUint32(0); // fromId
+
+                byte[] itemSeeData = writerItemSee.ToArray();
+                ushort itemSeeSize = (ushort)itemSeeData.Length;
+                itemSeeData[0] = (byte)(itemSeeSize >> 8);
+                itemSeeData[1] = (byte)(itemSeeSize & 0xFF);
+
+                var contextItemSee = new ProxyPacketContext(1, "S -> C", (ushort)PkoCommand.CMD_MC_ITEMBEGINSEE, 0x80000000, itemSeeData);
+                botPlugin.OnPacket(contextItemSee);
+
+                if (botPlugin.Items.Count != 1 || !botPlugin.Items.ContainsKey(500) || botPlugin.Items[500].ItemId != 1001)
+                {
+                    LogFail("BotPlugin failed to track CMD_MC_ITEMBEGINSEE");
+                    return false;
+                }
+
+                // Simulate CMD_CM_SAY with message "!bot start" and a current packetCount of 42
+                var writerSay = new PkoPacketWriter();
+                writerSay.WriteUint16(0); // size placeholder
+                writerSay.WriteUint32(0x80000000); // session
+                writerSay.WriteUint16((ushort)PkoCommand.CMD_CM_SAY);
+                writerSay.WriteUint32(42); // packetCount (sequence number)
+                writerSay.WriteString("!bot start");
+
+                byte[] sayData = writerSay.ToArray();
+                ushort saySize = (ushort)sayData.Length;
+                sayData[0] = (byte)(saySize >> 8);
+                sayData[1] = (byte)(saySize & 0xFF);
+
+                var contextSay = new ProxyPacketContext(1, "C -> S", (ushort)PkoCommand.CMD_CM_SAY, 0x80000000, sayData);
+                botPlugin.OnPacket(contextSay);
+
+                if (!botPlugin.IsBotActive)
+                {
+                    LogFail("BotPlugin failed to activate via !bot start");
+                    return false;
+                }
+
+                if (botPlugin.CurrentPacketCount != 42)
+                {
+                    LogFail($"BotPlugin failed to track packetCount. Expected 42, got {botPlugin.CurrentPacketCount}");
+                    return false;
+                }
+
+                // Test TickBot generates SendPickupPacket first (prioritizing items)
+                byte[] generatedPacket = null;
+                botPlugin.TickBot((pkt) => { generatedPacket = pkt; }, 0x80000000);
+
+                if (generatedPacket == null)
+                {
+                    LogFail("TickBot did not generate any action packets");
+                    return false;
+                }
+
+                var genReader = new PkoPacketReader(generatedPacket);
+                genReader.ReadUint16(); // skip size
+                genReader.ReadUint32(); // skip session
+                ushort genPktId = genReader.ReadUint16();
+                uint genPktCount = genReader.ReadUint32();
+                byte genActionType = genReader.ReadByte();
+
+                if (genPktId != (ushort)PkoCommand.CMD_CM_BEGINACTION || genPktCount != 43 || genActionType != (byte)PkoActionType.enumACTION_ITEM_PICK)
+                {
+                    LogFail($"BotPlugin generated invalid pickup packet structure. PktId: {genPktId}, PktCount: {genPktCount}, ActionType: {genActionType}");
+                    return false;
+                }
+
+                // Now remove the item to test attack mob action packet generation and packetCount incrementing to 44
+                var writerItemEnd = new PkoPacketWriter();
+                writerItemEnd.WriteUint16(0);
+                writerItemEnd.WriteUint32(0x80000000);
+                writerItemEnd.WriteUint16((ushort)PkoCommand.CMD_MC_ITEMENDSEE);
+                writerItemEnd.WriteUint32(500); // worldId of item to destroy
+
+                byte[] itemEndData = writerItemEnd.ToArray();
+                ushort itemEndSize = (ushort)itemEndData.Length;
+                itemEndData[0] = (byte)(itemEndSize >> 8);
+                itemEndData[1] = (byte)(itemEndSize & 0xFF);
+
+                var contextItemEnd = new ProxyPacketContext(1, "S -> C", (ushort)PkoCommand.CMD_MC_ITEMENDSEE, 0x80000000, itemEndData);
+                botPlugin.OnPacket(contextItemEnd);
+
+                if (botPlugin.Items.Count != 0)
+                {
+                    LogFail("BotPlugin failed to remove item on CMD_MC_ITEMENDSEE");
+                    return false;
+                }
+
+                // Tick bot again, it should generate attack/skill packet targeting worldId 200 with packetCount 44
+                generatedPacket = null;
+                botPlugin.TickBot((pkt) => { generatedPacket = pkt; }, 0x80000000);
+
+                if (generatedPacket == null)
+                {
+                    LogFail("TickBot did not generate attack packet");
+                    return false;
+                }
+
+                genReader = new PkoPacketReader(generatedPacket);
+                genReader.ReadUint16(); // skip size
+                genReader.ReadUint32(); // skip session
+                genPktId = genReader.ReadUint16();
+                genPktCount = genReader.ReadUint32();
+                genActionType = genReader.ReadByte();
+
+                if (genPktId != (ushort)PkoCommand.CMD_CM_BEGINACTION || genPktCount != 44 || genActionType != (byte)PkoActionType.enumACTION_SKILL)
+                {
+                    LogFail($"BotPlugin generated invalid attack packet structure. PktId: {genPktId}, PktCount: {genPktCount}, ActionType: {genActionType}");
+                    return false;
+                }
+
+                LogPass("BotPlugin see/endsee tracking, CMD_CM_SAY command toggles, packetCount synchronization, and Action selection");
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\n====================================================");
-                Console.WriteLine("       ALL 9 UNIT TESTS PASSED SUCCESSFULLY!        ");
+                Console.WriteLine("       ALL 10 UNIT TESTS PASSED SUCCESSFULLY!       ");
                 Console.WriteLine("====================================================");
                 Console.ResetColor();
                 return true;

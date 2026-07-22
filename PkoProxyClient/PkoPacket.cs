@@ -73,7 +73,15 @@ namespace PkoProxyClient
         {
             ushort len = ReadUint16();
             if (len <= 1)
+            {
+                if (len == 1)
+                {
+                    if (_pos + 1 > _data.Length)
+                        throw new EndOfStreamException("Attempted to read past the end of the packet.");
+                    _pos += 1;
+                }
                 return "";
+            }
 
             if (_pos + len - 1 > _data.Length)
                 throw new EndOfStreamException("Attempted to read past the end of the packet.");
