@@ -88,9 +88,11 @@ namespace PkoProxyClient
             byte[] payload = new byte[context.DecryptedPacket.Length - 8];
             Array.Copy(context.DecryptedPacket, 8, payload, 0, payload.Length);
 
+            string cmdName = PkoCommandTranslator.GetCommandName(context.PacketId);
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"=========================================================================");
-            sb.AppendLine($"[Connection #{context.ConnectionId}] {context.Direction} | Packet ID: {context.PacketId} | Size: {size} | Session: 0x{context.Session:X8}");
+            sb.AppendLine($"[Connection #{context.ConnectionId}] {context.Direction} | Packet ID: {cmdName} ({context.PacketId}) | Size: {size} | Session: 0x{context.Session:X8}");
             sb.AppendLine($"-------------------------------------------------------------------------");
             sb.AppendLine(PkoProxy.HexDump(payload));
             sb.AppendLine();
@@ -139,6 +141,7 @@ namespace PkoProxyClient
             if (!Enabled) return;
 
             ushort size = (ushort)((context.DecryptedPacket[0] << 8) | context.DecryptedPacket[1]);
+            string cmdName = PkoCommandTranslator.GetCommandName(context.PacketId);
 
             lock (_consoleLock)
             {
@@ -163,7 +166,7 @@ namespace PkoProxyClient
                     Console.Write($"[{DateTime.Now:HH:mm:ss.fff}] ");
                 }
 
-                Console.WriteLine($"[Connection #{context.ConnectionId}] {context.Direction} | ID: {context.PacketId,3} | Size: {size,4} | Session: 0x{context.Session:X8}");
+                Console.WriteLine($"[Connection #{context.ConnectionId}] {context.Direction} | {cmdName} ({context.PacketId}) | Size: {size,4} | Session: 0x{context.Session:X8}");
                 Console.ForegroundColor = prevColor;
             }
         }

@@ -138,7 +138,8 @@ namespace PkoProxyClient
                     _ = pktReader.ReadUint32(); // session
                     ushort packetId = pktReader.ReadUint16();
 
-                    LogConsole($"[S->C] Packet ID: {packetId} | Size: {packetSize}", ConsoleColor.Yellow);
+                    string cmdName = PkoCommandTranslator.GetCommandName(packetId);
+                    LogConsole($"[S->C] {cmdName} ({packetId}) | Size: {packetSize}", ConsoleColor.Yellow);
 
                     if (packetId == 940) // ChapString
                     {
