@@ -1,0 +1,13 @@
+# Visual Studio junk
+.vs/
+*.sdf
+*.VC.db
+*.ipch
+*.suo
+*.user
+*.opensdf
+*.opendb
+Debug/
+Release/
+x64/
+ipch/
