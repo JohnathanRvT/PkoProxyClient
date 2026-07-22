@@ -1,0 +1,236 @@
+
+#include "stdafx.h"
+
+#include "uiNumAnswer.h"
+
+CImageBMP::CImageBMP()
+	: _pData(nullptr), _nDataSize(0), _nBmpData(0), _nWidth(0), _nHeight(0) {
+}
+
+CImageBMP::~CImageBMP() {
+	Clear();
+}
+
+bool CImageBMP::Load(BYTE* pData, int nSize) {
+	Clear();
+
+	_pData = new BYTE[nSize];
+	memcpy(_pData, pData, nSize);
+
+	_nDataSize = nSize;
+
+	// 数据开始位置，高度，宽度
+	memcpy(&_nBmpData, _pData + 10, sizeof(int));
+	memcpy(&_nWidth, _pData + 18, sizeof(int));
+	memcpy(&_nHeight, _pData + 22, sizeof(int));
+
+	return true;
+}
+
+void CImageBMP::RandomPoint() {
+	
+	static BYTE BitMask[] = {0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE};
+
+	if (_pData) {
+		for (int i = _nBmpData; i < _nDataSize; ++i) {
+			if ((rng.uniform(0, RAND_MAX) & 3) == 0) {
+				_pData[i] &= BitMask[rng.uniform(0, RAND_MAX) & 7];
+			}
+		}
+	}
+}
+
+void CImageBMP::Clear() {
+	SAFE_DELETE_ARRAY(_pData);
+	_nDataSize = 0;
+	_nBmpData = 0;
+	_nWidth = 0;
+	_nHeight = 0;
+}
+
+int CImageBMP::GetWidth() {
+	return _nWidth;
+}
+
+int CImageBMP::GetHeight() {
+	return _nHeight;
+}
+
+DWORD CImageBMP::GetColor(int x, int y) {
+	static BYTE BitMask[] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+
+	if (_pData) {
+		//  位置 = 数据起始  + ( 转换对应BMP的行  *    每一行的占用的字节数   ) + 列偏移字节
+		int nPos = _nBmpData + (_nHeight - y - 1) * (((_nWidth >> 5) + 1) << 2) + (x >> 3);
+
+		return (!(_pData[nPos] & BitMask[x & 7]));
+	}
+
+	return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+namespace GUI {
+
+CNumAnswerMgr::CNumAnswerMgr() {
+	_pNumTexture = nullptr;
+	_dwTickCount = 0;
+}
+
+CNumAnswerMgr::~CNumAnswerMgr() {
+	SAFE_RELEASE(_pNumTexture);
+}
+
+bool CNumAnswerMgr::Init() {
+#if !ENABLE_NUMANSWER
+	return true;
+#endif
+
+	frmNumAnswer = CFormMgr::s_Mgr.Find("frmWGAnswer");
+	if (!frmNumAnswer)
+		return false;
+	frmNumAnswer->evtEntrustMouseEvent = _evtCheckCodeMouseEvent;
+
+	frmFast = CFormMgr::s_Mgr.Find("frmFast");
+	if (!frmFast)
+		return false;
+
+	edtUserInput = dynamic_cast<CEdit*>(frmNumAnswer->Find("edtUserInput"));
+	if (!edtUserInput)
+		return false;
+
+	ui3dCheckCode = dynamic_cast<C3DCompent*>(frmNumAnswer->Find("ui3dCheckCode"));
+	if (!ui3dCheckCode)
+		return false;
+	ui3dCheckCode->SetRenderEvent(_evtCheckCodeRenderEvent);
+
+	labTimeLeft = dynamic_cast<CLabelEx*>(frmNumAnswer->Find("labTimeLeft"));
+	if (!labTimeLeft)
+		return false;
+
+	if (FAILED(g_Render.GetDevice()->CreateTextureX(256, 256, 1, 0, D3DFMT_R5G6B5, D3DPOOL_MANAGED, &_pNumTexture, nullptr))) {
+		MessageBox(nullptr, TEXT("NumAnswer_CreateTexture Failed!"), nullptr, MB_ICONERROR);
+		return false;
+	}
+
+	return true;
+}
+
+void CNumAnswerMgr::ShowForm(bool v) {
+#if !ENABLE_NUMANSWER
+	return;
+#endif
+
+	if (v) {
+		_dwTickCount = GetTickCount();
+		edtUserInput->SetCaption("");
+
+		frmNumAnswer->SetPos(frmNumAnswer->GetLeft(), frmFast->GetTop());
+		frmNumAnswer->Refresh();
+
+		frmNumAnswer->SetIsShow(v);
+		frmNumAnswer->SetActiveCompent(edtUserInput);
+	} else {
+		frmNumAnswer->SetIsShow(v);
+	}
+}
+
+void CNumAnswerMgr::FrameMove(DWORD dwTime) {
+#if !ENABLE_NUMANSWER
+	return;
+#endif
+
+	if (frmNumAnswer && frmNumAnswer->GetIsShow()) {
+		if (frmNumAnswer->GetBottom() > frmFast->GetTop()) {
+			int nLeft = (frmFast->GetWidth() - frmNumAnswer->GetWidth()) / 2 + frmFast->GetLeft();
+			int nTop = frmNumAnswer->GetTop() - 2;
+			frmNumAnswer->SetPos(nLeft, nTop);
+			frmNumAnswer->Refresh();
+		}
+
+		if (_dwTickCount) {
+			int nSecond = 60 - ((GetTickCount() - _dwTickCount) / 1000);
+
+			char szTime[64] = {0};
+			_snprintf_s(szTime, _TRUNCATE, "%d", nSecond);
+			labTimeLeft->SetCaption(szTime);
+
+			if (nSecond <= 0) {
+				frmNumAnswer->SetIsShow(false);
+				_dwTickCount = 0;
+			}
+		}
+	}
+}
+
+void CNumAnswerMgr::SetBmp(int nSeq, BYTE* pData, int nSize) {
+	_imgBMP[nSeq].Load(pData, nSize);
+	//_imgBMP[nSeq].RandomPoint();
+}
+
+// 将数据刷新至纹理
+void CNumAnswerMgr::Refresh() {
+	
+	if (_pNumTexture) {
+		D3DLOCKED_RECT stLock;
+		HRESULT hr = _pNumTexture->LockRect(0, &stLock, nullptr, D3DLOCK_DISCARD);
+		if (FAILED(hr)) {
+			return;
+		}
+
+		srand((unsigned int)time(nullptr));
+
+		int nLeft = 0;
+		for (auto& nBMP : _imgBMP) {
+			const int nWidth = nBMP.GetWidth();
+			const int nHeight = nBMP.GetHeight();
+
+			for (int x = 0; x < nWidth; ++x) {
+				for (int y = 0; y < nHeight; ++y) {
+					((unsigned short*)stLock.pBits)[y * 256 + x + nLeft] = nBMP.GetColor(x, y) ? (rng.uniform((unsigned short)0, (unsigned short)RAND_MAX)) : 0xFFFF;
+				}
+			}
+
+			nLeft += nWidth;
+		}
+
+		_pNumTexture->UnlockRect(0);
+	}
+}
+
+void CNumAnswerMgr::RenderCheckCode() {
+	if (_pNumTexture && frmNumAnswer && ui3dCheckCode) {
+		RECT rc;
+		memset(&rc, 0, sizeof(RECT));
+
+		for (auto& i : _imgBMP) {
+			rc.right += i.GetWidth();
+			rc.bottom = i.GetHeight() > rc.bottom ? i.GetHeight() : rc.bottom;
+		}
+
+		D3DXVECTOR2 vecDest;
+		vecDest.x = (FLOAT)(frmNumAnswer->GetLeft() + ui3dCheckCode->GetLeft());
+		vecDest.y = (FLOAT)(frmNumAnswer->GetTop() + ui3dCheckCode->GetTop());
+
+		GetRender().RenderSprite(_pNumTexture, &rc, nullptr, &vecDest, 0xFFFFFFFF);
+	}
+}
+
+void CNumAnswerMgr::SendCheckCode() {
+	CS_CheatCheck(edtUserInput->GetCaption());
+}
+
+void CNumAnswerMgr::_evtCheckCodeMouseEvent(CCompent* pSender, int nMsgType, int x, int y, MouseClickState dwKey) {
+	std::string strName = pSender->GetName();
+
+	if (strName == "btnYes") {
+		g_stUINumAnswer.SendCheckCode();
+	}
+}
+
+void CNumAnswerMgr::_evtCheckCodeRenderEvent(C3DCompent* pSender, int x, int y) {
+	g_stUINumAnswer.RenderCheckCode();
+}
+
+} // namespace GUI

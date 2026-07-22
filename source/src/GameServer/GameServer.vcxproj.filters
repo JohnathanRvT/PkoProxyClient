@@ -1,0 +1,465 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="工具库">
+      <UniqueIdentifier>{d201e152-cd67-4eef-92b4-ae0d438a5862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="工具库\Math">
+      <UniqueIdentifier>{00029cc4-9812-4c4c-ac75-0439b78e7520}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="工具库\Other">
+      <UniqueIdentifier>{7705ea24-fd28-49de-8ad7-9f27947a0703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="脚本系统">
+      <UniqueIdentifier>{85d8a2fc-ad88-431b-aa51-8f6bc5c47c1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="脚本系统\任务系统">
+      <UniqueIdentifier>{1c477774-3877-46ce-8a0b-d259b99aa99a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="数据库">
+      <UniqueIdentifier>{a5545784-fd5c-4d4b-8fc2-a478b25a4e0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="应用程序框架">
+      <UniqueIdentifier>{e935fa1f-0513-45a7-8a98-b87815ee2368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="应用程序框架\服务器配置">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="应用程序框架\事件处理">
+      <UniqueIdentifier>{a4ede1fc-eca9-4553-a005-d08d0a13a820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="地图与管理单元">
+      <UniqueIdentifier>{7d67e403-9d53-4578-a306-4179a4620661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体">
+      <UniqueIdentifier>{93936925-b93e-488c-999f-590720f7b008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\角色">
+      <UniqueIdentifier>{66e6dca4-7bcb-41cb-b8a7-9d530064c625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\角色\玩家">
+      <UniqueIdentifier>{8f0f717c-1057-4283-b91a-652f3727b432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\角色\NPC">
+      <UniqueIdentifier>{dedc79dd-0e79-4ec0-ac99-625a774967e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\角色\行为控制">
+      <UniqueIdentifier>{fc9a2934-dabb-407e-8b0d-0dac5b7e81a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\角色\Eudemon">
+      <UniqueIdentifier>{300c9118-b8c9-4d41-8e99-8b235e3307f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\角色\超级指令">
+      <UniqueIdentifier>{d4c196cd-bf80-4339-be3a-3e2f7b8c4c5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\角色\事件实体">
+      <UniqueIdentifier>{4eefb104-b5a6-4f14-9822-3a42652ac453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\道具">
+      <UniqueIdentifier>{10c6a71f-fa54-411e-8623-6ec9a5e7e895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\其他">
+      <UniqueIdentifier>{77410cbb-9a78-48c1-8828-bfea33bddf68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体\基类">
+      <UniqueIdentifier>{fe709043-841b-4ee9-98b7-82f003e3e34c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="系统报告">
+      <UniqueIdentifier>{b0c098a0-2ee7-4b72-aa72-d1e441b30e68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="其他">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="网络与服务器组">
+      <UniqueIdentifier>{867376e2-d300-43ed-a4e7-8f5fa48e77df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="网络2">
+      <UniqueIdentifier>{10056785-b282-4233-91d3-b1332e7f09d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="公会">
+      <UniqueIdentifier>{37658626-dd5e-41f0-9ba8-24fe001a47a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="图片资源">
+      <UniqueIdentifier>{ec24d7b3-52a0-4f22-b360-20ae543f0b87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="竞拍">
+      <UniqueIdentifier>{9eff9e68-4cb6-4a9b-b885-fde4f11b4019}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Range.h">
+      <Filter>工具库\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Identity.h">
+      <Filter>工具库\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\MsgQueue.h">
+      <Filter>工具库\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Timer.h">
+      <Filter>工具库\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\CharScript.h">
+      <Filter>脚本系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Expand.h">
+      <Filter>脚本系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_gamectrl.h">
+      <Filter>脚本系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_gamectrl2.h">
+      <Filter>脚本系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\NpcScript.h">
+      <Filter>脚本系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Parser.h">
+      <Filter>脚本系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Script.h">
+      <Filter>脚本系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\CharBoat.h">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\CharForge.h">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\CharStall.h">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\CharTrade.h">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\MapTrigger.h">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Mission.h">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\RoleData.h">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameDB.h">
+      <Filter>数据库</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\TradeLogDB.h">
+      <Filter>数据库</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameApp.h">
+      <Filter>应用程序框架</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Config.h">
+      <Filter>应用程序框架\服务器配置</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\EventHandler.h">
+      <Filter>应用程序框架\事件处理</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Weather.h">
+      <Filter>应用程序框架\事件处理</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Birthplace.h">
+      <Filter>地图与管理单元</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\EyeshotCell.h">
+      <Filter>地图与管理单元</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\MapEntry.h">
+      <Filter>地图与管理单元</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\MapRes.h">
+      <Filter>地图与管理单元</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\StateCell.h">
+      <Filter>地图与管理单元</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\SubMap.h">
+      <Filter>地图与管理单元</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Character.h">
+      <Filter>实体\角色</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Player.h">
+      <Filter>实体\角色\玩家</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\NPC.h">
+      <Filter>实体\角色\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Action.h">
+      <Filter>实体\角色\行为控制</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\WorldEudemon.h">
+      <Filter>实体\角色\Eudemon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\EventEntity.h">
+      <Filter>实体\角色\事件实体</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Item.h">
+      <Filter>实体\道具</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\HarmRec.h">
+      <Filter>实体\其他</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\SkillState.h">
+      <Filter>实体\其他</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\SkillTemp.h">
+      <Filter>实体\其他</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Attachable.h">
+      <Filter>实体\基类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\AttachManage.h">
+      <Filter>实体\基类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Entity.h">
+      <Filter>实体\基类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\EntityAlloc.h">
+      <Filter>实体\基类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\EntitySpawn.h">
+      <Filter>实体\基类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Event.h">
+      <Filter>实体\基类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\FightAble.h">
+      <Filter>实体\基类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\MoveAble.h">
+      <Filter>实体\基类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\SystemDialog.h">
+      <Filter>系统报告</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\ProfileMonitor.h">
+      <Filter>其他</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\stdafx.h">
+      <Filter>其他</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\EntityScript.h">
+      <Filter>网络与服务器组</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameServerApp.h">
+      <Filter>网络与服务器组</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\gtplayer.h">
+      <Filter>网络2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Guild.h">
+      <Filter>公会</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\PicSet.h">
+      <Filter>图片资源</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Picture.h">
+      <Filter>图片资源</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Auction.h">
+      <Filter>竞拍</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\AuctionItem.h">
+      <Filter>竞拍</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameAppNet.h">
+      <Filter>应用程序框架</Filter>
+    </ClInclude>
+    <ClInclude Include=".\resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include=".\CharScript.cpp">
+      <Filter>脚本系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\EntityScript.cpp">
+      <Filter>脚本系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\lua_gamectrl.cpp">
+      <Filter>脚本系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\NpcScript.cpp">
+      <Filter>脚本系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Parser.cpp">
+      <Filter>脚本系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Script.cpp">
+      <Filter>脚本系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharBoat.cpp">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharForge.cpp">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharStall.cpp">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharTrade.cpp">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\MapTrigger.cpp">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Mission.cpp">
+      <Filter>脚本系统\任务系统</Filter>
+    </ClCompile>
+    <ClCompile Include=".\GameDB.cpp">
+      <Filter>数据库</Filter>
+    </ClCompile>
+    <ClCompile Include=".\TradeLogDB.cpp">
+      <Filter>数据库</Filter>
+    </ClCompile>
+    <ClCompile Include=".\GameApp.cpp">
+      <Filter>应用程序框架</Filter>
+    </ClCompile>
+    <ClCompile Include=".\GameAppNet.cpp">
+      <Filter>应用程序框架</Filter>
+    </ClCompile>
+    <ClCompile Include=".\GameSMain.cpp">
+      <Filter>应用程序框架</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Config.cpp">
+      <Filter>应用程序框架\服务器配置</Filter>
+    </ClCompile>
+    <ClCompile Include=".\EventCalculate.cpp">
+      <Filter>应用程序框架\事件处理</Filter>
+    </ClCompile>
+    <ClCompile Include=".\EventHandler.cpp">
+      <Filter>应用程序框架\事件处理</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Weather.cpp">
+      <Filter>应用程序框架\事件处理</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Birthplace.cpp">
+      <Filter>地图与管理单元</Filter>
+    </ClCompile>
+    <ClCompile Include=".\EyeshotCell.cpp">
+      <Filter>地图与管理单元</Filter>
+    </ClCompile>
+    <ClCompile Include=".\MapEntry.cpp">
+      <Filter>地图与管理单元</Filter>
+    </ClCompile>
+    <ClCompile Include=".\MapRes.cpp">
+      <Filter>地图与管理单元</Filter>
+    </ClCompile>
+    <ClCompile Include=".\StateCell.cpp">
+      <Filter>地图与管理单元</Filter>
+    </ClCompile>
+    <ClCompile Include=".\SubMap.cpp">
+      <Filter>地图与管理单元</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Character.cpp">
+      <Filter>实体\角色</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharacterAI.cpp">
+      <Filter>实体\角色</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharacterAIState.cpp">
+      <Filter>实体\角色</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharacterCmd.cpp">
+      <Filter>实体\角色</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharacterPacket.cpp">
+      <Filter>实体\角色</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharacterPrl.cpp">
+      <Filter>实体\角色</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharacterRun.cpp">
+      <Filter>实体\角色</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Player.cpp">
+      <Filter>实体\角色\玩家</Filter>
+    </ClCompile>
+    <ClCompile Include=".\NPC.cpp">
+      <Filter>实体\角色\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Action.cpp">
+      <Filter>实体\角色\行为控制</Filter>
+    </ClCompile>
+    <ClCompile Include=".\WorldEudemon.cpp">
+      <Filter>实体\角色\Eudemon</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CharacterSuperCmd.cpp">
+      <Filter>实体\角色\超级指令</Filter>
+    </ClCompile>
+    <ClCompile Include=".\EventEntity.cpp">
+      <Filter>实体\角色\事件实体</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Item.cpp">
+      <Filter>实体\道具</Filter>
+    </ClCompile>
+    <ClCompile Include=".\HarmRec.cpp">
+      <Filter>实体\其他</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Attachable.cpp">
+      <Filter>实体\基类</Filter>
+    </ClCompile>
+    <ClCompile Include=".\AttachManage.cpp">
+      <Filter>实体\基类</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Entity.cpp">
+      <Filter>实体\基类</Filter>
+    </ClCompile>
+    <ClCompile Include=".\EntityAlloc.cpp">
+      <Filter>实体\基类</Filter>
+    </ClCompile>
+    <ClCompile Include=".\EntitySpawn.cpp">
+      <Filter>实体\基类</Filter>
+    </ClCompile>
+    <ClCompile Include=".\FightAble.cpp">
+      <Filter>实体\基类</Filter>
+    </ClCompile>
+    <ClCompile Include=".\MoveAble.cpp">
+      <Filter>实体\基类</Filter>
+    </ClCompile>
+    <ClCompile Include=".\SystemDialog.cpp">
+      <Filter>系统报告</Filter>
+    </ClCompile>
+    <ClCompile Include=".\ProfileMonitor.cpp">
+      <Filter>其他</Filter>
+    </ClCompile>
+    <ClCompile Include=".\stdafx.cpp">
+      <Filter>其他</Filter>
+    </ClCompile>
+    <ClCompile Include=".\GameServerApp.cpp">
+      <Filter>网络与服务器组</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Guild.cpp">
+      <Filter>公会</Filter>
+    </ClCompile>
+    <ClCompile Include=".\PicSet.cpp">
+      <Filter>图片资源</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Picture.cpp">
+      <Filter>图片资源</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Auction.cpp">
+      <Filter>竞拍</Filter>
+    </ClCompile>
+    <ClCompile Include=".\AuctionItem.cpp">
+      <Filter>竞拍</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include=".\kop.ico">
+      <Filter>应用程序框架\服务器配置</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\GameServer.rc">
+      <Filter>其他</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>其他</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerDebuggerType>Auto</LocalDebuggerDebuggerType>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>startgame</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..\..\client\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommand>$(ProjectDir)..\..\..\client\system\$(TargetFileName)</LocalDebuggerCommand>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Calua_Luajit|Win32'">
+    <LocalDebuggerDebuggerType>Auto</LocalDebuggerDebuggerType>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>startgame</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\..\client\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommand>$(SolutionDir)..\..\..\client\system\$(TargetFileName)</LocalDebuggerCommand>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Calua_Compat|Win32'">
+    <LocalDebuggerDebuggerType>Auto</LocalDebuggerDebuggerType>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>startgame</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\..\client\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommand>$(SolutionDir)..\..\..\client\system\$(TargetFileName)</LocalDebuggerCommand>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommand>$(SolutionDir)..\..\..\client\system\$(TargetFileName)</LocalDebuggerCommand>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\..\client\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommandArguments>startgame</LocalDebuggerCommandArguments>
+  </PropertyGroup>
+</Project>

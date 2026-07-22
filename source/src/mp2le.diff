@@ -1,0 +1,5488 @@
+Only in /c/games/top-recode/source/src/LightEngine/.vs: LightEngine
+Only in /c/games/top-recode/source/src/MindPower3D/.vs: MindPower3D
+Only in /c/games/top-recode/source/src/LightEngine: AniFile.cpp
+Only in /c/games/top-recode/source/src/LightEngine: AniFile.h
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/Blk.cpp /c/games/top-recode/source/src/LightEngine/Blk.cpp
+3a4
+> #include "MyMemory.h"
+Only in /c/games/top-recode/source/src/LightEngine: Color.cpp
+Only in /c/games/top-recode/source/src/LightEngine: Color.h
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/d3dfont.cpp /c/games/top-recode/source/src/LightEngine/d3dfont.cpp
+54c54
+<     _tcsncpy_s( m_strFontName, strFontName , _TRUNCATE);
+---
+>     _tcscpy( m_strFontName, strFontName );
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/d3dutil.cpp /c/games/top-recode/source/src/LightEngine/d3dutil.cpp
+14a15
+> #include "MyMemory.h"
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/dxutil.cpp /c/games/top-recode/source/src/LightEngine/dxutil.cpp
+578c578
+< 	_sntprintf_s(buffer, _TRUNCATE, _T("%s(%ld): "), strFile, dwLine);
+---
+>     wsprintf( buffer, _T("%s(%ld): "), strFile, dwLine );
+584c584
+< 		_sntprintf_s(buffer, _TRUNCATE, _T("(hr=%08lx)\n"), hr);
+---
+>         wsprintf( buffer, _T("(hr=%08lx)\n"), hr );
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/EffectFile.cpp /c/games/top-recode/source/src/LightEngine/EffectFile.cpp
+1,3d0
+< // DXEffectFile.cpp: implementation of the CMPEffectFile class.
+< //
+< //////////////////////////////////////////////////////////////////////
+6,7d2
+< //#include "../../../proj/EffectEditer.h"
+< //#include <mindpower.h>
+11d5
+< //#include "DXUtil.h"
+14,16d7
+< //////////////////////////////////////////////////////////////////////
+< // Construction/Destruction
+< //////////////////////////////////////////////////////////////////////
+50a42,44
+> #ifdef __MEM_DEBUG__
+> extern long g_nDontCare;
+> #endif
+53a48,50
+> #ifdef __MEM_DEBUG__
+> 	InterlockedIncrement(&g_nDontCare);
+> #endif
+59a57,59
+> #ifdef __MEM_DEBUG__
+> 		InterlockedDecrement(&g_nDontCare);
+> #endif
+61a62,64
+> #ifdef __MEM_DEBUG__
+> 	InterlockedDecrement(&g_nDontCare);
+> #endif
+65,73d67
+< 	//if (FAILED(m_pEffect->FindNextValidTechnique(NULL, &technique)))
+< 	//{
+< 	//	return FALSE;
+< 	//}
+< 	//_vecTechniques.push_back(technique);
+< 	//_iTechNum++;
+< 
+< 	//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
+< 
+80d73
+< 		//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
+82c75
+< 		_snprintf_s(t_psz, _TRUNCATE, "t%d", _iTechNum);
+---
+> 		_snprintf_s(t_psz,4,_TRUNCATE,"t%d",_iTechNum);
+84,86d76
+< 	//_DbgOut( " technique.Name", _iTechNum, S_OK,  (TCHAR*)technique.Name );
+< 
+< 
+90,140d79
+< //BOOL CMPEffectFile::LoadEffectFromResource(TCHAR*  pszsrc)
+< //{
+< //    HRESULT hr;
+< //    HMODULE hModule = NULL;
+< //    HRSRC rsrc;
+< //    HGLOBAL hgData;
+< //    LPVOID pvData;
+< //    DWORD cbData;
+< //	D3DXTECHNIQUE_DESC   technique;
+< //
+< //    rsrc = FindResource( hModule, pszsrc, "EFFECT" );
+< //    if( rsrc != NULL )
+< //    {
+< //        cbData = SizeofResource( hModule, rsrc );
+< //        if( cbData > 0 )
+< //        {
+< //            hgData = LoadResource( hModule, rsrc );
+< //            if( hgData != NULL )
+< //            {
+< //                pvData = LockResource( hgData );
+< //                if( pvData != NULL )
+< //                {
+< //                    if( FAILED( hr = D3DXCreateEffect( 
+< //                        m_pDev, pvData, cbData, 
+< //						&m_pEffect,NULL) ) )
+< //                    {
+< //                        return FALSE;
+< //                    }
+< //					else
+< //						return TRUE;
+< //                }
+< //            }
+< //        }
+< //    }
+< //	if (FAILED(m_pEffect->FindNextValidTechnique(NULL, &technique)))
+< //	{
+< //		return FALSE;
+< //	}
+< //	_vecTechniques.push_back(technique);
+< //	_iTechNum++;
+< //
+< //	while(SUCCEEDED(m_pEffect->FindNextValidTechnique(technique.Name, &technique)))
+< //	{
+< //		_vecTechniques.push_back(technique);
+< //		_iTechNum++;
+< //	}
+< //
+< //	return FALSE;
+< //}
+< 
+< 
+147,151d85
+< //	if(_dwVShader)
+< //	{
+< //		m_pDev->DeleteVertexShader(_dwVShader);
+< //		_dwVShader = 0;
+< //	}
+Only in /c/games/top-recode/source/src/LightEngine: Frames.cpp
+Only in /c/games/top-recode/source/src/LightEngine: Frames.h
+Only in /c/games/top-recode/source/src/LightEngine: Frustum.cpp
+Only in /c/games/top-recode/source/src/LightEngine: Frustum.h
+Only in /c/games/top-recode/source/src/LightEngine: Heightmap.cpp
+Only in /c/games/top-recode/source/src/LightEngine: Heightmap.h
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/I_Effect.cpp /c/games/top-recode/source/src/LightEngine/I_Effect.cpp
+4d3
+< //#include "MPModelEff.h"
+10,11c9
+< //#include "mpresmanger.h"
+< 
+---
+> #include "CPerformance.h"
+36a35
+> 	m_pCModel = 0;
+93c92
+< 	_bBillBoard = (bool)lParam;
+---
+> 	_bBillBoard = ( lParam == 0? false : true );
+99,102c98,108
+< 	//_vecFrameTime[0]	= 1.75f;
+< 	//_vecFrameTime[1]	= 1.25f;
+< 	//_vecFrameTime[2]	= 2.00f;
+< 	////_vecFrameTime[3]	= 1.5f;
+---
+> 	//_vecFrameTime.resize(3);
+> 	_vecFrameTime[0]	= 1.75f;
+> 	_vecFrameTime[1]	= 1.25f;
+> 	_vecFrameTime[2]	= 2.00f;
+> 	//_vecFrameTime[3]	= 1.5f;
+> 
+> 	//_vecFrameColor.resize(3)
+> 	_vecFrameColor[0]	=D3DCOLOR_ARGB(0,255,255,255);
+> 	_vecFrameColor[1]	=D3DCOLOR_ARGB(0,255,255,255);
+> 	_vecFrameColor[2]	=D3DCOLOR_ARGB(255,255,255,255);
+> 	//_vecFrameColor[3]	=D3DCOLOR_ARGB(200,255,255,255);
+104,107c110
+< 	//_vecFrameColor[0]	=D3DCOLOR_ARGB(0,255,255,255);
+< 	//_vecFrameColor[1]	=D3DCOLOR_ARGB(0,255,255,255);
+< 	//_vecFrameColor[2]	=D3DCOLOR_ARGB(255,255,255,255);
+< 	////_vecFrameColor[3]	=D3DCOLOR_ARGB(200,255,255,255);
+---
+> 	m_pCModel			= (CEffectModel*)lParam;
+109c112
+< 	//m_pCModel			= (CEffectModel*)lParam;
+---
+> 	m_strModelName		= m_pCModel->m_strName;
+111c114,116
+< 	//m_strModelName		= m_pCModel->m_strName;
+---
+> 	m_CTexCoordlist.GetCoordFromModel(m_pCModel);
+> 	m_CTextruelist.GetTextureFromModel(m_pCModel);
+> }
+113,114c118,124
+< 	//m_CTexCoordlist.GetCoordFromModel(m_pCModel);
+< 	//m_CTextruelist.GetTextureFromModel(m_pCModel);
+---
+> void I_Effect::SetBillBoard(bool bBoard)
+> {
+> 	_bBillBoard = bBoard;
+> 	if(_bBillBoard)
+> 		_iVSIndex = 2;
+> 	if(_eEffectType == EFFECT_MODEL)
+> 		_iVSIndex = 1;
+190c200
+< 				_snprintf_s(pszMsg, _TRUNCATE, "特效文件[%s]加载帖图[%s]时出错",
+---
+> 				_snprintf_s(pszMsg,64,_TRUNCATE, "特效文件[%s]加载帖图[%s]时出错",
+204c214
+< 			_snprintf_s(pszMsg, _TRUNCATE, "特效文件[%s]加载帖图[%s]时出错",
+---
+> 			_snprintf_s(pszMsg,64,_TRUNCATE,"特效文件[%s]加载帖图[%s]时出错",
+244c254
+< 				_snprintf_s(pszMsg, _TRUNCATE, "特效文件[%s]缺少可变模型[%s]",
+---
+> 				_snprintf_s(pszMsg,64, _TRUNCATE,"特效文件[%s]缺少可变模型[%s]",
+257c267
+< 			_snprintf_s(pszMsg, _TRUNCATE, "特效文件[%s]加载模型[%s]时出错",
+---
+> 			_snprintf_s(pszMsg,64,_TRUNCATE, "特效文件[%s]加载模型[%s]时出错",
+277c287
+< 	//		//_snprintf_s(pszn, _TRUNCATE, "texture\\effect\\%s",m_CTextruelist.m_vecTexName.c_str());
+---
+> 	//		//_snprintf_s(pszn, "texture\\effect\\%s",m_CTextruelist.m_vecTexName.c_str());
+295a306,314
+> void I_Effect::PlayModel()
+> {	
+> 	if (!m_pCModel) 
+> 		return;
+> 	if(m_pCModel->IsItem())
+> 	{
+> 		m_pCModel->PlayDefaultAnimation();
+> 	}
+> }
+376a396,398
+> 	/*if(!m_pCModel)
+> 		return;*/
+> 
+456c478,479
+< 	for(WORD n = 0; n < _wFrameCount; n++)
+---
+> 	WORD n = 0;
+> 	for( n = 0; n < _wFrameCount; n++)
+488a512
+> 		//TODO
+489a514
+> 		//fwrite(m_CTexCoordlist.m_vecCoordList[n]._Myfirst, sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
+503a529,530
+> 		//TODO
+> 		//fwrite(m_CTextruelist.m_vecTexList[n]._Myfirst, sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
+507a535
+> 	if(m_pCModel)
+508a537,538
+> 	else
+> 		lstrcpy(t_pszName,"None");
+515a546,547
+> 	if(m_pCModel)
+> 	{
+519a552,553
+> 	}
+> 	
+578c612,614
+< 	for(WORD n = 0; n < _wFrameCount; n++)
+---
+> 
+> 	WORD n = 0;
+> 	for( n = 0; n < _wFrameCount; n++)
+616a653,654
+> 		//fread(m_CTexCoordlist.m_vecCoordList[n]._Myfirst, sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
+> 		//TODO
+617a656
+> 
+650a690,692
+> 				
+> 		//fread(m_CTextruelist.m_vecTexList[n]._Myfirst, sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
+> 		//TODO
+877a920,921
+> 		if(!m_pCModel)
+> 			return;
+979a1024
+> 
+994c1039
+< 	GetObject()->GetPrimitive()->SetState(STATE_TRANSPARENT, 0);
+---
+> 	//GetObject()->GetPrimitive()->SetState(STATE_TRANSPARENT, 0); //TODO
+1082a1128
+> 	
+2085d2130
+<     // begin by lsh
+2293c2338,2339
+< 	for(WORD i = 0; i < m_wVerCount; ++i)
+---
+> 	WORD i = 0;
+> 	for( i = 0; i < m_wVerCount; ++i)
+2403a2450
+> 	m_vecTexList.clear();
+2474a2522,2523
+> 	if(!pCModel)
+> 		return;
+2556a2606
+> 	m_vecCoord.clear();
+2675c2725
+< 		_snprintf_s(psName,_TRUNCATE,"%s",str[_iTextureID].c_str());
+---
+> 		_snprintf_s(psName,64, _TRUNCATE,"%s",str[_iTextureID].c_str());
+2680c2730
+< 		//	_snprintf_s(psName,_TRUNCATE,"%s.tga",str[_iTextureID].c_str());
+---
+> 		//	_snprintf_s(psName,"%s.tga",str[_iTextureID].c_str());
+2682c2732
+< 			_snprintf_s(psName,_TRUNCATE,"%s2",str[_iTextureID].c_str());
+---
+> 			_snprintf_s(psName,64, _TRUNCATE,"%s",str[_iTextureID].c_str()); //FIXED: %s2 was invalid here (just 1 string)
+2686,2709c2736
+< 	//switch(_iTextureID)
+< 	//{
+< 	//case 0:
+< 	//	m_vecTexName = "加血.tga";
+< 	//	break;
+< 	//case 1:
+< 	//	m_vecTexName = "减血.tga";
+< 	//	break;
+< 	//case 2:
+< 	//	m_vecTexName = "加sp.tga";
+< 	//	break;
+< 	//case 3:
+< 	//	m_vecTexName = "减sp.tga";
+< 	//	break;
+< 	//case 4:
+< 	//	m_vecTexName = "加血怪兽.tga";
+< 	//	break;
+< 	//case 5:
+< 	//	m_vecTexName = "减血怪兽.tga";
+< 	//	break;
+< 	//case 6:
+< 	//	m_vecTexName = "暴.tga";
+< 	//	break;
+< 	//}
+---
+> 
+2720c2747
+< 
+---
+> 		if( m_pTex )
+2721a2749,2750
+> 		else
+> 			m_lpCurTex = NULL;
+2986,2987d3014
+< 	char msg[_MAX_STRING];
+< 
+2989d3015
+< 
+2992,2993c3018
+< 		_snprintf_s( msg, _TRUNCATE, "CIniFile::OpenFileRead() Error (0) : Could not open file for read : <%s>\n", filename );
+< 		OutputDebugString( msg );
+---
+> 		IP("CIniFile::OpenFileRead() Error (0) : Could not open file for read : <%s>\n", filename );
+3020d3044
+< 	char msg[_MAX_STRING];
+3074c3098
+< 					strncpy_s(section, sizeof(section), Section, _TRUNCATE);
+---
+> 					strncpy_s( section,strlen( Section ) + 1, Section, _TRUNCATE);
+3102,3103c3126
+< 			_snprintf_s( msg, _TRUNCATE, "CIniFile::ReadSection() Error(0) : Reach the end of the file in reading section <%s>\n", section );
+< 			OutputDebugString( msg );
+---
+> 			IP("CIniFile::ReadSection() Error(0) : Reach the end of the file in reading section <%s>\n", section );
+3119c3142
+< 				strncpy_s(section, sizeof(section), Section, _TRUNCATE);
+---
+> 				strncpy_s( section,strlen( Section ) + 1, Section, _TRUNCATE);
+3144d3166
+< 	char msg[_MAX_STRING];
+3164c3186
+< 				OutputDebugString( "Reach the end of file " );
+---
+> 				IP( "Reach the end of file " );
+3231,3232c3253
+< 			_snprintf_s( msg, _TRUNCATE, "CIniFile::ReadLine() Error(0) : Reach the end of the file in reading named <%s>\n", name );
+< 			OutputDebugString( msg );
+---
+> 			IP("CIniFile::ReadLine() Error(0) : Reach the end of the file in reading named <%s>\n", name );
+3330c3351
+< 	fopen_s(&fFile, ptcsFileName, _TEXT("rb"));
+---
+> 	_tfopen_s( &fFile, ptcsFileName, _TEXT("rb"));
+3417c3438
+< 					MessageBox(NULL, _TEXT("请更新 .\\scripts\\CharacterAction.tx"), _TEXT("错误"), 0);
+---
+> 					MessageBox(NULL, _TEXT("please update .\\scripts\\CharacterAction.tx"), _TEXT("错误"), 0);
+3527a3549,3550
+> 			if( m_SCharacterAction[i].m_SActionInfo )
+> 			{
+3537a3561
+> 			}
+Only in /c/games/top-recode/source/src/LightEngine: LightEngine.vcxproj
+Only in /c/games/top-recode/source/src/LightEngine: LightEngine.vcxproj.filters
+Only in /c/games/top-recode/source/src/LightEngine: LightEngine.vcxproj.user
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwAnimCtrl.cpp /c/games/top-recode/source/src/LightEngine/lwAnimCtrl.cpp
+75c75,76
+<     FILE* fp = fopen("xxx.txt", "wt");
+---
+>     FILE* fp;
+> 	fopen_s( &fp, "xxx.txt", "wt");
+140d140
+<     // by lsh
+339d338
+<     // by lsh
+654,664d652
+< #if 0
+<     // frame type cannot invoke CallBack proc
+<     if(info->type == PLAY_FRAME)
+<         goto __addr_ret_ok;
+< 
+<     if(LW_FAILED(_pose_ctrl.CallBack(info)))
+<         goto __ret;
+< #endif
+< 
+<             
+< 
+677d664
+< __addr_ret_ok:
+1003a991,992
+> //BOOL g_bMyTest = FALSE;
+> //void* g_pAnimCtrlTexUV = NULL;
+1007a997,1002
+> //	if( _frame_num==31 )
+> //	{
+> //		g_bMyTest = TRUE;
+> // 		if( g_pAnimCtrlTexUV==NULL )
+> // 			g_pAnimCtrlTexUV = this;
+> //	}
+1008a1004,1005
+> 	{
+> //		g_bMyTest = FALSE;
+1009a1007,1008
+> 	}
+> //	g_bMyTest = FALSE;
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwAnimCtrlObj.cpp /c/games/top-recode/source/src/LightEngine/lwAnimCtrlObj.cpp
+298,299c298
+<             DWORD i = 0;
+< 	for( i = 0; i < mesh_info->bone_index_num; i++)
+---
+>             for(DWORD i = 0; i < mesh_info->bone_index_num; i++)
+342,343c341
+<         DWORD j = 0;
+< 	for( j = 0; j < num; j++)
+---
+>         for(DWORD j = 0; j < num; j++)
+362,363c360
+<         DWORD i = 0;
+< 	for( i = 0; i < num; i++)
+---
+>         for(DWORD i = 0; i < num; i++)
+389,390c386
+<     DWORD i = 0;
+< 	for( i = 0; i < _dummy_rtm_num; i++)
+---
+>     for(DWORD i = 0; i < _dummy_rtm_num; i++)
+491a488,489
+> //extern void* g_pAnimCtrlTexUV;
+> //void* g_lwAnimCtrlObjTexUV = NULL;
+501a500,505
+> // 	if( NULL==g_lwAnimCtrlObjTexUV )
+> // 	{
+> // 		if( _anim_ctrl==g_pAnimCtrlTexUV )
+> // 			g_lwAnimCtrlObjTexUV = this;
+> // 	}
+> 
+833,834c837
+<     DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++)
+---
+>     for(DWORD i = 0; i < _obj_num; i++)
+864,865c867
+<     DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++)
+---
+>     for(DWORD i = 0; i < _obj_num; i++)
+900,901c902
+<     DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++)
+---
+>     for(DWORD i = 0; i < _obj_num; i++)
+916c917
+< 
+---
+> //void* g_lwAnimCtrlAgent = NULL;
+921,922c922
+<     DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++)
+---
+>     for(DWORD i = 0; i < _obj_num; i++)
+925a926,931
+> 
+> // 		if( NULL==g_lwAnimCtrlAgent )
+> // 		{
+> // 			if( _obj_seq[i]==g_lwAnimCtrlObjTexUV )
+> // 				g_lwAnimCtrlAgent = this;
+> // 		}
+945,946c951
+<     DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++)
+---
+>     for(DWORD i = 0; i < _obj_num; i++)
+1000,1001c1005
+<     DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++)
+---
+>     for(DWORD i = 0; i < _obj_num; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwAnimKeySetPRS.cpp /c/games/top-recode/source/src/LightEngine/lwAnimKeySetPRS.cpp
+580a581
+> 
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwBitmap.cpp /c/games/top-recode/source/src/LightEngine/lwBitmap.cpp
+202,203c202
+<      DWORD i = 0;
+< 	for( i = 0; i < buf_num; i++ )
+---
+>     for( DWORD i = 0; i < buf_num; i++ )
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwConsole.cpp /c/games/top-recode/source/src/LightEngine/lwConsole.cpp
+46c46
+<     _vsntprintf_s(buf, _countof(buf), _TRUNCATE, str, args);
+---
+>     _vsntprintf_s(buf, 1024, _TRUNCATE, str, args);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwCoordinateSys.cpp /c/games/top-recode/source/src/LightEngine/lwCoordinateSys.cpp
+14,15c14
+<     DWORD i = 0;
+< 	for( i = 0; i < COORD_SEQ_SIZE; i++)
+---
+>     for(DWORD i = 0; i < COORD_SEQ_SIZE; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwD3DSettings.cpp /c/games/top-recode/source/src/LightEngine/lwD3DSettings.cpp
+104c104
+< 	_itoa_s(param->adapter, buf, 10);
+---
+> 	_itoa_s( param->adapter, buf, LW_MAX_NAME, 10 );
+106c106
+< 	_itoa_s(param->dev_type, buf, 10);
+---
+> 	_itoa_s( param->dev_type, buf, LW_MAX_NAME, 10 );
+108c108
+< 	_itoa_s(param->behavior_flag, buf, 10);
+---
+> 	_itoa_s( param->behavior_flag, buf, LW_MAX_NAME, 10 );
+111c111
+< 	_itoa_s(param->present_param.Windowed, buf, 10);
+---
+> 	_itoa_s( param->present_param.Windowed, buf, LW_MAX_NAME, 10 );
+113c113
+< 	_itoa_s(param->present_param.BackBufferCount, buf, 10);
+---
+> 	_itoa_s( param->present_param.BackBufferCount, buf, LW_MAX_NAME, 10 );
+115c115
+< 	_itoa_s(param->present_param.BackBufferFormat, buf, 10);
+---
+> 	_itoa_s( param->present_param.BackBufferFormat, buf, LW_MAX_NAME, 10 );
+117c117
+< 	_itoa_s(param->present_param.BackBufferHeight, buf, 10);
+---
+> 	_itoa_s( param->present_param.BackBufferHeight, buf, LW_MAX_NAME, 10 );
+119c119
+< 	_itoa_s(param->present_param.BackBufferWidth, buf, 10);
+---
+> 	_itoa_s( param->present_param.BackBufferWidth, buf, LW_MAX_NAME, 10 );
+121c121
+< 	_itoa_s(param->present_param.EnableAutoDepthStencil, buf, 10);
+---
+> 	_itoa_s( param->present_param.EnableAutoDepthStencil, buf, LW_MAX_NAME, 10 );
+123c123
+< 	_itoa_s(param->present_param.AutoDepthStencilFormat, buf, 10);
+---
+> 	_itoa_s( param->present_param.AutoDepthStencilFormat, buf, LW_MAX_NAME, 10 );
+125c125
+< 	_itoa_s(param->present_param.MultiSampleType, buf, 10);
+---
+> 	_itoa_s( param->present_param.MultiSampleType, buf, LW_MAX_NAME, 10 );
+127c127
+< 	_itoa_s(param->present_param.FullScreen_RefreshRateInHz, buf, 10);
+---
+> 	_itoa_s( param->present_param.FullScreen_RefreshRateInHz, buf, LW_MAX_NAME, 10 );
+131c131
+< 	_itoa_s(param->present_param.FullScreen_PresentationInterval, buf, 10);
+---
+> 	_itoa_s( param->present_param.FullScreen_PresentationInterval, buf, LW_MAX_NAME, 10 );
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwDDS.h /c/games/top-recode/source/src/LightEngine/lwDDS.h
+13,14d12
+< // by lsh
+< 
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwDDSFile.cpp /c/games/top-recode/source/src/LightEngine/lwDDSFile.cpp
+4c4
+< #include "lwGraphicsutil.h"
+---
+> #include "lwGraphicsUtil.h"
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwDeviceObject.cpp /c/games/top-recode/source/src/LightEngine/lwDeviceObject.cpp
+11a12,13
+> #include "CPerformance.h"
+> #include "ErrorReport.h"
+13d14
+< // Del by lark.li 20080611
+15c16,19
+< 
+---
+> #ifdef __MEM_DEBUG__
+> extern long g_nDontCare;
+> #endif
+> extern string GetDxError(HRESULT hr);
+218,223c222,227
+< 		SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+< 		SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+< 		SetSamplerState(i, D3DSAMP_MAXANISOTROPY, 1);
+< 		SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+< 		SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+< 		SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+---
+> 		SetSamplerState(i, D3DSALE_ADDRESSU, D3DTADDRESS_WRAP);
+> 		SetSamplerState(i, D3DSALE_ADDRESSV, D3DTADDRESS_WRAP);
+> 		SetSamplerState(i, D3DSALE_MAXANISOTROPY, 1);
+> 		SetSamplerState(i, D3DSALE_MINFILTER, D3DTEXF_POINT);
+> 		SetSamplerState(i, D3DSALE_MAGFILTER, D3DTEXF_POINT);
+> 		SetSamplerState(i, D3DSALE_MIPFILTER, D3DTEXF_NONE);
+290,291c294
+<         int i = 0;
+< 	for( i = 0; i < fmt_num; i++)
+---
+>         for(int i = 0; i < fmt_num; i++)
+319,320c322
+<         int i = 0;
+< 	for( i = 0; i < fmt_num; i++)
+---
+>         for(int i = 0; i < fmt_num; i++)
+394,395c396
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_LIGHT_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_LIGHT_NUM; i++)
+494a496,507
+> //		IP("MultiSampleType(%d)\n", param->present_param.MultiSampleType);
+> //		IP("SwapEffect(%d)\n", param->present_param.SwapEffect);
+> //		IP("EnableAutoDepthStencil(%d) fmt(%d)\n", 
+> //			param->present_param.EnableAutoDepthStencil, 
+> //			param->present_param.AutoDepthStencilFormat);
+> //		IP("Flags(%08x)\n", param->present_param.Flags);
+> 		ErrorLog("CreateDevice(%dx%d fmt%d cnt%d typ%d, flag%08x) failed=%s\n", 
+> 			param->present_param.BackBufferWidth, 
+> 			param->present_param.BackBufferHeight, 
+> 			param->present_param.BackBufferFormat, 
+> 			param->present_param.BackBufferCount,
+> 			param->dev_type, param->behavior_flag, GetDxError(hr).c_str());
+537d549
+< 	// Del by lark.l i20080611
+542d553
+< 	// Del by lark.l i20080611
+693a705
+> 
+699c711,714
+<     if(FAILED(D3DXCreateTextureFromFileInMemoryEx(
+---
+> #ifdef __MEM_DEBUG__
+> 	InterlockedIncrement(&::g_nDontCare);
+> #endif
+> 	HRESULT hr = D3DXCreateTextureFromFileInMemoryEx(
+714c729,730
+<         &t))) // out
+---
+> 		&t);
+>     if( FAILED(hr) ) // out
+715a732,739
+> // 		IP("D3DXCreateTextureFromFileInMemoryEx failed %d\n", hr);
+> // 		IP("data=%x, size=%u, %dx%d, mip=%d, usage=%d\n", data, data_size, width, height, mip_level, usage);
+> // 		IP("fmt=%d, pool=%d, fltr=%d, mf=%d key=%08x\n", format, pool, filter, mip_filter, colorkey);
+> // 		IP("info=%08x, pal=%08x\n", src_info, palette);
+> 
+> #ifdef __MEM_DEBUG__
+> 		InterlockedDecrement(&::g_nDontCare);
+> #endif
+717a742,744
+> #ifdef __MEM_DEBUG__
+> 	InterlockedDecrement(&::g_nDontCare);
+> #endif
+720a748,749
+> 	{
+> 		//IP("GetLevelDesc5 failed\n");
+721a751
+> 	}
+931a962,963
+> 	if(!data)
+> 		return LW_RET_FAILED;
+948a981,982
+> 	if(!data)
+> 		return LW_RET_FAILED;
+1027a1062,1064
+> #ifdef __FPS_DEBUG__
+> extern void PrintRenderState(D3DRENDERSTATETYPE state, DWORD value);
+> #endif
+1031a1069,1074
+> // #ifdef __FPS_DEBUG__
+> // 	if( state==D3DRS_CULLMODE )
+> // 		value = D3DCULL_CCW;
+> // #endif
+> 
+> 
+1034a1078,1081
+> // #ifdef __FPS_DEBUG__
+> // 		if( state==D3DRS_CULLMODE )
+> //  			PrintRenderState(state, value);
+> // #endif
+1261,1262c1308
+<     int i = 0;
+< 	for( i = 0; i < fmt_num; i++)
+---
+>     for(int i = 0; i < fmt_num; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwDeviceObject.h /c/games/top-recode/source/src/LightEngine/lwDeviceObject.h
+11c11
+< #include "lwPreDefinition.h"
+---
+> #include "lwPredefinition.h"
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwDirectoryBrowser.cpp /c/games/top-recode/source/src/LightEngine/lwDirectoryBrowser.cpp
+65c65
+< 			_snprintf_s(sub_file, _TRUNCATE, "%s%s\\%s", file_path, wfd.cFileName, file_spec);
+---
+>             _snprintf_s(sub_file, 260 ,_TRUNCATE,"%s%s\\%s", file_path, wfd.cFileName, file_spec);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwExpObj.cpp /c/games/top-recode/source/src/LightEngine/lwExpObj.cpp
+67,68c67
+<         DWORD i = 0;
+< 	for( i = 0; i < rsm.SEQUENCE_SIZE; i++)
+---
+>         for(DWORD i = 0; i < rsm.SEQUENCE_SIZE; i++)
+94c93
+< 		for( i = 0; i < LW_MAX_TEXTURESTAGE_NUM; i++)
+---
+>         for(DWORD i = 0; i < LW_MAX_TEXTURESTAGE_NUM; i++)
+119,120c118
+<             DWORD j = 0;
+< 	for( j = 0; j < p->tss_set.SEQUENCE_SIZE; j++)
+---
+>             for(DWORD j = 0; j < p->tss_set.SEQUENCE_SIZE; j++)
+142,143c140
+<         DWORD i = 0;
+< 	for( i = 0; i < rsm.SEQUENCE_SIZE; i++)
+---
+>         for(DWORD i = 0; i < rsm.SEQUENCE_SIZE; i++)
+169c166
+< 		for( i = 0; i < LW_MAX_TEXTURESTAGE_NUM; i++)
+---
+>         for(DWORD i = 0; i < LW_MAX_TEXTURESTAGE_NUM; i++)
+190,191c187
+<             DWORD j = 0;
+< 	for( j = 0; j < p->tss_set.SEQUENCE_SIZE; j++)
+---
+>             for(DWORD j = 0; j < p->tss_set.SEQUENCE_SIZE; j++)
+223a220
+> 
+225c222
+< 	for( i = 0; i < LW_MTL_RS_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MTL_RS_NUM; i++)
+290,291c287
+<     DWORD i = 0;
+< 	for( i = 0; i < num; i++)
+---
+>     for(DWORD i = 0; i < num; i++)
+307,308c303
+<     DWORD i = 0;
+< 	for( i = 0; i < num; i++)
+---
+>     for(DWORD i = 0; i < num; i++)
+459c454
+< 		_snprintf_s(buf, _TRUNCATE, "old version file, need re-export it");
+---
+>         _snprintf_s(buf, 256 ,_TRUNCATE,"old version file, need re-export it");
+783c778
+< 		_snprintf_s(buf, _TRUNCATE, "old animation file: %s, need re-export it", file);
+---
+>         _snprintf_s(buf, 256,_TRUNCATE,"old animation file: %s, need re-export it", file);
+890d884
+< 	DWORD i = 0;
+911c905
+< 			for( i = 0; i < _bone_num; i++)
+---
+>             for(DWORD i = 0; i < _bone_num; i++)
+934d927
+<     // by lsh
+1354d1346
+< 		//// added by clp
+1469,1470c1461
+<         DWORD j = 0;
+< 	for( j = 0; j < header.rs_set.SEQUENCE_SIZE; j++)
+---
+>         for(DWORD j = 0; j < header.rs_set.SEQUENCE_SIZE; j++)
+1522d1512
+< 			//// added by clp
+1601d1590
+< 			//// added by clp
+1652,1653c1641
+<             DWORD i = 0;
+< 	for( i = 0; i < info->bone_index_num; i++)
+---
+>             for(DWORD i = 0; i < info->bone_index_num; i++)
+1805,1806c1793
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1810,1811c1797
+<         DWORD j = 0;
+< 	for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+---
+>         for(DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+1862,1863c1848
+<         DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>         for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1873,1874c1858
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1876,1877c1860
+<         DWORD j = 0;
+< 	for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+---
+>         for(DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+1887c1870
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1889,1890c1872
+<         DWORD j = 0;
+< 	for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+---
+>         for(DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+1931,1932c1913
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1941c1922
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1943,1944c1924
+<         DWORD j = 0;
+< 	for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+---
+>         for(DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+1977c1957
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1985c1965
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1987,1988c1967
+<         DWORD j = 0;
+< 		for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+---
+>         for(DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+1997c1976
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1999,2000c1978
+<         DWORD j = 0;
+< 		for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+---
+>         for(DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+2033,2034c2011
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+2041,2042c2018
+<         DWORD j = 0;
+< 	for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+---
+>         for(DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+2070,2071c2046
+<     DWORD i = 0;
+< 	for( i = 0; i < num; i++)
+---
+>     for(DWORD i = 0; i < num; i++)
+2223,2224c2198
+< 	int i = 0;
+< 	for( i = 0; i < 3; i++) 
+---
+> 	for(int i = 0; i < 3; i++) 
+2226,2227c2200
+< 		int j = 0;
+< 	for( j = 0; j < 3; j++) 
+---
+> 		for(int j = 0; j < 3; j++) 
+2501,2502c2474
+<         DWORD i = 0;
+< 	for( i = 0; i < mesh_num; i++)
+---
+>         for(DWORD i = 0; i < mesh_num; i++)
+2537,2538c2509
+<         DWORD i = 0;
+< 	for( i = 0; i < box_num; i++)
+---
+>         for(DWORD i = 0; i < box_num; i++)
+2547,2548c2518
+<         DWORD i = 0;
+< 	for( i = 0; i < mesh_num; i++)
+---
+>         for(DWORD i = 0; i < mesh_num; i++)
+2593,2594c2563
+<         DWORD i = 0;
+< 	for( i = 0; i < dummy_num; i++)
+---
+>         for(DWORD i = 0; i < dummy_num; i++)
+2618,2619c2587
+<         DWORD i = 0;
+< 	for( i = 0; i < bbox_num; i++)
+---
+>         for(DWORD i = 0; i < bbox_num; i++)
+2640,2641c2608
+<     DWORD i = 0;
+< 	for( i = 0; i < mesh_num; i++)
+---
+>     for(DWORD i = 0; i < mesh_num; i++)
+2666,2667c2633
+<         DWORD i = 0;
+< 	for( i = 0; i < mesh_num; i++)
+---
+>         for(DWORD i = 0; i < mesh_num; i++)
+2693,2694c2659
+<         DWORD i = 0;
+< 	for( i = 0; i < bbox_num; i++)
+---
+>         for(DWORD i = 0; i < bbox_num; i++)
+2738,2739c2703
+<     DWORD i = 0;
+< 	for( i = 0; i < mesh_num; i++)
+---
+>     for(DWORD i = 0; i < mesh_num; i++)
+2962,2963c2926
+<     DWORD i = 0;
+< 	for( i = 0; i < obj_num; i++)
+---
+>     for(DWORD i = 0; i < obj_num; i++)
+3079,3080c3042
+<     DWORD i = 0;
+< 	for( i = 0; i < geom_obj_num-1; i++)
+---
+>     for(DWORD i = 0; i < geom_obj_num-1; i++)
+3100,3101c3062
+<     DWORD i = 0;
+< 	for( i = 0; i < geom_obj_num; i++)
+---
+>     for(DWORD i = 0; i < geom_obj_num; i++)
+3411,3412c3372
+<     DWORD i = 0;
+< 	for( i = 0; i < obj_num; i++)
+---
+>     for(DWORD i = 0; i < obj_num; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwExpObj.h /c/games/top-recode/source/src/LightEngine/lwExpObj.h
+962,963c962
+<         DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MODEL_GEOM_OBJ_NUM; i++)
+---
+>         for(DWORD i = 0; i < LW_MAX_MODEL_GEOM_OBJ_NUM; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwFile.cpp /c/games/top-recode/source/src/LightEngine/lwFile.cpp
+4a5
+> #include "MyMemory.h"
+438c439,440
+< 	//strncpy_s(buf,ofn.lpstrFile,_TRUNCATE);
+---
+> 
+> 	//strcpy_s(buf,ofn.lpstrFile);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwFileStream.cpp /c/games/top-recode/source/src/LightEngine/lwFileStream.cpp
+3c3
+< #include "lwGuidObj.h"
+---
+> #include "lwGUIDObj.h"
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwFileutil.cpp /c/games/top-recode/source/src/LightEngine/lwFileutil.cpp
+2c2
+< #include "lwfileutil.h"
+---
+> #include "lwFileutil.h"
+64d63
+< 
+155c154
+< 	//strncpy_s(buf,ofn.lpstrFile,_TRUNCATE);
+---
+> 	//strcpy_s(buf,ofn.lpstrFile);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwFileutil.h /c/games/top-recode/source/src/LightEngine/lwFileutil.h
+52c52
+< int LWUTILS_API LwGetFolderName(char *folder, HWND hwnd,const char *title,LPITEMIDLIST pid_root=0);
+---
+> int LWUTILS_API lwGetFolderName(char *folder, HWND hwnd,const char *title,LPITEMIDLIST pid_root=0);
+Only in /c/games/top-recode/source/src/MindPower3D: lwgraphicsutil.cpp
+Only in /c/games/top-recode/source/src/LightEngine: lwGraphicsUtil.cpp
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwGuidObj.cpp /c/games/top-recode/source/src/LightEngine/lwGuidObj.cpp
+2c2
+< #include "lwGuidObj.h"
+---
+> #include "lwGUIDObj.h"
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwHeap.h /c/games/top-recode/source/src/LightEngine/lwHeap.h
+117,118c117
+<     int i = 0;
+< 	for( i = 0; i < new_size; i++)
+---
+>     for(int i = 0; i < new_size; i++)
+139,140c138
+<         DWORD i = 0;
+< 	for( i = 0; i < _buf_size; i++)
+---
+>         for(DWORD i = 0; i < _buf_size; i++)
+161,162c159
+<         DWORD i = 0;
+< 	for( i = 0; i < _buf_size; i++)
+---
+>         for(DWORD i = 0; i < _buf_size; i++)
+269,270c266
+<     DWORD i = 0;
+< 	for( i = 0; i < size; i++)
+---
+>     for(DWORD i = 0; i < size; i++)
+310,311c306
+<     DWORD i = 0;
+< 	for( i = 0; i < GetHeapNum(); i++)
+---
+>     for(DWORD i = 0; i < GetHeapNum(); i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwIFunc.cpp /c/games/top-recode/source/src/LightEngine/lwIFunc.cpp
+3c3
+< #include "lwGuidObj.h"
+---
+> #include "lwGUIDObj.h"
+10c10
+< #include "lwPreDefinition.h"
+---
+> #include "lwPredefinition.h"
+620,621c620,621
+<         fscanf_s(fp, "%s\n", model_file, _TRUNCATE);
+<         _snprintf_s(path, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), model_file);
+---
+>         fscanf_s(fp, "%s\n", model_file);
+>         _snprintf_s(path, LW_MAX_PATH, _TRUNCATE,"%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), model_file);
+647c647
+<                 _snprintf_s(smti.file_name, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_TEXTURE_SCENE), tex_info->file_name);
+---
+>                 _snprintf_s(smti.file_name,LW_MAX_PATH, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_TEXTURE_SCENE), tex_info->file_name);
+693,694c693,694
+<         fscanf_s(fp, "%d\t%s\n", &handle, model_file, _TRUNCATE);
+<         _snprintf_s(path, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), model_file);
+---
+>         fscanf_s(fp, "%d\t%s\n", &handle, model_file);
+>         _snprintf_s(path, LW_MAX_PATH, _TRUNCATE,"%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), model_file);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwItem.cpp /c/games/top-recode/source/src/LightEngine/lwItem.cpp
+12a13
+> #include "MyMemory.h"
+93c94
+<         _snprintf_s( path, _TRUNCATE, "%s%s", path_info->GetPath( PATH_TYPE_MODEL_ITEM ), file );
+---
+>         _snprintf_s( path,LW_MAX_PATH, _TRUNCATE, "%s%s", path_info->GetPath( PATH_TYPE_MODEL_ITEM ), file );
+106a108,109
+> 		LG("ERROR", path);
+> 
+109a113,114
+> 		LG("ERROR", "\na1\n");
+> 
+112a118,119
+> 		LG("ERROR", "a2\n");
+> 
+170c177
+<     //_tcsncpy_s( o->_file_name, _file_name , _TRUNCATE);
+---
+>     //_tcsncpy_s( o->_file_name, _file_name );
+342,343c349
+<      DWORD i = 0;
+< 	for( i = 0; i < rtmat_num; i++ )
+---
+>     for( DWORD i = 0; i < rtmat_num; i++ )
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwIUtil.cpp /c/games/top-recode/source/src/LightEngine/lwIUtil.cpp
+74,75c74
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++)
+244,245c243
+<     // DWORD i = 0;
+< 	//for( i = 0; i < t; i++ )
+---
+>     //for( DWORD i = 0; i < t; i++ )
+290,291c288
+<     // DWORD i = 0;
+< 	//for( i = 0; i < t; i++ )
+---
+>     //for( DWORD i = 0; i < t; i++ )
+352,353c349
+<     // DWORD i = 0;
+< 	//for( i = 0; i < t; i++ )
+---
+>     //for( DWORD i = 0; i < t; i++ )
+400,401c396
+<     // DWORD i = 0;
+< 	//for( i = 0; i < t; i++ )
+---
+>     //for( DWORD i = 0; i < t; i++ )
+439,440c434
+<     // DWORD i = 0;
+< 	//for( i = 0; i < t; i++ )
+---
+>     //for( DWORD i = 0; i < t; i++ )
+479,483c473,477
+<     //_tcsncpy_s( tex_info.file_name, "boxlight2.tga" , _TRUNCATE);
+<     //_tcsncpy_s( tex_info.file_name, "shlight.tga" , _TRUNCATE);
+<     //_tcsncpy_s( tex_info.file_name, "multi009.tga" , _TRUNCATE);
+<     //@@_tcsncpy_s( tex_info.file_name, "ocean_h.08.bmp" , _TRUNCATE);
+<     //_tcsncpy_s( tex_info.file_name, "water_gsc012.BMP" , _TRUNCATE);
+---
+>     //_tcsncpy_s( tex_info.file_name, "boxlight2.tga" );
+>     //_tcsncpy_s( tex_info.file_name, "shlight.tga" );
+>     //_tcsncpy_s( tex_info.file_name, "multi009.tga" );
+>     //@@_tcsncpy_s( tex_info.file_name, "ocean_h.08.bmp" );
+>     //_tcsncpy_s( tex_info.file_name, "water_gsc012.BMP" );
+554,558c548,552
+<     //_tcsncpy_s( tex_info.file_name, "boxlight2.tga" , _TRUNCATE);
+<     //_tcsncpy_s( tex_info.file_name, "shlight.tga" , _TRUNCATE);
+<     //_tcsncpy_s( tex_info.file_name, "multi009.tga" , _TRUNCATE);
+<     //@@_tcsncpy_s( tex_info.file_name, "ocean_h.08.bmp" , _TRUNCATE);
+<     //_tcsncpy_s( tex_info.file_name, "water_gsc012.BMP" , _TRUNCATE);
+---
+>     //_tcsncpy_s( tex_info.file_name, "boxlight2.tga" );
+>     //_tcsncpy_s( tex_info.file_name, "shlight.tga" );
+>     //_tcsncpy_s( tex_info.file_name, "multi009.tga" );
+>     //@@_tcsncpy_s( tex_info.file_name, "ocean_h.08.bmp" );
+>     //_tcsncpy_s( tex_info.file_name, "water_gsc012.BMP" );
+618,619c612,613
+<     DWORD i = 1;
+< 	for( i = 1; i < 4; i++)
+---
+> #pragma message("[Waiting Note] why i=0 don't need destroy? ")
+>     for(DWORD i = 1; i < 4; i++)
+Only in /c/games/top-recode/source/src/MindPower3D: lwmath.cpp
+Only in /c/games/top-recode/source/src/LightEngine: lwMath.cpp
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwMisc.cpp /c/games/top-recode/source/src/LightEngine/lwMisc.cpp
+3a4,165
+> #include "CPerformance.h"
+> #include "MyMemory.h"
+> 
+> #define _CASE(x)	\
+> 		case(x):	\
+> 		{			\
+> 		return #x;	\
+> 		}
+> 
+> #ifdef __FPS_DEBUG__
+> string GetRenderStateName(DWORD state)
+> {
+> 	switch(state)
+> 	{
+> 	_CASE(D3DRS_ZENABLE)
+> 	_CASE(D3DRS_FILLMODE)
+> 	_CASE(D3DRS_SHADEMODE)
+> 	_CASE(D3DRS_ZWRITEENABLE)
+> 	_CASE(D3DRS_ALPHATESTENABLE)
+> 	_CASE(D3DRS_LASTPIXEL)
+> 	_CASE(D3DRS_SRCBLEND)
+> 	_CASE(D3DRS_DESTBLEND)
+> 	_CASE(D3DRS_CULLMODE)
+> 	_CASE(D3DRS_ZFUNC)
+> 	_CASE(D3DRS_ALPHAREF)
+> 	_CASE(D3DRS_ALPHAFUNC)
+> 	_CASE(D3DRS_DITHERENABLE)
+> 	_CASE(D3DRS_ALPHABLENDENABLE)
+> 	_CASE(D3DRS_FOGENABLE)
+> 	_CASE(D3DRS_SPECULARENABLE)
+> 	_CASE(D3DRS_FOGCOLOR)
+> 	_CASE(D3DRS_FOGTABLEMODE)
+> 	_CASE(D3DRS_FOGSTART)
+> 	_CASE(D3DRS_FOGEND)
+> 	_CASE(D3DRS_FOGDENSITY)
+> #ifdef LW_USE_DX8
+> 	_CASE(D3DRS_ZBIAS)
+> #endif
+> 	_CASE(D3DRS_RANGEFOGENABLE)
+> 	_CASE(D3DRS_STENCILENABLE)
+> 	_CASE(D3DRS_STENCILFAIL)
+> 	_CASE(D3DRS_STENCILZFAIL)
+> 	_CASE(D3DRS_STENCILPASS)
+> 	_CASE(D3DRS_STENCILFUNC)
+> 	_CASE(D3DRS_STENCILREF)
+> 	_CASE(D3DRS_STENCILMASK)
+> 	_CASE(D3DRS_STENCILWRITEMASK)
+> 	_CASE(D3DRS_TEXTUREFACTOR)
+> 	_CASE(D3DRS_WRAP0)
+> 	_CASE(D3DRS_WRAP1)
+> 	_CASE(D3DRS_WRAP2)
+> 	_CASE(D3DRS_WRAP3)
+> 	_CASE(D3DRS_WRAP4)
+> 	_CASE(D3DRS_WRAP5)
+> 	_CASE(D3DRS_WRAP6)
+> 	_CASE(D3DRS_WRAP7)
+> 	_CASE(D3DRS_CLIPPING)
+> 	_CASE(D3DRS_LIGHTING)
+> 	_CASE(D3DRS_AMBIENT)
+> 	_CASE(D3DRS_FOGVERTEXMODE)
+> 	_CASE(D3DRS_COLORVERTEX)
+> 	_CASE(D3DRS_LOCALVIEWER)
+> 	_CASE(D3DRS_NORMALIZENORMALS)
+> 	_CASE(D3DRS_DIFFUSEMATERIALSOURCE)
+> 	_CASE(D3DRS_SPECULARMATERIALSOURCE)
+> 	_CASE(D3DRS_AMBIENTMATERIALSOURCE)
+> 	_CASE(D3DRS_EMISSIVEMATERIALSOURCE)
+> 	_CASE(D3DRS_VERTEXBLEND)
+> 	_CASE(D3DRS_CLIPPLANEENABLE)
+> 	_CASE(D3DRS_POINTSIZE)
+> 	_CASE(D3DRS_POINTSIZE_MIN)
+> 	_CASE(D3DRS_POINTSPRITEENABLE)
+> 	_CASE(D3DRS_POINTSCALEENABLE)
+> 	_CASE(D3DRS_POINTSCALE_A)
+> 	_CASE(D3DRS_POINTSCALE_B)
+> 	_CASE(D3DRS_POINTSCALE_C)
+> 	_CASE(D3DRS_MULTISAMPLEANTIALIAS)
+> 	_CASE(D3DRS_MULTISAMPLEMASK)
+> 	_CASE(D3DRS_PATCHEDGESTYLE)
+> 	_CASE(D3DRS_DEBUGMONITORTOKEN)
+> 	_CASE(D3DRS_POINTSIZE_MAX)
+> 	_CASE(D3DRS_INDEXEDVERTEXBLENDENABLE)
+> 	_CASE(D3DRS_COLORWRITEENABLE)
+> 	_CASE(D3DRS_TWEENFACTOR)
+> 	_CASE(D3DRS_BLENDOP)
+> 
+> #ifdef LW_USE_DX8
+> 	_CASE(D3DRS_POSITIONORDER)   // NPatch position interpolation order. D3DORDER_LINEAR or D3DORDER_CUBIC (default)
+> 	_CASE(D3DRS_NORMALORDER)   // NPatch normal interpolation order. D3DORDER_LINEAR (default) or D3DORDER_QUADRATIC
+> #endif//LW_USE_DX8
+> 
+> #ifdef LW_USE_DX9
+> 	_CASE(D3DRS_POSITIONDEGREE)
+> 	_CASE(D3DRS_NORMALDEGREE)
+> 	_CASE(D3DRS_SCISSORTESTENABLE)
+> 	_CASE(D3DRS_SLOPESCALEDEPTHBIAS)
+> 	_CASE(D3DRS_ANTIALIASEDLINEENABLE)
+> 	_CASE(D3DRS_MINTESSELLATIONLEVEL)
+> 	_CASE(D3DRS_MAXTESSELLATIONLEVEL)
+> 	_CASE(D3DRS_ADAPTIVETESS_X)
+> 	_CASE(D3DRS_ADAPTIVETESS_Y)
+> 	_CASE(D3DRS_ADAPTIVETESS_Z)
+> 	_CASE(D3DRS_ADAPTIVETESS_W)
+> 	_CASE(D3DRS_ENABLEADAPTIVETESSELLATION)
+> 	_CASE(D3DRS_TWOSIDEDSTENCILMODE)
+> 	_CASE(D3DRS_CCW_STENCILFAIL)
+> 	_CASE(D3DRS_CCW_STENCILZFAIL)
+> 	_CASE(D3DRS_CCW_STENCILPASS)
+> 	_CASE(D3DRS_CCW_STENCILFUNC)
+> 	_CASE(D3DRS_COLORWRITEENABLE1)
+> 	_CASE(D3DRS_COLORWRITEENABLE2)
+> 	_CASE(D3DRS_COLORWRITEENABLE3)
+> 	_CASE(D3DRS_BLENDFACTOR)
+> 	_CASE(D3DRS_SRGBWRITEENABLE)
+> 	_CASE(D3DRS_DEPTHBIAS)
+> 	_CASE(D3DRS_WRAP8)
+> 	_CASE(D3DRS_WRAP9)
+> 	_CASE(D3DRS_WRAP10)
+> 	_CASE(D3DRS_WRAP11)
+> 	_CASE(D3DRS_WRAP12)
+> 	_CASE(D3DRS_WRAP13)
+> 	_CASE(D3DRS_WRAP14)
+> 	_CASE(D3DRS_WRAP15)
+> 	_CASE(D3DRS_SEPARATEALPHABLENDENABLE)
+> 	_CASE(D3DRS_SRCBLENDALPHA)
+> 	_CASE(D3DRS_DESTBLENDALPHA)
+> 	_CASE(D3DRS_BLENDOPALPHA)
+> 	_CASE(D3DRS_FORCE_DWORD)
+> #endif//LW_USE_DX9
+> 	}
+> 	return "";
+> }
+> #endif
+> 
+> string GetDxError(HRESULT hr)
+> {
+> 	switch(hr)
+> 	{
+> 	_CASE(D3DERR_WRONGTEXTUREFORMAT)
+> 	_CASE(D3DERR_UNSUPPORTEDCOLOROPERATION)
+> 	_CASE(D3DERR_UNSUPPORTEDCOLORARG)
+> 	_CASE(D3DERR_UNSUPPORTEDALPHAOPERATION)
+> 	_CASE(D3DERR_UNSUPPORTEDALPHAARG)
+> 	_CASE(D3DERR_TOOMANYOPERATIONS)
+> 	_CASE(D3DERR_CONFLICTINGTEXTUREFILTER)
+> 	_CASE(D3DERR_UNSUPPORTEDFACTORVALUE)
+> 	_CASE(D3DERR_CONFLICTINGRENDERSTATE)
+> 	_CASE(D3DERR_UNSUPPORTEDTEXTUREFILTER)
+> 	_CASE(D3DERR_CONFLICTINGTEXTUREPALETTE)
+> 	_CASE(D3DERR_DRIVERINTERNALERROR)
+> 	_CASE(D3DERR_NOTFOUND)
+> 	_CASE(D3DERR_MOREDATA)
+> 	_CASE(D3DERR_DEVICELOST)
+> 	_CASE(D3DERR_DEVICENOTRESET)
+> 	_CASE(D3DERR_NOTAVAILABLE)
+> 	_CASE(D3DERR_OUTOFVIDEOMEMORY)
+> 	_CASE(D3DERR_INVALIDDEVICE)
+> 	_CASE(D3DERR_INVALIDCALL)
+> 	_CASE(D3DERR_DRIVERINVALIDCALL)
+> 	}
+> 	return "";
+> }
+9a172,215
+> #ifdef __FPS_DEBUG__
+> void PrintAllRenderState(lwRenderStateAtom* rsa_seq, DWORD num)
+> {
+> 	if( num==0 )
+> 		return;
+> 
+> 	int line = 0;
+> 	lwRenderStateAtom* p;
+> 	for(DWORD i = 0; i < num; i++)
+> 	{
+> 		p = &rsa_seq[i];
+> 
+> 		if(p->state == LW_INVALID_INDEX)
+> 		{
+> 			break;
+> 		}
+> 
+> 		line ++;
+> 		if( line==1 )
+> 		{
+> 			IP("-------------------------------------\n");
+> 		}
+> 
+> 		if( ((int)p->value0)<0 || ((int)p->value0)>10 )
+> 		{
+> 			IP("RenderState(%s, 0x%08x)\n", GetRenderStateName(p->state).c_str(), p->value0);
+> 			continue;
+> 		}
+> 
+> 		IP("RenderState(%s, %d)\n", GetRenderStateName(p->state).c_str(), p->value0);
+> 	}
+> }
+> void PrintRenderState(D3DRENDERSTATETYPE state, DWORD value)
+> {
+> 	if( ((int)value)<0 || ((int)value)>10 )
+> 	{
+> 		IP("SetRenderState(%s, 0x%08x)\n", GetRenderStateName(state).c_str(), value);
+> 		return;
+> 	}
+> 
+> 	IP("SetRenderState(%s, %d)\n", GetRenderStateName(state).c_str(), value);
+> }
+> #endif
+> 
+108,109c314,318
+<     DWORD i = 0;
+< 	for( i = 0; i < num; i++)
+---
+> #ifdef __FPS_DEBUG__
+>  	//PrintAllRenderState(rsa_seq, num);
+> #endif
+> 
+>     for(DWORD i = 0; i < num; i++)
+128,129c337
+<     DWORD i = 0;
+< 	for( i = 0; i < num; i++)
+---
+>     for(DWORD i = 0; i < num; i++)
+149,150c357
+<     DWORD i = 0;
+< 	for( i = 0; i < num; i++)
+---
+>     for(DWORD i = 0; i < num; i++)
+169,170c376
+<     DWORD i = 0;
+< 	for( i = 0; i < num; i++)
+---
+>     for(DWORD i = 0; i < num; i++)
+233,234c439
+<         DWORD i = 0;
+< 	for( i = 0; i < _rsa_num; i++)
+---
+>         for(DWORD i = 0; i < _rsa_num; i++)
+257,258c462
+<     DWORD i = 0;
+< 	for( i = 0; i < _rsa_num; i++)
+---
+>     for(DWORD i = 0; i < _rsa_num; i++)
+299d502
+< 
+304,305c507
+<     DWORD i = 0;
+< 	for( i = 0; i < _rsa_num; i++)
+---
+>     for(DWORD i = 0; i < _rsa_num; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwMisc.h /c/games/top-recode/source/src/LightEngine/lwMisc.h
+37,38c37
+<     DWORD i = 0;
+< 	for( i = 0; i < type_value::SEQUENCE_SIZE; i++)
+---
+>     for(DWORD i = 0; i < type_value::SEQUENCE_SIZE; i++)
+73c72
+< 	LW_RESULT AddStateToSet(DWORD state, DWORD value); //添加 RenderState 如果渲染状态表满了，则返回失败，最多8个 
+---
+> 	LW_RESULT AddStateToSet(DWORD state, DWORD value); //��� RenderState �����Ⱦ״̬�����ˣ��򷵻�ʧ�ܣ����8�� 
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwModel.cpp /c/games/top-recode/source/src/LightEngine/lwModel.cpp
+11c11,12
+< #include "lwPreDefinition.h"
+---
+> #include "lwPredefinition.h"
+> #include "MyMemory.h"
+121c122
+<         _snprintf_s(path, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), file);
+---
+>         _snprintf_s(path, LW_MAX_PATH, _TRUNCATE,"%s%s", path_info->GetPath(PATH_TYPE_MODEL_SCENE), file);
+198c199
+<             strncpy_s(res.file_name, path, _TRUNCATE);
+---
+>             _tcsncpy_s(res.file_name, path, _TRUNCATE);
+270c271
+<     strncpy_s(_file_name, o->_file_name, _TRUNCATE);
+---
+>     _tcsncpy_s(_file_name, o->_file_name, _TRUNCATE);
+301a303
+> //void* g_lwModel = NULL;
+308a311,316
+> // 	if( g_lwModel )
+> // 	{
+> // 		if( this!=g_lwModel )
+> // 			return LW_RET_OK;
+> // 	}
+> 
+346a355
+> //extern void* g_lwPrimitive;
+398a408,415
+> // 		if( g_lwPrimitive )
+> // 		{
+> // 			if( p!=g_lwPrimitive )
+> // 				continue;
+> // 			else if( NULL==g_lwModel )
+> // 				g_lwModel = this;
+> // 		}
+> 
+855d871
+< //__ret:
+Only in /c/games/top-recode/source/src/MindPower3D: lwModelObject.cpp
+Only in /c/games/top-recode/source/src/MindPower3D: lwModelObject.h
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwNodeObject.cpp /c/games/top-recode/source/src/LightEngine/lwNodeObject.cpp
+187,188c187
+<         DWORD i = 0;
+< 	for( i = 0; i < _mtltex_agent_seqsize; i++)
+---
+>         for(DWORD i = 0; i < _mtltex_agent_seqsize; i++)
+214,215c213
+<     DWORD j = 0;
+< 	for( j = 0; j < bs_num; j++)
+---
+>     for(DWORD j = 0; j < bs_num; j++)
+470,471c468
+<     DWORD i = 0;
+< 	for( i = 0; i < _mtltex_agent_seqsize; i++)
+---
+>     for(DWORD i = 0; i < _mtltex_agent_seqsize; i++)
+502,503c499
+<         DWORD j = 0;
+< 	for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+---
+>         for(DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++)
+618,619c614
+<     DWORD i = 0;
+< 	for( i = 0; i < src_mtltex_agent_seqsize; i++)
+---
+>     for(DWORD i = 0; i < src_mtltex_agent_seqsize; i++)
+667,668c662
+<         DWORD i = 0;
+< 	for( i = 0; i < anim_ctrl_num; i++)
+---
+>         for(DWORD i = 0; i < anim_ctrl_num; i++)
+840,841c834
+<     DWORD i = 0;
+< 	for( i = 0; i < _mtltex_agent_seqsize; i++)
+---
+>     for(DWORD i = 0; i < _mtltex_agent_seqsize; i++)
+993,994c986
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1004,1005c996
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+1511,1512c1502
+<     DWORD i = 0;
+< 	for( i = 0; i < v_num; i++)
+---
+>     for(DWORD i = 0; i < v_num; i++)
+2267,2268c2257
+<     DWORD i = 0;
+< 	for( i = 0; i < n; i++)
+---
+>     for(DWORD i = 0; i < n; i++)
+2400,2401c2389
+<     DWORD i = 0;
+< 	for( i = 0; i < l; i++)
+---
+>     for(DWORD i = 0; i < l; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwObjectMethod.cpp /c/games/top-recode/source/src/LightEngine/lwObjectMethod.cpp
+14d13
+< // Added by clp
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwObjectPool.h /c/games/top-recode/source/src/LightEngine/lwObjectPool.h
+206,207c206
+<      DWORD i = 0;
+< 	for( i = 0; i < POOL_SIZE; i++ ) 
+---
+>     for( DWORD i = 0; i < POOL_SIZE; i++ ) 
+219d217
+< typedef lwObjectPool< void*, 2048 > lwObjectPoolVoidPtr2048;
+223,225d220
+< typedef lwObjectPool< void*, 102400 > lwObjectPoolVoidPtr102400;
+< typedef lwObjectPool< DWORD, 10240 > lwObjectPoolDword10240;
+< typedef lwObjectPool< DWORD, 40960 > lwObjectPoolDword40960;
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwPhysique.cpp /c/games/top-recode/source/src/LightEngine/lwPhysique.cpp
+14a15,16
+> #include "MyMemory.h"
+> #include "CPerformance.h"
+89c91
+< 	_snprintf_s( path, _TRUNCATE, "%s%s", "model\\character\\", file );
+---
+> 	_snprintf_s( path, LW_MAX_PATH,_TRUNCATE, "%s%s", "model\\character\\", file );
+113c115
+< 	_snprintf_s( path, _TRUNCATE, "%s%s", "animation\\", file );
+---
+> 	_snprintf_s( path, LW_MAX_PATH, _TRUNCATE,"%s%s", "animation\\", file );
+220,221c222
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+265a267,271
+> /*------------------------------------------------------------------
+>    这些 TInit TBegin TEnd 用于检测代码段间的效能，Release不起作用 
+>    这段代码主要在于检测创建人物时的耗时，未优化完 by Waiting
+> ------------------------------------------------------------------*/
+> //TInit
+292c298
+<     _snprintf_s( path, _TRUNCATE, "%s%s", path_info->GetPath( PATH_TYPE_ANIMATION ), file );
+---
+>     _snprintf_s( path, LW_MAX_PATH,_TRUNCATE, "%s%s", path_info->GetPath( PATH_TYPE_ANIMATION ), file );
+335c341
+< 			_snprintf_s( szData, _TRUNCATE, "Load bone file error!%s.", path );
+---
+> 			_snprintf_s( szData, 128, _TRUNCATE,"Load bone file error!%s.", path );
+339a346
+> //TBegin
+343a351
+> // 			IP("LoadBone: %s\n",  file );
+345a354,355
+> 			{
+> 				//TEnd
+347a358,360
+> 			g_GeomManager.AttachBoneData(file, i_data);
+> 		}
+> //TEnd
+348a362,363
+> 		{
+> 			//TEnd
+350c365,366
+< 
+---
+> 		}
+> //TBegin
+351a368,369
+> 		{
+> 			//TEnd
+353c371,372
+< 
+---
+> 		}
+> //TEnd
+367a387
+> //TEnd
+374a395
+> 		//TBegin
+376a398
+> 		//TEnd
+378d399
+< 
+413,414c434
+<      DWORD j = 0;
+< 	for( j = 0; j < info->mtl_num; j++ )
+---
+>     for( DWORD j = 0; j < info->mtl_num; j++ )
+427,428c447
+<          DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_TEXTURESTAGE_NUM; i++ )
+---
+>         for( DWORD i = 0; i < LW_MAX_TEXTURESTAGE_NUM; i++ )
+520c539
+<     _snprintf_s( path, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_CHARACTER), file );
+---
+>     _snprintf_s( path, LW_MAX_PATH, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_MODEL_CHARACTER), file );
+532d550
+< 
+535a554
+> //IP("LoadPrimitive: %s\n", path);
+577,578c596
+<      DWORD j = 0;
+< 	for( j = 0; j < pInfo->mtl_num; j++ )
+---
+>     for( DWORD j = 0; j < pInfo->mtl_num; j++ )
+591,592c609
+<          DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_TEXTURESTAGE_NUM; i++ )
+---
+>         for( DWORD i = 0; i < LW_MAX_TEXTURESTAGE_NUM; i++ )
+599c616
+<             _snprintf_s( path, _TRUNCATE, "%s%s", tex_path, tex_info->file_name );
+---
+>             _snprintf_s( path, LW_MAX_PATH, _TRUNCATE ,"%s%s", tex_path, tex_info->file_name );
+711,712c728
+<          DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>         for( DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+734,735c750
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+783,784c798
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+795a810,813
+>             /*---------------------------------------------------------------------------
+>               保存iter的方法，能省掉3次的查找，虽然这个变量大部分都没有用到。。。
+>             ---------------------------------------------------------------------------*/
+> 			IndexColourFilterPairList::iterator it = mIndexColourFilterList.find( i );
+797c815
+< 			if( mIndexColourFilterList.find( i ) != mIndexColourFilterList.end() )
+---
+> 			if( it != mIndexColourFilterList.end() )
+804,805c822
+< 					texture = _res_mgr->getMonochromaticTexture( mIndexColourFilterList[ i ].first,
+< 						mIndexColourFilterList[ i ].second );
+---
+> 					texture = _res_mgr->getMonochromaticTexture( (*it).second.first, (*it).second.second );
+821c838
+< 			if( mIndexColourFilterList.find( i ) != mIndexColourFilterList.end() )
+---
+> 			if( it != mIndexColourFilterList.end() )
+850,851c867
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+887,888c903
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+946,947c961
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++)
+958,959c972
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwPhysique.h /c/games/top-recode/source/src/LightEngine/lwPhysique.h
+44a45,48
+>     //保存已经载入的Bone数据索引，避免重复载入
+>     //目的:解决创建人物时耗时过长的问题
+> 	inline void AttachBoneData(const char* file, lwIAnimDataBone* pBone) { m_AnimDataMap[file] = pBone; }
+> 
+127c131
+< 	virtual bool isLoaded() { return _end && _count == 0; }
+---
+> 	virtual bool isLoaded() { return true;/*_end && _count == 0;*/ }
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwPoseCtrl.cpp /c/games/top-recode/source/src/LightEngine/lwPoseCtrl.cpp
+3a4
+> #include "CPerformance.h"
+5a7,15
+> #ifdef __MAXEXP__ //Max导出插件
+> #define RealFps	0	//固定使用每秒30帧
+> #define g_fFrameRate 1.0f
+> #else
+> #include "MPRender.h"
+> extern MINDPOWER_API float g_fFrameRate;
+> #define RealFps g_Render.IsRealFPS()
+> #endif
+> 
+107a118
+> extern BOOL g_bMyTest;
+140c151,153
+<             while(cur_frame < 0.0f)
+---
+> 			// 			if( g_bMyTest )
+> 			// 				IP("obj(%x) cur_frame=%f\n",(DWORD)this, cur_frame);
+> 			do
+143a157
+> 			while(cur_frame < 0.0f);
+148a163,165
+> 		if( RealFps )
+> 			next_frame = cur_frame + velocity * g_fFrameRate;
+> 		else
+172a190,195
+> 	// 	if( g_bMyTest )
+> 	// 	{
+> 	// 		if( _frame_num!=31 )
+> 	// 			goto __ret;
+> 	// 	}
+> 
+270a294,296
+> 		if( RealFps )
+> 			cur_frame -= info->velocity * g_fFrameRate;
+> 		else
+272c298
+<         assert(cur_frame >= 0.0f);
+---
+> 		cur_frame = max(cur_frame, 0.0f); //避免出現负帧 
+275a302,304
+> 		if( RealFps )
+> 			cur_frame -= info->velocity * g_fFrameRate;
+> 		else
+279a309
+> 			//			IP("Minus Looping\n"); //会出現这种情况吗？ 需要验证
+305c335
+<         if((cur_frame > (l - info->velocity)) && (cur_frame <= l))
+---
+> 		if( RealFps )
+306a337
+> 			if((cur_frame > (l - info->velocity * g_fFrameRate)) && (cur_frame <= l))
+307a339,340
+> 			else if((cur_frame >= 0.0f) && (cur_frame < info->velocity * g_fFrameRate))
+> 				key_type = KEYFRAME_TYPE_BEGIN;
+309c342
+<         else if((cur_frame >= 0.0f) && (cur_frame < info->velocity))
+---
+> 		else
+310a344,346
+> 			if((cur_frame > (l - info->velocity)) && (cur_frame <= l))
+> 				key_type = KEYFRAME_TYPE_END;
+> 			else if((cur_frame >= 0.0f) && (cur_frame < info->velocity))
+328,329c364
+<     DWORD i = 0;
+< 	for( i = 0; i < pi->key_frame_num; i++)
+---
+> 	for(DWORD i = 0; i < pi->key_frame_num; i++)
+363c398
+<     DWORD i;
+---
+> 	int i;
+386c421
+< 			_snprintf_s(buf, _TRUNCATE, "CharacterAction.tx table error!\n" \
+---
+> 			_snprintf_s(buf, 256,_TRUNCATE, "CharacterAction.tx table error!\n" \
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwPoseCtrl.h /c/games/top-recode/source/src/LightEngine/lwPoseCtrl.h
+13d12
+< // by lsh
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwPreDefinition.h /c/games/top-recode/source/src/LightEngine/lwPreDefinition.h
+47c47
+< #define USE_TEXLOG_MGR
+---
+> //#define USE_TEXLOG_MGR
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwPrimitive.cpp /c/games/top-recode/source/src/LightEngine/lwPrimitive.cpp
+63,64c63
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+105,106c104
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+337,338c335
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+369,370c366
+<          DWORD j = 0;
+< 	for( j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++ )
+---
+>         for( DWORD j = 0; j < LW_MAX_TEXTURESTAGE_NUM; j++ )
+456,457c452
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+516,517c511
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+528,529c522
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++)
+552,553c545
+<         DWORD i = 0;
+< 	for( i = 0; i < anim_ctrl_num; i++)
+---
+>         for(DWORD i = 0; i < anim_ctrl_num; i++)
+649a642,644
+> //extern void* g_lwAnimCtrlAgent;
+> //void* g_lwPrimitive = NULL;
+> //extern __declspec(dllimport) int g_nTemp;
+664a660,669
+> // 	if( _anim_agent && _anim_agent==g_lwAnimCtrlAgent )
+> // 	{
+> // 		if( g_lwPrimitive==NULL )
+> // 			g_lwPrimitive = this;
+> // 	}
+> // 	else if( g_lwAnimCtrlAgent && _anim_agent )
+> // 		goto __addr_ret_ok;
+> //	else if( g_nTemp )
+> //		goto __addr_ret_ok;
+> 
+671,672c676
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+781,782c785
+<      DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+---
+>     for( DWORD i = 0; i < LW_MAX_SUBSET_NUM; i++ )
+904,905c907
+<     DWORD i = 0;
+< 	for( i = 0; i < n; i++)
+---
+>     for(DWORD i = 0; i < n; i++)
+925a928,930
+> 	if(!obj)
+> 		return LW_RET_FAILED;
+> 
+942,943c947
+<     DWORD i = 0;
+< 	for( i = 0; i < n; i++)
+---
+>     for(DWORD i = 0; i < n; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwPrimitiveHelper.cpp /c/games/top-recode/source/src/LightEngine/lwPrimitiveHelper.cpp
+134,135c134
+<      DWORD i = 0;
+< 	for( i = 0; i < 24; i++ )
+---
+>     for( DWORD i = 0; i < 24; i++ )
+149,150c148
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+166,167c164
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+213,214c210
+<     DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+226c222
+< 	for( i = 0; i < vert_num; i++ )
+---
+>     for( DWORD i = 0; i < vert_num; i++ )
+253,254c249
+<      DWORD j = 0;
+< 	for( j = 0; j < _obj_num; j++ )
+---
+>     for( DWORD j = 0; j < _obj_num; j++ )
+300,301c295
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+335,336c329
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+404,405c397
+<              DWORD j = 0;
+< 	for( j = 0; j <= default_seg; j++ ) 
+---
+>             for( DWORD j = 0; j <= default_seg; j++ ) 
+450c442
+< 	for( i = 0; i < vert_num; i++ )
+---
+>     for( DWORD i = 0; i < vert_num; i++ )
+481,482c473
+<      DWORD j = 0;
+< 	for( j = 0; j < _obj_num; j++ )
+---
+>     for( DWORD j = 0; j < _obj_num; j++ )
+529,530c520
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+564,565c554
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+593,594c582
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+753,754c741
+<      DWORD k = 0;
+< 	for( k = 0; k < _obj_num; k++ )
+---
+>     for( DWORD k = 0; k < _obj_num; k++ )
+779,780c766
+<          DWORD i = 0;
+< 	for( i = 0; i < hmi->face_num; i++ )
+---
+>         for( DWORD i = 0; i < hmi->face_num; i++ )
+842,843c828
+<      DWORD k = 0;
+< 	for( k = 0; k < _obj_num; k++ )
+---
+>     for( DWORD k = 0; k < _obj_num; k++ )
+857,858c842
+<          DWORD i = 0;
+< 	for( i = 0; i < hmi->face_num; i++ )
+---
+>         for( DWORD i = 0; i < hmi->face_num; i++ )
+860,861c844
+<              DWORD j = 0;
+< 	for( j = 0; j < 3; j++ )
+---
+>             for( DWORD j = 0; j < 3; j++ )
+910,911c893
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+940,941c922
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+951,952c932
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+998,999c978
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+1011c990
+< 	for( i = 0; i < vert_num; i++ )
+---
+>     for( DWORD i = 0; i < vert_num; i++ )
+1038,1039c1017
+<      DWORD j = 0;
+< 	for( j = 0; j < _obj_num; j++ )
+---
+>     for( DWORD j = 0; j < _obj_num; j++ )
+1081,1082c1059
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+1098,1099c1075
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+1116,1117c1092
+<      DWORD i = 0;
+< 	for( i = 0; i < _obj_num; i++ )
+---
+>     for( DWORD i = 0; i < _obj_num; i++ )
+1384,1385c1359
+<         DWORD i = 0;
+< 	for( i = 0; i < a->mesh_num; i++)
+---
+>         for(DWORD i = 0; i < a->mesh_num; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwRenderCtrlEmb.cpp /c/games/top-recode/source/src/LightEngine/lwRenderCtrlEmb.cpp
+63,64c63
+<     DWORD i = 0;
+< 	for( i = 0; i < animobj_num; i++)
+---
+>     for(DWORD i = 0; i < animobj_num; i++)
+116,117c115
+<     DWORD i = 0;
+< 	for( i = 0; i < animobj_num; i++)
+---
+>     for(DWORD i = 0; i < animobj_num; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwResourceMgr.cpp /c/games/top-recode/source/src/LightEngine/lwResourceMgr.cpp
+26c26
+< 
+---
+> #include "CPerformance.h"
+386c386
+<             _snprintf_s(_file_name, _TRUNCATE, "%s%s", tex_path, info->file_name);
+---
+>             _snprintf_s(_file_name, LW_MAX_PATH , _TRUNCATE ,"%s%s", tex_path, info->file_name);
+486a487,488
+> 		{
+> 			//IP("LoadSystemMemory failed\n");
+488a491
+>     }
+490d492
+< 	// added by clp
+494a497
+> 		//IP("TextureData(%s) pool=%d\n", _file_name, _pool);
+511a515
+> 			//IP("CreateTextureFromFileInMemory failed\n");
+516a521,522
+> 		{
+> 			//IP("GetLevelDesc failed\n");
+517a524
+> 		}
+538a546,547
+> 		{
+> 			//IP("_file_name len=0\n");
+539a549
+> 		}
+553c563
+<         //_tcsncpy_s(info.file_name, _file_name, _TRUNCATE);
+---
+>         //_tcsncpy_s(info.file_name, _file_name);
+573a584,585
+> 		{
+> 			//IP("QuerySysMemTex failed\n");
+574a587
+> 		}
+587a601,602
+> 			{
+> 				//IP("GetSysMemTex failed\n");
+588a604
+> 			}
+608a625,626
+> 			{
+> 				//IP("RegisterSysMemTex failed\n");
+609a628
+> 			}
+611a631,632
+> 			{
+> 				//IP("GetSysMemTex2 failed\n");
+612a634
+> 			}
+654a677,685
+> 		//由最低配置512M内存创建贴图失败引申的解决方案 
+> 		//使用D3DPOOL_DEFAULT创建的贴图放在显存，当装置丢失时这些资料会Lost，需要重新加载
+> 		//但是那个啥没有做这方面的工作, 这就解释了为什么进入屏幕保护再切回来时,UI很多东西都不见了, 包括2M内存的机器也会发生
+> 		//改用 D3DPOOL_MANAGED会先在系统内存创建，当需要时复制一份到显存，由D3D Runtime 完成同步
+> 		//当显存不够用, MANAGED最先被移出, 而且因为有同步机制在, MANAGED 不适合用在频繁更新的贴图(例如RenderTarget,Lock)
+> 		//因此如果发现这个修改严重造成客户端效率问题,应找出该贴图,特殊处理
+> 		//IP("CheckDDS(%s) pool=%d\n", _file_name, _pool);
+> 		if( _pool==D3DPOOL_DEFAULT )
+> 			_pool = D3DPOOL_MANAGED; 
+671a703
+> 			//IP("CreateTextureFromFileInMemory2 failed\n");
+676a709,710
+> 		{
+> 			//IP("GetLevelDesc3 failed\n");
+677a712
+> 		}
+698c733
+< #else
+---
+> #else//not USE_DDS_FILE
+707c742
+<             _tcsncpy_s(smti.file_name, _file_name, _TRUNCATE);
+---
+>             _tcsncpy_s(smti.file_name, _file_name);
+726c761
+< 
+---
+> #ifndef USE_DDS_FILE
+727a763
+> #endif
+738a775
+> 			//IP("Query(%s) pool=%d\n", _file_name, _pool);
+755a793
+> 				//IP("CreateTextureFromFileInMemory3 failed\n");
+760a799,800
+> 			{
+> 				//IP("GetLevelDesc4 failed\n");
+761a802
+> 			}
+798a840
+> 				//IP("D3DXCreateTextureFromFileEx failed\n");
+867a910,911
+> 		{
+> 			//IP("CreateTexture failed\n");
+869a914
+>     }
+876a922
+> 	_state |= RES_STATE_LOADTEST;
+879d924
+<     _state |= RES_STATE_LOADTEST;
+882,883c927,932
+<         lwMessageBox("load texture file error with: (%d) %s", ret, this->_file_name);
+< 		
+---
+> 		//if( dev_obj && dev_obj->GetDevice() )
+> 		{
+> 			//IP("TestCooperativeLevel: (%d)\n", dev_obj->GetDevice()->TestCooperativeLevel());
+> 		}
+> 		//IP("load texture file error with: (%d) %s\n", ret, this->_file_name);
+>         lwMessageBox("load texture file error with: (%d) %s\n", ret, this->_file_name);
+1182a1232,1245
+> //关于狂野竞技场的调试代码，在这里锁定了模型物件，正式代码已写在 AddStateToSet 函式 
+> // 	if( *info->vertex_seq==lwVector3(-50,-50,0) || *info->vertex_seq==lwVector3(-85,85,0) )
+> // 	{
+> // 		for(int i=0; i<LW_MESH_RS_NUM; i++)
+> // 		{
+> // 			if( info->rs_set[i].state==LW_INVALID_INDEX )
+> // 			{
+> // 				RSA_VALUE(&_mesh_info.rs_set[i], D3DRS_ZBIAS, 1);
+> // 				_rsa_0.SetStateValue(i, D3DRS_ZBIAS, 1);
+> // 				break;
+> // 			}
+> // 		}
+> // 	}
+> 
+1486c1549
+<     if(!(_state & RES_STATE_VIDEOMEMORY) && (_state | RES_STATE_INIT))
+---
+>     if(!(_state & RES_STATE_VIDEOMEMORY) )
+1487a1551
+> 		//IP("Mesh(%08x) file(%s) state=%08x\n", this, _res_file.file_name, _state);
+1840,1841c1904
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+1906,1907c1969
+<     DWORD j = 0;
+< 	for( j = 0; j < LW_MAX_MTL_TEX_NUM; j++)
+---
+>     for(DWORD j = 0; j < LW_MAX_MTL_TEX_NUM; j++)
+1931,1932c1993
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+2002,2003c2063
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+2065,2066c2125,2127
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+> #pragma message("[Waiting Note] here crash? ")
+> 
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+2175,2176c2236
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+2200c2260
+< 	for( i = 0; i < _rsa_0.GetStateNum(); i++)
+---
+>     for(DWORD i = 0; i < _rsa_0.GetStateNum(); i++)
+2264,2265c2324
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+2302,2303c2361
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+2366,2367c2424
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+2383,2384c2440
+<     DWORD i = 0;
+< 	for( i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+---
+>     for(DWORD i = 0; i < LW_MAX_MTL_TEX_NUM; i++)
+2548,2549c2604
+<     DWORD i = 0;
+< 	for( i = 0; i < _rs_set.SEQUENCE_SIZE; i++)
+---
+>     for(DWORD i = 0; i < _rs_set.SEQUENCE_SIZE; i++)
+2572,2573c2627
+<     DWORD i = 0;
+< 	for( i = 0; i < _rs_set.SEQUENCE_SIZE; i++)
+---
+>     for(DWORD i = 0; i < _rs_set.SEQUENCE_SIZE; i++)
+2620,2621c2674
+<     DWORD i = 0;
+< 	for( i = 0; i < obj_num; i++)
+---
+>     for(DWORD i = 0; i < obj_num; i++)
+2629c2682
+< 	for( i = 0; i < obj_num; i++)
+---
+>     for(DWORD i = 0; i < obj_num; i++)
+2677c2730
+<     _tcsncpy_s(o->file_name, info->file_name, _TRUNCATE);
+---
+>     _tcsncpy_s(o->file_name, info->file_name);
+2749,2750c2802
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+2774,2775c2826
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+2885,2886c2936
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+2940,2941c2990
+<     DWORD i = 0;
+< 	for( i = 0; num > 0; i++)
+---
+>     for(DWORD i = 0; num > 0; i++)
+2985,2986c3034
+<     DWORD i = 0;
+< 	for( i = 0; i < THREAD_POOL_SIZE; i++)
+---
+>     for(DWORD i = 0; i < THREAD_POOL_SIZE; i++)
+2994,2995c3042
+<         DWORD j = 0;
+< 	for( j = 0; j < ci[i][0]; j++)
+---
+>         for(DWORD j = 0; j < ci[i][0]; j++)
+2998c3045
+<             LG("threadid", "%d:%s\n", id, "MindPower::LoadResource Thread");
+---
+> //          LG("threadid", "%d:%s\n", id, "MindPower::LoadResource Thread");
+3004c3051
+< 	for( i = 0; i < CRITICALSECTION_SEQ_SIZE; i++)
+---
+>     for(DWORD i = 0; i < CRITICALSECTION_SEQ_SIZE; i++)
+3017,3018c3064
+<     DWORD i = 0;
+< 	for( i = 0; i < THREAD_POOL_SIZE; i++)
+---
+>     for(DWORD i = 0; i < THREAD_POOL_SIZE; i++)
+3029c3075
+< 	for( i = 0; i < CRITICALSECTION_SEQ_SIZE; i++)
+---
+>     for(DWORD i = 0; i < CRITICALSECTION_SEQ_SIZE; i++)
+3163,3164c3209
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+3182,3183c3227
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+3202,3203c3246
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+3332,3343c3375,3376
+<     LW_RESULT ret = LW_RET_FAILED;
+< 
+<     lwMeshAgent* o = NULL;
+<     
+<     if((o = LW_NEW(lwMeshAgent(this))) == NULL)
+<         goto __ret;
+< 
+<     *ret_obj = o;
+< 
+<     ret = LW_RET_OK;
+< __ret:
+<     return ret;
+---
+>     *ret_obj = LW_NEW(lwMeshAgent(this));
+> 	return (*ret_obj)==NULL ? LW_RET_FAILED : LW_RET_OK;
+3344a3378,3381
+> /*---------------------------------------------------------------------------
+>    下面3个函数修改后，能产生更快速的汇编代码 by Waiting
+>    但实际上，仍然不满意，如果这些函数是inline，可以省去开堆栈的时间
+> ---------------------------------------------------------------------------*/
+3347,3359c3384,3385
+<     LW_RESULT ret = LW_RET_FAILED;
+< 
+<     lwMtlTexAgent* o = NULL;
+<     
+<     if((o = LW_NEW(lwMtlTexAgent(this))) == NULL)
+<         goto __ret;
+< 
+<     *ret_obj = o;
+< 
+<     ret = LW_RET_OK;
+< __ret:
+<     return ret;
+< 
+---
+> 	*ret_obj = LW_NEW(lwMtlTexAgent(this));
+>     return (*ret_obj)==NULL ? LW_RET_FAILED : LW_RET_OK;
+3363,3368c3389,3390
+<     lwIRenderCtrlAgent* o = LW_NEW(lwRenderCtrlAgent(this));
+<     if(o == NULL)
+<         return LW_RET_FAILED;
+< 
+<     *ret_obj = o;
+<     return LW_RET_OK;
+---
+>     *ret_obj = LW_NEW(lwRenderCtrlAgent(this));
+>     return (*ret_obj)==NULL ? LW_RET_FAILED : LW_RET_OK;
+3373,3378c3395,3396
+<     lwIAnimCtrlAgent* o = LW_NEW(lwAnimCtrlAgent(this));
+<     if(o == NULL)
+<         return LW_RET_FAILED;
+< 
+<     *ret_obj = o;
+<     return LW_RET_OK;
+---
+>     *ret_obj = LW_NEW(lwAnimCtrlAgent(this));
+> 	return (*ret_obj)==NULL ? LW_RET_FAILED : LW_RET_OK;
+3387d3404
+< 
+4174c4191
+< 	size_t width, size_t height )
+---
+> 	UINT width, UINT height )
+4201,4203c4218,4219
+< 		size_t* writer = reinterpret_cast < size_t* > ( lockedRect.pBits );
+< 		 size_t y = 0;
+< 	for( y = 0; y < height; ++y )
+---
+> 		UINT* writer = reinterpret_cast < UINT* > ( lockedRect.pBits );
+> 		for( UINT y = 0; y < height; ++y )
+4205c4221
+< 			size_t offset = y * width;
+---
+> 			UINT offset = y * width;
+4207,4208c4223
+< 			 size_t x = 0;
+< 	for( x = 0; x < width; ++x )
+---
+> 			for( UINT x = 0; x < width; ++x )
+4252,4254c4267,4268
+< 		size_t* writer = reinterpret_cast < size_t* > ( lockedRect.pBits );
+< 		 size_t y = 0;
+< 	for( y = 0; y < height; ++y )
+---
+> 		UINT* writer = reinterpret_cast < UINT* > ( lockedRect.pBits );
+> 		for( UINT y = 0; y < height; ++y )
+4256c4270
+< 			size_t offset = y * width;
+---
+> 			UINT offset = y * width;
+4258,4259c4272
+< 			 size_t x = 0;
+< 	for( x = 0; x < width; ++x )
+---
+> 			for( UINT x = 0; x < width; ++x )
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwResourceMgr.h /c/games/top-recode/source/src/LightEngine/lwResourceMgr.h
+13c13
+< #include "lwPreDefinition.h"
+---
+> #include "lwPredefinition.h"
+49c49
+<         _snprintf_s(buf, _TRUNCATE, "file:%s\nwidth: %d\theight: %d\tformat: %d\tmem_size:%d\n\n",
+---
+>         _snprintf_s(buf, 512,_TRUNCATE,"file:%s\nwidth: %d\theight: %d\tformat: %d\tmem_size:%d\n\n",
+77c77
+<         _tcsncpy_s(info->file, file, _TRUNCATE);
+---
+>         _tcsncpy_s(info->file, file);
+130c130
+<         _snprintf_s(buf, _TRUNCATE, "total: %d, scene: %d, terrain: %d, ui: %d, map: %d\n",
+---
+>         _snprintf_s(buf, 256,_TRUNCATE,"total: %d, scene: %d, terrain: %d, ui: %d, map: %d\n",
+143,266c143,266
+< struct lwTexLogFilterInfo
+< {
+<     char filter_str[LW_MAX_PATH];
+<     DWORD size;
+<     DWORD num;
+< 
+<     BOOL Filter(DWORD op_type, const char* file, DWORD file_size)
+<     {
+<         if(_tcsstr(file, filter_str) == 0)
+<             return 0;
+< 
+<         if(op_type == 1)
+<         {
+<             size += file_size;
+<             num += 1;
+<         }
+<         else
+<         {
+<             size -= file_size;
+<             num -= 1;
+<         }
+< 
+<         return 1;
+<     }
+< };
+< class lwTexLogMgr
+< {
+<     typedef vector<lwTexLogFilterInfo> lwTexLogFilterInfoSeq;
+< private:
+<     FILE* _fp;
+<     DWORD _total_size;
+<     DWORD _total_num;
+<     lwTexLogFilterInfoSeq _v_filter_entity;
+< 
+< public:
+<     lwTexLogMgr()
+<     {
+<         _fp = 0;
+<         _total_size = 0;
+<         _total_num = 0;
+<         _v_filter_entity.reserve(20);
+<     };
+<     ~lwTexLogMgr()
+<     {
+<         if(_fp)
+<         {
+<             char buf[256];
+<             lwTexLogFilterInfoSeq::iterator it = _v_filter_entity.begin();
+<             for(; it != _v_filter_entity.end(); ++it)
+<             {
+<                 _snprintf_s(buf, _TRUNCATE, "type: %s, num: %d, size: %d\n", (*it).filter_str, (*it).num, (*it).size);
+<                 fwrite(buf, strlen(buf), 1, _fp);
+<             }
+< 
+<             _snprintf_s(buf, _TRUNCATE, "Total num: %d, Total size: %d\n", _total_num, _total_size);
+<             fwrite(buf, strlen(buf), 1, _fp);
+< 
+< 
+<             fclose(_fp);
+<         }
+<     }
+< 
+<     LW_RESULT OpenLogFile(const char* file)
+<     {
+< 		fopen_s(&_fp, file, "wt");
+<         return _fp ? LW_RET_OK : LW_RET_FAILED;
+<     }
+<     LW_RESULT AddTexType(const char* name)
+<     {
+<         lwTexLogFilterInfo info;
+<         info.num = 0;
+<         info.size = 0;
+<         _tcsncpy_s(info.filter_str, name, _TRUNCATE);
+< 
+<         _v_filter_entity.push_back(info);
+<         return LW_RET_OK;
+<     }
+< 
+<     LW_RESULT Log(DWORD op_type, const char* file, DWORD width, DWORD height, D3DFORMAT fmt, DWORD devmem_size)
+<     {
+<         if(_fp == 0)
+<             return LW_RET_FAILED;
+< 
+<         char op[2][64] =
+<         {
+<             "Load",
+<             "Release"
+<         };
+<         char* p;
+< 
+<         if(op_type == 1)
+<         {
+<             _total_size += devmem_size;
+<             _total_num += 1;
+<             p = op[0];
+<         }
+<         else
+<         {
+<             _total_size -= devmem_size;
+<             _total_num -= 1;
+<             p = op[1];
+<         }
+< 
+<         char buf[512];
+<         _snprintf_s(buf, _TRUNCATE, "%s file:%s\nwidth: %d\theight: %d\tformat: %d\tmem_size:%d\n",
+<             p, file, width, height, fmt, devmem_size);
+< 
+<         fwrite(buf, strlen(buf), 1, _fp);
+< 
+< 
+<         lwTexLogFilterInfoSeq::iterator it = _v_filter_entity.begin();
+<         for(; it != _v_filter_entity.end(); ++it)
+<         {
+<             if((*it).Filter(op_type, file, devmem_size))
+<             {
+<                 //break;
+<             }
+<             _snprintf_s(buf, _TRUNCATE, "[%s]: num: %d, size: %d\t[%d]\n", (*it).filter_str, (*it).num, (*it).size, _total_size);
+<             fwrite(buf, strlen(buf), 1, _fp);
+<         }
+< 
+<         return LW_RET_OK;
+<     }
+< };
+---
+> // struct lwTexLogFilterInfo
+> // {
+> //     char filter_str[LW_MAX_PATH];
+> //     DWORD size;
+> //     DWORD num;
+> // 
+> //     BOOL Filter(DWORD op_type, const char* file, DWORD file_size)
+> //     {
+> //         if(_tcsstr(file, filter_str) == 0)
+> //             return 0;
+> // 
+> //         if(op_type == 1)
+> //         {
+> //             size += file_size;
+> //             num += 1;
+> //         }
+> //         else
+> //         {
+> //             size -= file_size;
+> //             num -= 1;
+> //         }
+> // 
+> //         return 1;
+> //     }
+> // };
+> // class lwTexLogMgr
+> // {
+> //     typedef vector<lwTexLogFilterInfo> lwTexLogFilterInfoSeq;
+> // private:
+> //     FILE* _fp;
+> //     DWORD _total_size;
+> //     DWORD _total_num;
+> //     lwTexLogFilterInfoSeq _v_filter_entity;
+> // 
+> // public:
+> //     lwTexLogMgr()
+> //     {
+> //         _fp = 0;
+> //         _total_size = 0;
+> //         _total_num = 0;
+> //         _v_filter_entity.reserve(20);
+> //     };
+> //     ~lwTexLogMgr()
+> //     {
+> //         if(_fp)
+> //         {
+> //             char buf[256];
+> //             lwTexLogFilterInfoSeq::iterator it = _v_filter_entity.begin();
+> //             for(; it != _v_filter_entity.end(); ++it)
+> //             {
+> //                 _snprintf_s(buf, 256 ,_TRUNCATE,"type: %s, num: %d, size: %d\n", (*it).filter_str, (*it).num, (*it).size);
+> //                 fwrite(buf, strlen(buf), 1, _fp);
+> //             }
+> // 
+> //             _snprintf_s(buf,  256 ,_TRUNCATE,"Total num: %d, Total size: %d\n", _total_num, _total_size);
+> //             fwrite(buf, strlen(buf), 1, _fp);
+> // 
+> // 
+> //             fclose(_fp);
+> //         }
+> //     }
+> // 
+> //     LW_RESULT OpenLogFile(const char* file)
+> //     {
+> // 		fopen_s( &_fp, file, "wt");
+> //         return _fp ? LW_RET_OK : LW_RET_FAILED;
+> //     }
+> //     LW_RESULT AddTexType(const char* name)
+> //     {
+> //         lwTexLogFilterInfo info;
+> //         info.num = 0;
+> //         info.size = 0;
+> //         _tcsncpy_s(info.filter_str, name, _TRUNCATE );
+> // 
+> //         _v_filter_entity.push_back(info);
+> //         return LW_RET_OK;
+> //     }
+> // 
+> //     LW_RESULT Log(DWORD op_type, const char* file, DWORD width, DWORD height, D3DFORMAT fmt, DWORD devmem_size)
+> //     {
+> //         if(_fp == 0)
+> //             return LW_RET_FAILED;
+> // 
+> //         char op[2][64] =
+> //         {
+> //             "Load",
+> //             "Release"
+> //         };
+> //         char* p;
+> // 
+> //         if(op_type == 1)
+> //         {
+> //             _total_size += devmem_size;
+> //             _total_num += 1;
+> //             p = op[0];
+> //         }
+> //         else
+> //         {
+> //             _total_size -= devmem_size;
+> //             _total_num -= 1;
+> //             p = op[1];
+> //         }
+> // 
+> //         char buf[512];
+> //         _snprintf_s(buf, 512, _TRUNCATE,"%s file:%s\nwidth: %d\theight: %d\tformat: %d\tmem_size:%d\n",
+> //             p, file, width, height, fmt, devmem_size);
+> // 
+> //         fwrite(buf, strlen(buf), 1, _fp);
+> // 
+> // 
+> //         lwTexLogFilterInfoSeq::iterator it = _v_filter_entity.begin();
+> //         for(; it != _v_filter_entity.end(); ++it)
+> //         {
+> //             if((*it).Filter(op_type, file, devmem_size))
+> //             {
+> //                 //break;
+> //             }
+> //             _snprintf_s(buf, 512, _TRUNCATE, "[%s]: num: %d, size: %d\t[%d]\n", (*it).filter_str, (*it).num, (*it).size, _total_size);
+> //             fwrite(buf, strlen(buf), 1, _fp);
+> //         }
+> // 
+> //         return LW_RET_OK;
+> //     }
+> // };
+366d365
+< // remarks by lsh
+674c673
+<     lwTexLogMgr _texlog_mgr;
+---
+> //  lwTexLogMgr _texlog_mgr;
+770c769
+< 			size_t width, size_t height );
+---
+> 			UINT width, UINT height );
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwSceneMgr.cpp /c/games/top-recode/source/src/LightEngine/lwSceneMgr.cpp
+78,79c78
+<     DWORD i = 0;
+< 	for( i = 0; i < _sort_obj_num; i++)
+---
+>     for(DWORD i = 0; i < _sort_obj_num; i++)
+131,132c130
+<     DWORD i = 0;
+< 	for( i = 0; i < _sort_obj_num; i++)
+---
+>     for(DWORD i = 0; i < _sort_obj_num; i++)
+173,174c171
+<         DWORD i = 0;
+< 	for( i = 0; i < bs_num; i++)
+---
+>         for(DWORD i = 0; i < bs_num; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwSceneMgr.h /c/games/top-recode/source/src/LightEngine/lwSceneMgr.h
+12d11
+< // remarks: by lsh
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwShaderDeclMgr.cpp /c/games/top-recode/source/src/LightEngine/lwShaderDeclMgr.cpp
+17,18c17
+<      DWORD i = 0;
+< 	for( i = 0; i < SHADER_DECL_NUM; i++ )
+---
+>     for( DWORD i = 0; i < SHADER_DECL_NUM; i++ )
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwShaderMgr.cpp /c/games/top-recode/source/src/LightEngine/lwShaderMgr.cpp
+23,24c23
+<     DWORD i = 0;
+< 	for( i = 0; _vs_num > 0; i++)
+---
+>     for(DWORD i = 0; _vs_num > 0; i++)
+87a87
+> 	//MessageBox(NULL, file, "test RegisterVertexShader start", 0);
+95d94
+< 
+125d123
+< 
+133c131
+< 
+---
+> 	//MessageBox(NULL, file, "test RegisterVertexShader", 0);
+189,190c187
+<     DWORD i = 0;
+< 	for( i = 0; i < _vs_size; i++)
+---
+>     for(DWORD i = 0; i < _vs_size; i++)
+216,217c213
+<     DWORD i = 0;
+< 	for( i = 0; i < _vs_size; i++)
+---
+>     for(DWORD i = 0; i < _vs_size; i++)
+248,249c244
+<     DWORD i = 0;
+< 	for( i = 0; _vs_num > 0; i++)
+---
+>     for(DWORD i = 0; _vs_num > 0; i++)
+259,260c254
+<     DWORD i = 0;
+< 	for( i = 0; _decl_num > 0; i++)
+---
+>     for(DWORD i = 0; _decl_num > 0; i++)
+484,485c478
+<     DWORD i = 0;
+< 	for( i = 0; i < _vs_size; i++)
+---
+>     for(DWORD i = 0; i < _vs_size; i++)
+505,506c498
+<     DWORD i = 0;
+< 	for( i = 0; i < _vs_size; i++)
+---
+>     for(DWORD i = 0; i < _vs_size; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwStreamObj.cpp /c/games/top-recode/source/src/LightEngine/lwStreamObj.cpp
+281,282c281
+<     DWORD i = 0;
+< 	for( i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+---
+>     for(DWORD i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+711,712c710
+<     DWORD i = 0;
+< 	for( i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+---
+>     for(DWORD i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+726c724
+< 	for( i = 0; i < _entity_vb_seq_size; i++)
+---
+>     for(DWORD i = 0; i < _entity_vb_seq_size; i++)
+735c733
+< 	for( i = 0; i < _entity_ib_seq_size; i++)
+---
+>     for(DWORD i = 0; i < _entity_ib_seq_size; i++)
+751,752c749
+<     DWORD i = 0;
+< 	for( i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+---
+>     for(DWORD i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+778,779c775
+<     DWORD i = 0;
+< 	for( i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+---
+>     for(DWORD i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+791c787
+< 	for( i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+---
+>     for(DWORD i = 0; i < MAX_STREAM_SEQ_SIZE; i++)
+1579,1580c1575
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+1593c1588
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+1618,1619c1613
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+1632c1626
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+1791,1792c1785
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+1816,1817c1809
+<     DWORD i = 0;
+< 	for( i = 0; obj_num > 0; i++)
+---
+>     for(DWORD i = 0; obj_num > 0; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwSysCharacter.cpp /c/games/top-recode/source/src/LightEngine/lwSysCharacter.cpp
+24,25c24
+<     // int i = 0;
+< 	//for( i = 0; i < lwObjectPoolSkeleton::POOL_SIZE; i++ )
+---
+>     //for( int i = 0; i < lwObjectPoolSkeleton::POOL_SIZE; i++ )
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwSysGraphics.cpp /c/games/top-recode/source/src/LightEngine/lwSysGraphics.cpp
+7a8
+> #include "CPerformance.h"
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwSystemInfo.cpp /c/games/top-recode/source/src/LightEngine/lwSystemInfo.cpp
+4a5
+> #include "MyMemory.h"
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwThreadPool.cpp /c/games/top-recode/source/src/LightEngine/lwThreadPool.cpp
+25,26c25
+<     DWORD i = 0;
+< 	for( i = 0; i < _thread_seq_size; i++)
+---
+>     for(DWORD i = 0; i < _thread_seq_size; i++)
+136,137c135
+<     DWORD i = 0;
+< 	for( i = 0; i < thread_seq_size; i++)
+---
+>     for(DWORD i = 0; i < thread_seq_size; i++)
+310,311c308
+<     DWORD i = 0;
+< 	for( i = 0; i < _thread_num; i++)
+---
+>     for(DWORD i = 0; i < _thread_num; i++)
+342,343c339
+<     DWORD i = 0;
+< 	for( i = 0; i < _thread_num; i++)
+---
+>     for(DWORD i = 0; i < _thread_num; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwTimer.cpp /c/games/top-recode/source/src/LightEngine/lwTimer.cpp
+125,126c125
+<         DWORD i = 0;
+< 	for( i = 0; i < _timer_seq_size; i++)
+---
+>         for(DWORD i = 0; i < _timer_seq_size; i++)
+158,159c157
+<     DWORD i = 0;
+< 	for( i = 0; i < _timer_seq_size; i++) 
+---
+>     for(DWORD i = 0; i < _timer_seq_size; i++) 
+181,182c179
+<                 DWORD i = 0;
+< 	for( i = 0; (_timer_tickcount - info->last_time >= info->interval) && (i < info->hit_add_cnt); i++)
+---
+>                 for(DWORD i = 0; (_timer_tickcount - info->last_time >= info->interval) && (i < info->hit_add_cnt); i++)
+200,201c197
+<         DWORD i = 0;
+< 	for( i = 0; i < _timer_seq_size; i++)
+---
+>         for(DWORD i = 0; i < _timer_seq_size; i++)
+362,363c358
+<     DWORD i = 0;
+< 	for( i = 0; i < _timer_seq_size; i++)
+---
+>     for(DWORD i = 0; i < _timer_seq_size; i++)
+381,382c376
+<     DWORD i = 0;
+< 	for( i = 0; i < _timer_seq_size; i++)
+---
+>     for(DWORD i = 0; i < _timer_seq_size; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwTreeNode.cpp /c/games/top-recode/source/src/LightEngine/lwTreeNode.cpp
+82,83c82
+< 		 int Index = 0;
+< 	for( Index = 0; Index < MAX_IGNORE_NODES; Index ++ )
+---
+> 		for( int Index = 0; Index < MAX_IGNORE_NODES; Index ++ )
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwViewFrustum.cpp /c/games/top-recode/source/src/LightEngine/lwViewFrustum.cpp
+80,81c80
+<     int i = 0;
+< 	for( i = 0; i < 6; i++)
+---
+>     for(int i = 0; i < 6; i++)
+100,101c99
+<     int i = 0;
+< 	for( i = 0; i < 6; i++)
+---
+>     for(int i = 0; i < 6; i++)
+119,120c117
+<     DWORD i = 0;
+< 	for( i = 0; i < 6; i++)
+---
+>     for(DWORD i = 0; i < 6; i++)
+158,159c155
+<     DWORD i = 0;
+< 	for( i = 0; i < 6; i++)
+---
+>     for(DWORD i = 0; i < 6; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwxRenderCtrlVS.h /c/games/top-recode/source/src/LightEngine/lwxRenderCtrlVS.h
+62d61
+< 	// added by clp
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/lwxRenderCtrVS.cpp /c/games/top-recode/source/src/LightEngine/lwxRenderCtrVS.cpp
+113,114c113
+<     DWORD i = 0;
+< 	for( i = 0; i < animobj_num; i++)
+---
+>     for(DWORD i = 0; i < animobj_num; i++)
+128,129c127
+<             DWORD i = 0;
+< 	for( i = 0; i < bone_num; i++)
+---
+>             for(DWORD i = 0; i < bone_num; i++)
+151d148
+< 	// added by clp
+295,296c292
+<     DWORD i = 0;
+< 	for( i = 0; i < animobj_num; i++)
+---
+>     for(DWORD i = 0; i < animobj_num; i++)
+418,419c414
+<     DWORD i = 0;
+< 	for( i = 0; i < animobj_num; i++)
+---
+>     for(DWORD i = 0; i < animobj_num; i++)
+540,541c535
+<     DWORD i = 0;
+< 	for( i = 0; i < animobj_num; i++)
+---
+>     for(DWORD i = 0; i < animobj_num; i++)
+662,663c656
+<     DWORD i = 0;
+< 	for( i = 0; i < animobj_num; i++)
+---
+>     for(DWORD i = 0; i < animobj_num; i++)
+784,785c777
+<     DWORD i = 0;
+< 	for( i = 0; i < animobj_num; i++)
+---
+>     for(DWORD i = 0; i < animobj_num; i++)
+Only in /c/games/top-recode/source/src/MindPower3D: MindPower3D.vcxproj
+Only in /c/games/top-recode/source/src/MindPower3D: MindPower3D.vcxproj.filters
+Only in /c/games/top-recode/source/src/MindPower3D: MindPower3D.vcxproj.user
+Only in /c/games/top-recode/source/src/LightEngine: ModelObject.h
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPCamera.cpp /c/games/top-recode/source/src/LightEngine/MPCamera.cpp
+3a4,7
+> #ifdef _SKYBOX_
+> #include "..\src\Heightmap.h"
+> extern MINDPOWER_API CHeightmap g_Hmap;
+> #endif
+10c14
+< 	_snprintf_s(strCameraInfo , _TRUNCATE, "camera : (%4.02f %4.02f %4.02f)__(%4.02f %4.02f %4.02f)" , 
+---
+> 	_snprintf_s(strCameraInfo ,64 ,_TRUNCATE,"camera : (%4.02f %4.02f %4.02f)__(%4.02f %4.02f %4.02f)" , 
+93c97
+<   _snprintf_s(strCameraInfo , _TRUNCATE, "camera : (%4.02f %4.02f %4.02f)__(%4.02f %4.02f %4.02f)" , 
+---
+>   _snprintf_s(strCameraInfo ,64 ,_TRUNCATE,"camera : (%4.02f %4.02f %4.02f)__(%4.02f %4.02f %4.02f)" , 
+112a117,122
+> 
+> #ifdef _SKYBOX_
+> 	D3DXVECTOR3 vDir;
+> 	D3DXVec3Normalize(&vDir, &(m_RefPos - m_EyePos));
+> 	g_Hmap.UpdateFrustum(&m_EyePos, &vDir);
+> #endif
+129a140,145
+> 
+> #ifdef _SKYBOX_
+> 	D3DXVECTOR3 vDir;
+> 	D3DXVec3Normalize(&vDir, &(m_RefPos - m_EyePos));
+> 	g_Hmap.UpdateFrustum(&m_EyePos, &vDir);
+> #endif
+154a171,176
+> 
+> #ifdef _SKYBOX_
+> 	D3DXVECTOR3 vDir;
+> 	D3DXVec3Normalize(&vDir, &(m_RefPos - m_EyePos));
+> 	g_Hmap.UpdateFrustum(&m_EyePos, &vDir);
+> #endif
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPCharacter.cpp /c/games/top-recode/source/src/LightEngine/MPCharacter.cpp
+10c10
+< #include "lwgraphicsutil.h"
+---
+> #include "lwGraphicsUtil.h"
+12c12
+< 
+---
+> #include "CPerformance.h"
+17,18c17
+< : _link_item_num( 0 ),
+<   _pose_proc( 0 ), _proc_param( 0 )
+---
+> : _pose_proc( 0 ), _proc_param( 0 )
+26,27c25
+< : _link_item_num( 0 ),
+<   _pose_proc( 0 ), _proc_param( 0 )
+---
+> : _pose_proc( 0 ), _proc_param( 0 )
+45,48c43
+<      DWORD i = 0;
+< 	for( i = 0; i < _link_item_num; i++ )
+<     {
+<         if( _link_item_seq[ i ].obj )
+---
+> 	for(vector<MPLinkInfo>::iterator it=_link_item_seq.begin(); it!=_link_item_seq.end(); it++)
+50c45,46
+<             _link_item_seq[ i ].obj->GetObject()->ClearLinkCtrl();
+---
+>         if( (*it).obj )
+>             (*it).obj->GetObject()->ClearLinkCtrl();
+52,53c48
+<     }
+< 
+---
+> 	_link_item_seq.clear();
+203,204c198
+<      int i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>     for( int i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+228c222
+<         _snprintf_s( path_bone, _TRUNCATE, "%04d.lab", obj_id );
+---
+>         _snprintf_s( path_bone,LW_MAX_PATH, _TRUNCATE,"%04d.lab", obj_id );
+236,237c230
+<      int i = 0;
+< 	for( i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+---
+>     for( int i = 0; i < LW_MAX_SUBSKIN_NUM; i++ )
+278,280d270
+< 	//char szData[128];
+< 	//_snprintf_s( szData, _TRUNCATE, "%s\n", file );
+< 	//LG( "bone", szData );
+289c279
+<     _snprintf_s( path_mesh, _TRUNCATE, "%010d.lgo", file_id );
+---
+>     _snprintf_s( path_mesh, LW_MAX_NAME, _TRUNCATE,"%010d.lgo", file_id );
+496c486
+<     if( _link_item_num >= LW_MAX_LINK_ITEM_NUM )
+---
+>     if( _link_item_seq.size() >= LW_MAX_LINK_ITEM_NUM )
+508,510c498,502
+<     _link_item_seq[ _link_item_num ].obj = info->obj;
+<     _link_item_seq[ _link_item_num ].data = info->data;
+<     _link_item_num++;
+---
+> 	MPLinkInfo New;
+> 	New.obj = info->obj;
+> 	New.data = info->data;
+>     _link_item_seq.push_back(New);
+> 	//IP("MPCharacter(%x)::link=%d\n",  (DWORD)this, _link_item_seq.size());
+517,518c509
+<      DWORD i = 0;
+< 	for( i = 0; i < _link_item_num; i++ )
+---
+> 	for(vector<MPLinkInfo>::iterator it=_link_item_seq.begin(); it!=_link_item_seq.end();it++)
+520c511
+<         if( _link_item_seq[ i ].obj == obj )
+---
+> 		if( (*it).obj == obj )
+522,531c513,514
+<             //_physique->ClearItemLink( _link_item_seq[ i ]->GetObject() );
+<             _link_item_seq[ i ].obj->GetObject()->ClearLinkCtrl();
+< 
+<             _link_item_num -= 1;
+< 
+<             for( DWORD j = i; j < _link_item_num; j++ )
+<             {
+<                 _link_item_seq[ j ] = _link_item_seq[ j + 1 ];
+<             }
+< 
+---
+>             (*it).obj->GetObject()->ClearLinkCtrl();
+>             _link_item_seq.erase(it);
+540c523
+<     if( _link_item_num >= LW_MAX_LINK_ITEM_NUM )
+---
+>     if( _link_item_seq.size() >= LW_MAX_LINK_ITEM_NUM )
+558,561c541,545
+<     //_link_item_seq[ _link_item_num ].obj = info->obj;
+<     //_link_item_seq[ _link_item_num ].data = info->data;
+<     //_link_item_num++;
+< 
+---
+> // 	MPLinkInfo New;
+> // 	New.obj = info->obj;
+> // 	New.data = info->data;
+> // 	_link_item_seq.push_back(New);
+> // 	IP("%x link=%d\n",  (DWORD)this, _link_item_seq.size());
+563d546
+< 
+568,572c551
+<     DWORD new_item_num = 0;
+<     MPLinkInfo new_item_buf[ LW_MAX_LINK_ITEM_NUM ];
+< 
+<      DWORD i = 0;
+< 	for( i = 0; i < _link_item_num; i++ )
+---
+> 	for(vector<MPLinkInfo>::iterator it=_link_item_seq.begin(); it!=_link_item_seq.end();)
+574,577c553,554
+<         if( _link_item_seq[ i ].data != type )
+<         {
+<             new_item_buf[ new_item_num++ ] = _link_item_seq[i];
+<         }
+---
+> 		if( (*it).data == type )
+> 			_link_item_seq.erase(it);
+579,582c556
+<         {
+<             _link_item_seq[ i ].obj->GetObject()->ClearLinkCtrl();
+<             _link_item_seq[ i ].obj = 0;
+<         }
+---
+> 			it++;
+584,587d557
+< 
+<     _link_item_num = new_item_num;
+<     memcpy( _link_item_seq, new_item_buf, sizeof( MPLinkInfo ) * _link_item_num );
+< 
+606c576
+<     if( id < 0 || id >= _link_item_num )
+---
+>     if( id < 0 || id >= _link_item_seq.size() )
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPConsole.cpp /c/games/top-recode/source/src/LightEngine/MPConsole.cpp
+15,16c15
+<     int i = 0;
+< 	for( i = 0; i < _nMaxLine ; i++)
+---
+>     for(int i = 0; i < _nMaxLine ; i++)
+21c20
+<     AddText("Welcome To MindPower3D Engine");
+---
+>     AddText("Begin of MindPower Engine");
+25,26c24
+<     int y = 0;
+< 	for( y = 0; y < 13; y++)
+---
+>     for(int y = 0; y < 13; y++)
+50,51c48,49
+<             if(_bShowCursor)	_snprintf_s(_szInputTmp, _TRUNCATE, "]%s_", _szInput);
+< 			else				_snprintf_s(_szInputTmp, _TRUNCATE, "]%s", _szInput);
+---
+>             if(_bShowCursor)	_snprintf_s(_szInputTmp,128, _TRUNCATE ,"]%s_", _szInput);
+> 			else				_snprintf_s(_szInputTmp, 128, _TRUNCATE ,"]%s", _szInput);
+61,67c59,65
+< #ifdef DEBUG
+<     if(iChar=='`')
+<     {
+<         Show(!IsVisible());
+<         return TRUE;
+<     }
+< #endif
+---
+> // #if defined(DEBUG) | defined(_DEBUG)
+> //     if(iChar=='`')
+> //     {
+> //         Show(!IsVisible());
+> //         return TRUE;
+> //     }
+> // #endif
+85c83
+< 			_AddText("                MindPower3D Stars                       ",  false);
+---
+> 			_AddText("                MindPower Stars                       ",  false);
+122,123c120,121
+< 	if(_bShowCursor)	_snprintf_s(_szInputTmp, _TRUNCATE, "]%s_", _szInput);
+< 	else				_snprintf_s(_szInputTmp, _TRUNCATE, "]%s", _szInput);
+---
+> 	if(_bShowCursor)	_snprintf_s(_szInputTmp, 128,_TRUNCATE,"]%s_", _szInput);
+> 	else				_snprintf_s(_szInputTmp, 128,_TRUNCATE,"]%s", _szInput);
+165,166c163,164
+< 	if(_bShowCursor)	_snprintf_s(_szInputTmp, _TRUNCATE, "]%s_", _szInput);
+< 	else				_snprintf_s(_szInputTmp, _TRUNCATE, "]%s", _szInput);
+---
+> 	if(_bShowCursor)	_snprintf_s(_szInputTmp, 128, _TRUNCATE,"]%s_", _szInput);
+> 	else				_snprintf_s(_szInputTmp, 128, _TRUNCATE,"]%s", _szInput);
+172,173c170
+<     int i = 0;
+< 	for( i = 0; i < _nMaxLine ; i++)
+---
+>     for(int i = 0; i < _nMaxLine ; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPEffectCtrl.cpp /c/games/top-recode/source/src/LightEngine/MPEffectCtrl.cpp
+2c2
+< //#include <mindpower.h>
+---
+> //#include <MindPower.h>
+45c45
+< 		_snprintf_s(pszN, _TRUNCATE,"模型%d",n + 1);
+---
+> 		_snprintf_s(pszN,64,_TRUNCATE, "模型%d",n + 1);
+63c63
+< 		_snprintf_s(pszN, _TRUNCATE,"par%d",n + 1);
+---
+> 		_snprintf_s(pszN,64, _TRUNCATE,"par%d",n + 1);
+70c70
+< 		_snprintf_s(pszN, _TRUNCATE,"dummy%d",n + 1);
+---
+> 		_snprintf_s(pszN,64, _TRUNCATE,"dummy%d",n + 1);
+100c100
+< 		_snprintf_s(pszN, _TRUNCATE,"元素%d",n + 1);
+---
+> 		_snprintf_s(pszN,64, _TRUNCATE,"元素%d",n + 1);
+226c226
+< 	_snprintf_s(pszID, _TRUNCATE,"%d",iID);
+---
+> 	_snprintf_s(pszID,10, _TRUNCATE,"%d",iID);
+616c616,617
+< 		for (int n = 0; n < _iModelNum; n++)
+---
+> 		int n = 0;
+> 		for ( n = 0; n < _iModelNum; n++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPEffectMath.cpp /c/games/top-recode/source/src/LightEngine/MPEffectMath.cpp
+43,45d42
+< const std::string MPEffectMath::BLANK = std::string("");
+< 
+< 
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPFont.cpp /c/games/top-recode/source/src/LightEngine/MPFont.cpp
+12a13,14
+> #include "MyMemory.h"
+> #include "CPerformance.h"
+242,243c244
+< 	UINT n = 0;
+< 	for( n = 0; n < _MaFast; n++)
+---
+> 	for(UINT n = 0; n < _MaFast; n++)
+270,271c271
+< 	INT iw = 0;
+< 	for( iw = 0; iw <  RECTNUM; iw++)
+---
+> 	for(INT iw = 0; iw <  RECTNUM; iw++)
+358a359,360
+> 			//TODO
+> 			//memset(_vecBuf._Myfirst,0,sizeof(WORD)*_Max );
+377a380
+> 		//IP("TextOut2 %s\n", sz);
+413a417,422
+> 	if( NULL==_vecAsh || NULL==_vecVer )
+> 	{
+> 		LG("error","DrawText not Bing Res");
+> 		return;
+> 	}
+> 
+747c756
+< 	_snprintf_s(psz, _TRUNCATE,"%d",iNumber);
+---
+> 	_snprintf_s(psz,64, _TRUNCATE,"%d",iNumber);
+959a969,970
+> 		//TODO
+> 		//_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, prc->iAshNum, prc->_vecAsh._Myfirst,sizeof(FONT_VER));
+965a977,978
+> 		//TODO
+> 		//_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, prc->iHslNum, prc->_vecHsl._Myfirst,sizeof(FONT_VER)); //FIXED: Now using std::vector standard syntax.
+980a994,996
+> 
+> 		//TODO
+> 		//_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, prc->iAshNum, prc->_vecAsh._Myfirst,sizeof(FONT_VER));
+986a1003,1005
+> 
+> 		//TODO
+> 		//_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, prc->iHslNum, prc->_vecHsl._Myfirst,sizeof(FONT_VER));
+1639a1659
+> 			//IP("TextOut1 %s\n", sz);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPGameApp.cpp /c/games/top-recode/source/src/LightEngine/MPGameApp.cpp
+1,7d0
+< //################################
+< // MindPower 3D Engine
+< // class MPGameApp Implement
+< // Created By   : Ryan Wang 
+< // Last Modifed : 2004/02/06
+< //################################
+< 
+18c11
+< #include "lwGuidObj.h"
+---
+> #include "lwGUIDObj.h"
+21a15
+> #include "CPerformance.h"
+24c18
+< 
+---
+> #ifdef __VIM3D__
+26,27c20,22
+< //Del by lark.li 20080611
+< //#include "FontSystem.h"
+---
+> #endif
+> #include "MyMemory.h"
+> 
+33,34c28
+< MPResourceSet*  MPResourceSet::_Instance = NULL;
+< 
+---
+> MPResourceSet*  MPResourceSet::m_pInstance = NULL;
+54d47
+< 	// ----- Added by CLP ----- //
+57d49
+< 	// ----- Added by CLP ----- //
+84c76
+<     if(bFullScreen==2 ||bFullScreen==1) // 伪全屏
+---
+>     if(bFullScreen==2 ||bFullScreen==1) // αȫ��
+97c89
+< 	_hWnd = CreateWindow(pszClassName, "MindPower3D Application", dwWindowStyle, 
+---
+> 	_hWnd = CreateWindow(pszClassName, "MindPower Application", dwWindowStyle, 
+139,140d130
+< 	// Del by lark.li 20080611
+< 	// Added by clp
+182a173
+> #ifdef __FPS_DEBUG__
+184c175
+< 
+---
+> #endif
+187c178
+< 	g_Render.UpdateCullInfo() ; //added by billy
+---
+> 	g_Render.UpdateCullInfo() ; 
+204c195
+< 
+---
+> #ifdef __FPS_DEBUG__
+205a197
+> #endif
+207a200
+> #ifdef __VIM3D__
+208a202
+> #endif
+211a206
+> #ifdef __FPS_DEBUG__
+213a209
+> #endif
+216c212,213
+< 		_Render(); // 子类应用程序调用
+---
+> 		_Render(); // ����Ӧ�ó������
+> #ifdef __FPS_DEBUG__
+217a215
+> #endif
+226c224
+< 
+---
+> #ifdef __VIM3D__
+258c256
+< 		_Render(); // 子类应用程序调用
+---
+> 			_Render(); // ����Ӧ�ó������
+278c276,279
+< 	}else{
+---
+> 	}
+> 	else
+> #endif
+> 	{
+288c289
+< 		_Render(); // 子类应用程序调用
+---
+> 		_Render(); // ����Ӧ�ó������
+299,300c300,301
+< #ifdef DEBUG	
+<     g_Render.RenderDebugInfo();
+---
+> #ifdef __FPS_DEBUG__
+>     g_Render.RenderDebugInfo(); //INFO_FPS
+319d319
+< 	// Del by lark.l i20080611
+324c324
+< 
+---
+> #ifdef __FPS_DEBUG__
+325a326
+> #endif
+457d457
+< 	// Added by CLP
+460d459
+< 	// Added by CLP
+488c487,488
+< #if RESOURCE_SCRIPT == 2 || RESOURCE_SCRIPT == 3
+---
+> //Ϊ�˰�ȫ�ͷ��ڴ棬�����Դ����ĵ�DLL�У�Ҳ��ĳЩ�����ϣ����������ʱ������Ҫ������ 
+> //#if RESOURCE_SCRIPT == 2 || RESOURCE_SCRIPT == 3
+491c491
+< #endif
+---
+> //#endif
+497,499c497,504
+< 	//MPResourceSet *pResourceSet = MPResourceSet::GetInstancePtr();
+< 	//SAFE_DELETE(pResourceSet);
+< 
+---
+>     //��ȫ�ͷ��ڴ� 
+> 	MPResourceSet* pResourceSet = MPResourceSet::GetInstancePtr();
+> 	if( pResourceSet )
+> 	{
+> 		pResourceSet->Release();
+> 		//SAFE_DELETE(pResourceSet); //CHANGED: Already released by last line.
+> 		MPResourceSet::m_pInstance = NULL;
+> 	}
+541d545
+< 	// Added by CLP
+627d630
+< 	// ----- Added by CLP ----- //
+643c646
+< 	int nScroll  = dims2.lZ; // 中键滚动
+---
+> 	int nScroll  = dims2.lZ; // �м�����
+649c652
+< 	if(nOffsetX || nOffsetY) // 鼠标有移动 
+---
+> 	if(nOffsetX || nOffsetY) // ������ƶ� 
+663,664c666
+< 	int i = 0;
+< 	for( i = 0; i < 3; i++)
+---
+> 	for(int i = 0; i < 3; i++)
+769,770c771,774
+< 	return true;
+<     if(::GetFocus() != _hWnd)
+---
+> 	//�޸����� ������Ϸ���ڣ�����������ڣ��ٵ��·�������ʱ�����ܵ�����Ϸ�еĽ�ɫ���� 
+> 	//return true;
+> 	//if(::GetFocus() != _hWnd)
+>     if(::GetForegroundWindow() != _hWnd)
+772a777,779
+> 	if( GetCapture()==_hWnd )
+> 		return true;
+> 
+798c805
+<    	LG("end", "exit game appliaction successful!\n");
+---
+> // 	LG("end", "exit game appliaction successful!\n");
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPGUI.cpp /c/games/top-recode/source/src/LightEngine/MPGUI.cpp
+32,33c32
+<     unsigned int i = 0;
+< 	for( int i = 0; i < ObjList.size(); i++)
+---
+>     for(unsigned int i = 0; i < ObjList.size(); i++)
+322,323c321
+< 	FILE *fp;
+< 	fopen_s(&fp, pszFile, "wb");
+---
+> 	FILE *fp = fopen(pszFile, "wb");
+339,340c337
+<     FILE *fp;
+< 	fopen_s(&fp, pszFile, "rb");
+---
+>     FILE *fp = fopen(pszFile, "rb");
+520,521c517
+<         unsigned int i = 0;
+< 		for( i = 0; i < ObjList.size(); i++)
+---
+>         for(unsigned int i = 0; i < ObjList.size(); i++)
+571c567
+<     strncpy_s(_szText , pszText, _TRUNCATE);
+---
+>     strcpy(_szText , pszText);
+879,880c875
+< 		unsigned int i = 0;
+<         for(i = 0 ; i < ChildList.size() ; i++)
+---
+>         for(unsigned int i = 0 ; i < ChildList.size() ; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPMap.cpp /c/games/top-recode/source/src/LightEngine/MPMap.cpp
+1,3d0
+< // Map & MapSection 
+< // Created By Ryan
+< // 2004/01/31
+14a12,15
+> #ifdef _SKYBOX_ 
+> #include "Terrain.h"
+> #endif
+> #include "MyMemory.h"
+27c28
+<  
+---
+> static int s_nOldWaterLoopFrame = 0;
+38d38
+<  m_dwMaxLoadingTime(0),
+39a40,41
+> #ifdef __FPS_DEBUG__
+>  m_dwMaxLoadingTime(0),
+40a43
+> #endif
+57a61,63
+> #ifdef _SKYBOX_
+> 	m_pTerrain = NULL;
+> #endif
+103,104c109
+< 	delete m_pBlock;
+< 
+---
+> 	SAFE_DELETE(m_pBlock);
+151,152c156
+< 	if(_fp==NULL) return; 
+< 
+---
+> #ifdef __FPS_DEBUG__
+155c159
+< 
+---
+> #endif
+302a307,310
+> #ifdef _SKYBOX_
+> 	if( m_pTerrain )
+> 		m_pTerrain->Render();
+> #else
+304c312
+< 
+---
+> #endif
+332c340
+< 
+---
+> #ifdef __FPS_DEBUG__
+334c342
+< 
+---
+> #endif
+341,342d348
+< 	if(_fp==NULL) return; 
+< 	
+527,528c533
+< 	int k = 0;
+< 	for( k = 0; k < n; k++)
+---
+> 	for(int k = 0; k < n; k++)
+542c547
+< 
+---
+> #ifdef __FPS_DEBUG__
+544c549
+<     
+---
+> #endif    
+630,631c635
+< //				int i = 0;
+< //				for( i = 0; i < 4; i++)
+---
+> //				for(int i = 0; i < 4; i++)
+663a668,670
+> 		if( s_nOldWaterLoopFrame != _nWaterLoopFrame )
+> 		{
+> 			s_nOldWaterLoopFrame = _nWaterLoopFrame;
+680,681c687
+< 				int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 					for(int i = 0; i < 4; i++)
+708a715
+> 		}
+730,731c737
+< 				int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 				for(int i = 0; i < 4; i++)
+745d750
+<                 // begin by lsh
+756d760
+<                 // end
+765c769
+< 
+---
+> #ifdef __FPS_DEBUG__
+766a771
+> #endif
+806,807c811
+< 			int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 			for(int i = 0; i < 4; i++)
+817,818c821
+< 		//	int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 		//	for(int i = 0; i < 4; i++)
+825,826c828
+< 		int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 		for(int i = 0; i < 4; i++)
+896,897c898
+< 			int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 			for(int i = 0; i < 4; i++)
+907,908c908
+< 		//	int i = 0;
+< 		//	for( i = 0; i < 4; i++)
+---
+> 		//	for(int i = 0; i < 4; i++)
+915,916c915
+< 		int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 		for(int i = 0; i < 4; i++)
+964,965c963
+< 	int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 	for(int i = 0; i < 4; i++)
+1090,1091c1088
+<     int i = 0;
+< 	for( i = 0; i < nRenderGroupCnt; i++)
+---
+>     for(int i = 0; i < nRenderGroupCnt; i++)
+1096c1093
+<     
+---
+> #ifdef __FPS_DEBUG__
+1098a1096
+> #endif    
+1110,1111c1108
+<     short y = 0;
+< 	for( y = 0; y < _nShowHeight; y++)
+---
+>     for(short y = 0; y < _nShowHeight; y++)
+1113,1114c1110
+< 		short x = 0;
+< 	for( x = 0; x < _nShowWidth; x++)
+---
+> 		for(short x = 0; x < _nShowWidth; x++)
+1167,1168c1163
+<             int i = 1;
+< 			for( i = 1; i < 4; i++)
+---
+>             for(int i = 1; i < 4; i++)
+1189c1184
+< 	for( y = 0; y < m_iRange; y++)
+---
+>     for(short y = 0; y < m_iRange; y++)
+1191,1192c1186
+< 		short x = 0;
+< 	for( x = 0; x < m_iRange; x++)
+---
+> 		for(short x = 0; x < m_iRange; x++)
+1218,1219c1212
+<     int n = 0;
+< 	for( n = 0; n < 4; n++)
+---
+>     for(int n = 0; n < 4; n++)
+1221,1222c1214
+<         int i = 0;
+< 	for( i = 0; i < MAX_RENDER_GROUP; i++)
+---
+>         for(int i = 0; i < MAX_RENDER_GROUP; i++)
+1232a1225
+> #ifdef __FPS_DEBUG__
+1234d1226
+< 
+1235a1228
+> #endif
+1241c1234
+<     
+---
+> #ifdef __FPS_DEBUG__
+1242a1236
+> #endif    
+1256,1257c1250
+<     int j = 0;
+< 	for( j = 0; j < nRenderGroupCnt; j++)
+---
+>     for(int j = 0; j < nRenderGroupCnt; j++)
+1262,1263c1255
+<         int i = 0;
+< 	for( i = 0; i < pGroup->sTileCnt; i++)
+---
+>         for(int i = 0; i < pGroup->sTileCnt; i++)
+1311c1303
+< 
+---
+> #ifdef __FPS_DEBUG__
+1312a1305
+> #endif
+1325,1326c1318
+<     int j = 0;
+< 	for( j = 0; j < nRenderGroupCnt; j++)
+---
+>     for(int j = 0; j < nRenderGroupCnt; j++)
+1352a1345,1370
+> 
+> // 		MPTileVertex *pCurVertex = NULL;
+> // 		HRESULT hr = _pLandVB->Lock(nStartVertex* sizeof(MPTileVertex), pGroup->sTileCnt * 2 * 3 * sizeof(MPTileVertex), (BYTE**)&pCurVertex, D3DLOCK_READONLY);
+> // 		if(FAILED(hr)) 
+> // 		{
+> // 			LG("terrain", "Terrain Land VB Lock Fail!\n");
+> // 			return;
+> // 		}
+> // 		for(int p=0; p<pGroup->sTileCnt*2*3;p++)
+> // 		{
+> // 			LG("terrain", "(%6.2f,%6.2f,%6.2f) c=%08x uv1(%6.2f,%6.2f) uv1(%6.2f,%6.2f)\n", 
+> // 				pCurVertex[p].p.x, 
+> // 				pCurVertex[p].p.y, 
+> // 				pCurVertex[p].p.z, 
+> // 				pCurVertex[p].dwColor, 
+> // 				pCurVertex[p].tu1, 	pCurVertex[p].tv1, 
+> // 				pCurVertex[p].tu2, 	pCurVertex[p].tv2);
+> // 
+> // 			if( (p%3)==0 )
+> // 				LG("terrain", "\n");
+> // 
+> // 			if( (p%6)==0 )
+> // 				LG("terrain", "----------------------------------------------------------\n");
+> // 		}
+> // 		_pLandVB->Unlock();
+> 
+1527c1545
+< 			_snprintf_s(Path, _TRUNCATE,"shader\\vs_skydoom.vsh");
+---
+> 			_snprintf_s(Path,MAX_PATH,_TRUNCATE,"shader\\vs_skydoom.vsh");
+1563c1581
+< 			_snprintf_s(Path, _TRUNCATE,"shader\\ps_skydoom.psh");
+---
+> 			_snprintf_s(Path,MAX_PATH,_TRUNCATE,"shader\\ps_skydoom.psh");
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPMapData.cpp /c/games/top-recode/source/src/LightEngine/MPMapData.cpp
+4c4
+< #include "lwgraphicsutil.h"
+---
+> #include "lwGraphicsUtil.h"
+8a9,11
+> #include "MyMemory.h"
+> #include "CPerformance.h"
+> #include "Terrain.h"
+9a13
+> #pragma warning(disable:4311) //type cast warning
+13a18,231
+> #ifdef _SKYBOX_
+> typedef void (CALLBACK* FUNC_SRC2RGB)(int x, int y, int width, BYTE& r, BYTE& g, BYTE& b, BYTE* pSrcData);
+> static void CALLBACK TileHeight2RGB(int x, int y, int width, BYTE& r, BYTE& g, BYTE& b, BYTE* pSrcData)
+> {
+> 	MPTile NewTile;
+> 	NewTile.Init();
+> 	SNewFileTile* pMap = (SNewFileTile*)pSrcData;
+> 	SNewFileTile tile = pMap[y*width+x];
+> 	TileInfo_5To8(tile.dwTileInfo, tile.btTileInfo, (BYTE*)(&NewTile.TexLayer[0]));
+> 	NewTile.dwColor = LW_RGB565TODWORD(tile.sColor);
+> 	NewTile.dwColor|=0xff000000;
+> 	NewTile.fHeight = (float)(tile.cHeight * 10) / 100.0f;
+> 	r = g = b = BYTE(tile.cHeight + 128);
+> }
+> 
+> bool SaveBMP(char* szFilename, int width, int height, BYTE* pSrcData, FUNC_SRC2RGB pFunc_Src2RGB)
+> {
+> 	if( szFilename == NULL || szFilename[0]==0 )
+> 		return false;
+> 
+> 	FILE* pFile = NULL;
+> 	if( fopen_s(&pFile, szFilename, "wb") != 0)
+> 		return false;
+> 
+> 	//存成BMP格式
+> 	BITMAPFILEHEADER	bmf;
+> 	BITMAPINFOHEADER	bmi;
+> 	int					headsize = sizeof(bmf) + sizeof(bmi);
+> 	int					pitch = width * 3;
+> 	bmf.bfType = 'MB';
+> 	bmf.bfSize = headsize + pitch * height;
+> 	bmf.bfReserved1 = bmf.bfReserved2 = 0;
+> 	bmf.bfOffBits = headsize;
+> 	bmi.biSize = sizeof( bmi );
+> 	bmi.biWidth = width;
+> 	bmi.biHeight = height;
+> 	bmi.biPlanes = 1;
+> 	bmi.biBitCount = 24;
+> 	bmi.biCompression = BI_RGB;
+> 	bmi.biSizeImage = pitch * height;
+> 	bmi.biXPelsPerMeter = 72;
+> 	bmi.biYPelsPerMeter = 72;
+> 	bmi.biClrUsed = 0;
+> 	bmi.biClrImportant = 0;
+> 	fwrite(&bmf, sizeof(bmf), 1, pFile);
+> 	fwrite(&bmi, sizeof(bmi), 1, pFile);
+> 	LPBYTE pBits  = new BYTE[ bmi.biSizeImage ];
+> 	int trg = 0;
+> 	int src = 0;
+> 
+> 	if( pFunc_Src2RGB )
+> 	{
+> 		for(int y=0; y<height; y++)
+> 		{
+> 			for(int x=0; x<width; x++)
+> 			{
+> 				pFunc_Src2RGB(x, y, width, pBits[trg+2], pBits[trg+1], pBits[trg], pSrcData);
+> 				trg += 3;
+> 			}
+> 		}
+> 	}
+> 	else
+> 	{
+> 		memcpy( pBits, pSrcData, bmi.biSizeImage);
+> 	}
+> 
+> 	fwrite(pBits, bmi.biSizeImage, 1, pFile);
+> 	fclose(pFile);
+> 	delete [] pBits;
+> 	return true;
+> }
+> 
+> bool MPMap::SaveHeightBMP(char* szFilename, int width, int height)
+> {
+> 	if( szFilename == NULL || szFilename[0]==0 )
+> 		return false;
+> 
+> 	FILE* pFile = NULL;
+> 	if( fopen_s(&pFile, szFilename, "wb") != 0)
+> 		return false;
+> 
+> 	PSTR pExt = strrchr(szFilename, '.');
+> 	if( pExt && _stricmp(pExt, ".BMP")==0 )
+> 	{
+> 		//存成BMP格式
+> 		BITMAPFILEHEADER	bmf;
+> 		BITMAPINFOHEADER	bmi;
+> 		int					headsize = sizeof(bmf) + sizeof(bmi);
+> 		int					pitch = width * 3;
+> 		bmf.bfType = 'MB';
+> 		bmf.bfSize = headsize + pitch * height;
+> 		bmf.bfReserved1 = bmf.bfReserved2 = 0;
+> 		bmf.bfOffBits = headsize;
+> 		bmi.biSize = sizeof( bmi );
+> 		bmi.biWidth = width;
+> 		bmi.biHeight = height;
+> 		bmi.biPlanes = 1;
+> 		bmi.biBitCount = 24;
+> 		bmi.biCompression = BI_RGB;
+> 		bmi.biSizeImage = pitch * height;
+> 		bmi.biXPelsPerMeter = 72;
+> 		bmi.biYPelsPerMeter = 72;
+> 		bmi.biClrUsed = 0;
+> 		bmi.biClrImportant = 0;
+> 		fwrite(&bmf, sizeof(bmf), 1, pFile);
+> 		fwrite(&bmi, sizeof(bmi), 1, pFile);
+> 		LPBYTE pBits  = new BYTE[ bmi.biSizeImage ];
+> 		ZeroMemory(pBits, bmi.biSizeImage * sizeof(BYTE));
+> 		int trg = 0;
+> 
+> 		// 读取全部Section数据
+> 		for(int sy=0; sy<_nSectionCntY; sy++)
+> 		{
+> 			for(int sx=0; sx<_nSectionCntX; sx++)
+> 			{
+> 				DWORD dwDataOffset = _ReadSectionDataOffset(sx, sy);
+> 				if( dwDataOffset==0 )
+> 					continue;
+> 
+> 				DWORD dwPos = dwDataOffset - m_dwMapPos;
+> 
+> 				for(int y=0; y<_nSectionHeight; y++)
+> 				{
+> 					for(int x=0; x<_nSectionWidth; x++)
+> 					{
+> 						MPTile MPTile;
+> 						MPTile.Init();
+> 
+> 						SNewFileTile tile = *(SNewFileTile*)(m_pMapData+dwPos);
+> 						trg = (height-(sy*_nSectionHeight+y)-1) * _nSectionCntX * _nSectionWidth + (sx*_nSectionWidth+x);
+> 						trg*=3;
+> 						pBits[trg+2] = tile.btBlock[0]; //min(255,tile.sRegion * 3); //128 + tile.cHeight; //LW_RGB565_B(tile.sColor);
+> 						pBits[trg+1] = tile.btBlock[1]; //min(255,tile.sRegion * 3); //128 + tile.cHeight; //LW_RGB565_G(tile.sColor);
+> 						pBits[trg+0] = tile.btBlock[2]; //min(255,tile.sRegion * 3); //128 + tile.cHeight; //LW_RGB565_R(tile.sColor);
+> 						dwPos += sizeof(SNewFileTile);
+> 					}
+> 				}
+> 			}
+> 		}
+> 
+> 		fwrite(pBits, bmi.biSizeImage, 1, pFile);
+> 		delete [] pBits;
+> 	}
+> 	else if( pExt && _stricmp(pExt, ".RAW")==0 )
+> 	{
+> // 		LPBYTE pBits  = new BYTE[ width * height ];
+> // 		ZeroMemory(pBits, width * height * sizeof(BYTE));
+> // 		int trg = 0;
+> // 
+> // 		// 读取全部Section数据
+> // 		for(int sy=0; sy<_nSectionCntY; sy++)
+> // 		{
+> // 			for(int sx=0; sx<_nSectionCntX; sx++)
+> // 			{
+> // 				DWORD dwDataOffset = _ReadSectionDataOffset(sx, sy);
+> // 				if( dwDataOffset==0 )
+> // 					continue;
+> // 
+> // 				DWORD dwPos = dwDataOffset - m_dwMapPos;
+> // 
+> // 				for(int y=0; y<_nSectionHeight; y++)
+> // 				{
+> // 					for(int x=0; x<_nSectionWidth; x++)
+> // 					{
+> // 						MPTile MPTile;
+> // 						MPTile.Init();
+> // 
+> // 						SNewFileTile tile = *(SNewFileTile*)(m_pMapData+dwPos);
+> // 						trg = (height-(sy*_nSectionHeight+y)-1) * _nSectionCntX * _nSectionWidth + (sx*_nSectionWidth+x);
+> // 						pBits[trg] = 128 + tile.cHeight;
+> // 						dwPos += sizeof(SNewFileTile);
+> // 					}
+> // 				}
+> // 			}
+> // 		}
+> // 		fwrite(pBits, width * height * sizeof(BYTE), 1, pFile);
+> // 		delete [] pBits;
+> 
+> 		LPBYTE pBits  = new BYTE[ _nSectionCntX * _nSectionCntY ];
+> 		ZeroMemory(pBits, _nSectionCntX * _nSectionCntY * sizeof(BYTE));
+> 		int trg = 0;
+> 
+> 		// 读取全部Section数据
+> 		for(int sy=0; sy<_nSectionCntY; sy++)
+> 		{
+> 			for(int sx=0; sx<_nSectionCntX; sx++)
+> 			{
+> 				DWORD dwDataOffset = _ReadSectionDataOffset(sx, sy);
+> 				if( dwDataOffset==0 )
+> 					continue;
+> 
+> 				DWORD dwPos = dwDataOffset - m_dwMapPos;
+> 
+> 				int Total = 0;
+> 				for(int y=0; y<_nSectionHeight; y++)
+> 				{
+> 					for(int x=0; x<_nSectionWidth; x++)
+> 					{
+> 						SNewFileTile tile = *(SNewFileTile*)(m_pMapData+dwPos);
+> 						Total += tile.cHeight;
+> 						dwPos += sizeof(SNewFileTile);
+> 					}
+> 				}
+> 				trg = (_nSectionCntY-sy-1) * _nSectionCntX + sx;
+> 				pBits[trg] = 128 + Total / (_nSectionHeight*_nSectionWidth);
+> 			}
+> 		}
+> 		fwrite(pBits, _nSectionCntX * _nSectionCntY * sizeof(BYTE), 1, pFile);
+> 		delete [] pBits;
+> 	}
+> 	fclose(pFile);
+> 	return true;
+> }
+> #endif
+60c278
+< 		LG("map", "msg[%s]不是有效的 MindPower Map File!\n", pszMapName);
+---
+> 		//LG("map", "msg[%s]不是有效的 MindPower Map File!\n", pszMapName);
+98a317,318
+>  		fclose(_fp); 
+>  		_fp = NULL;
+99a320,353
+> 
+> #ifdef _SKYBOX_
+> 	if( m_pTerrain )
+> 		delete m_pTerrain;
+> 	m_pTerrain = new CTerrain;
+> 	if( m_pTerrain )
+> 		m_pTerrain->LoadTerrain(this);
+> 
+> // 	SNewFileTile* pTile = (SNewFileTile*)m_pMapData;
+> // 	for(int y=0; y<_nSectionCntY; y++)
+> // 	{
+> // 		for(int x=0; x<_nSectionCntX; x++)
+> // 		{
+> // 			if( pTile->sColor!=0xffffffff || pTile->cHeight!=35 )
+> // 			{
+> // 				IP("(%3d,%3d) L(%08x) T(%08x) C(%08x) H(%d), R(%d), I(%u), B[%u,%u,%u,%u]\n", x,y,
+> // 					pTile->dwTileInfo, pTile->btTileInfo, pTile->sColor, pTile->cHeight, 
+> // 					pTile->sRegion, pTile->btIsland, 
+> // 					pTile->btBlock[0], pTile->btBlock[1], pTile->btBlock[2], pTile->btBlock[3]);
+> // 			}
+> // 			pTile ++;
+> // 		}
+> // 	}
+> //
+> //	//把高度图存成BMP
+> //	char szBmp[MAX_PATH];
+> //	strcpy_s(szBmp, _countof(szBmp), pszMapName);
+> //	PSTR pExt = strrchr(szBmp, '.');
+> //	if( pExt )
+> //		strcpy_s(pExt+1, _countof(szBmp)-(pExt+1-szBmp), "RAW");
+> //	SaveBMP(szBmp, _nSectionCntX, _nSectionCntY, m_pMapData, TileHeight2RGB);
+> //	SaveHeightBMP(szBmp, _nSectionCntX*_nSectionWidth, _nSectionCntY*_nSectionHeight);
+> #endif
+> 
+102c356
+< 	m_pBlock->Load(pszMapName,bEdit);
+---
+> 	m_pBlock->Load(this);
+158,161c412,415
+<     
+<     fseek(_fp, sizeof(MPMapFileHeader) + 4 * dwLoc, SEEK_SET);
+< 	DWORD dwDataOffset; fread(&dwDataOffset, 4, 1, _fp);
+< 	return dwDataOffset;
+---
+> //     
+> //  fseek(_fp, sizeof(MPMapFileHeader) + 4 * dwLoc, SEEK_SET);
+> // 	DWORD dwDataOffset; fread(&dwDataOffset, 4, 1, _fp);
+> // 	return dwDataOffset;
+223a478
+> 		assert(_fp);
+238a494
+> 	//IP("_LoadSectionData(%d,%d) Offset=%u\n", pSection->nX, pSection->nY,pSection->dwDataOffset);
+246a503
+> 				assert(_fp);
+319,320d575
+<     if(_fp==NULL) return;
+< 
+333c588
+< 	
+---
+> #ifdef __FPS_DEBUG__
+335a591
+> #endif	
+420d675
+<     m_dwActiveSectionCnt = (DWORD)(_ActiveSectionList.size());
+422a678,679
+> #ifdef __FPS_DEBUG__
+> 	m_dwActiveSectionCnt = (DWORD)(_ActiveSectionList.size());
+434a692
+> #endif
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPMath.cpp /c/games/top-recode/source/src/LightEngine/MPMath.cpp
+233,234c233
+<     int i = 0;
+< 	for( i = 0; i < nStep; i++)
+---
+>     for(int i = 0; i < nStep; i++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPModelEff.cpp /c/games/top-recode/source/src/LightEngine/MPModelEff.cpp
+3c3
+< //#include <mindpower.h>
+---
+> //#include <MindPower.h>
+8c8
+< #include "mpmodeleff.h"
+---
+> #include "MPModelEff.h"
+14,15c14
+< 	WORD i = 0;
+< 	for( i = 0; i < pCModel->GetVerCount(); i++)
+---
+> 	for(WORD i = 0; i < pCModel->GetVerCount(); i++)
+22,23c21
+< 	WORD i = 0;
+< 	for( i = 0; i < pCModel->GetVerCount(); i++)
+---
+> 	for(WORD i = 0; i < pCModel->GetVerCount(); i++)
+30,31c28
+< 	WORD i = 0;
+< 	for( i = 0; i < pCModel->GetVerCount(); i++)
+---
+> 	for(WORD i = 0; i < pCModel->GetVerCount(); i++)
+181a179
+> 	m_iEffNum = 0;
+187c185
+< 	FILE* t_pFile;
+---
+> 	FILE* t_pFile = NULL;
+222,223c220
+< 	int n = 0;
+< 	for( n = 0; n < m_iEffNum; n++)
+---
+> 	for(int n = 0; n < m_iEffNum; n++)
+312,313c309
+< 	int n = 0;
+< 	for( n = 0; n < m_iEffNum; n++)
+---
+> 	for(int n = 0; n < m_iEffNum; n++)
+369,370c365
+< 	int n = 0;
+< 	for( n = 0; n < m_iEffNum; n++)
+---
+> 	for(int n = 0; n < m_iEffNum; n++)
+502,503c497
+< 	int n = 0;
+< 	for( n = 0; n < m_iEffNum; n++)
+---
+> 	for(int n = 0; n < m_iEffNum; n++)
+590c584
+< 	/*if(	m_bUsePath)
+---
+> 	if(	m_bUsePath) //CHECK //CHANGED
+593c587
+< 	}*/
+---
+> 	}
+621,622c615
+< 	int n = 0;
+< 	for( n = 0; n < m_iEffNum; n++)
+---
+> 	for(int n = 0; n < m_iEffNum; n++)
+709c702
+< 				//_snprintf_s( szData, _TRUNCATE, "No model file. name = %s.", m_pCEffect->m_strModelName.c_str() );
+---
+> 				//_snprintf_s( szData, "No model file. name = %s.", m_pCEffect->m_strModelName.c_str() );
+714d706
+<             // begin by lsh
+838,839c830,831
+< 			}/*else
+< 				m_pCurCortrol->FillTextureUV(m_pCEffect->m_pCModel);*/
+---
+> 			} else //CHECK //CHANGED
+> 				m_pCurCortrol->FillTextureUV(m_pCEffect->m_pCModel); //CHECK //CHANGED
+896,897c888
+< 	int n = 0;
+< 	for( n = 0; n < m_iEffNum; n++)
+---
+> 	for(int n = 0; n < m_iEffNum; n++)
+906c897,899
+< 		if(!m_pCEffect->m_CTextruelist.m_pTex->IsLoadingOK())
+---
+> 		//修改精灵白屏在845上宕机问题 
+> 		if( m_pCEffect->m_CTextruelist.m_pTex==NULL ||
+> 			!m_pCEffect->m_CTextruelist.m_pTex->IsLoadingOK())
+1044,1045c1037
+< 	//int n = 0;
+< 	//for( n = 0; n < m_iEffNum; n++)
+---
+> 	for(int n = 0; n < m_iEffNum; n++) //CHANGED: Uncommented //TODO
+1083,1084c1075
+< 	//	WORD i = 0;
+< 	//for( i = 0; i < m_pCEffect->m_pCModel->GetVerCount(); ++i)
+---
+> 	//	for(WORD i = 0; i < m_pCEffect->m_pCModel->GetVerCount(); ++i)
+1136,1137c1127
+< 	//	WORD i = 0;
+< 	//for( i = 0; i < m_pCEffect->m_pCModel->GetVerCount(); ++i)
+---
+> 	//	for(WORD i = 0; i < m_pCEffect->m_pCModel->GetVerCount(); ++i)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPParticleCtrl.cpp /c/games/top-recode/source/src/LightEngine/MPParticleCtrl.cpp
+2c2
+< //#include <mindpower.h>
+---
+> //#include <MindPower.h>
+394c394,395
+< 		for (int n = 0; n < m_iPartNum; ++n)
+---
+> 		int n = 0;
+> 		for ( n = 0; n < m_iPartNum; ++n)
+425,426c426,427
+< 
+< 	for (int n = 0; n < m_iPartNum; ++n)
+---
+> 	int n = 0;
+> 	for ( n = 0; n < m_iPartNum; ++n)
+472c473,474
+< 	for (int n = 0; n < pPart->m_iPartNum; ++n)
+---
+> 	int n = 0;
+> 	for ( n = 0; n < pPart->m_iPartNum; ++n)
+498c500
+< 		_snprintf_s(psID, _TRUNCATE,"%d",pModel->GetID());
+---
+> 		_snprintf_s(psID,32, _TRUNCATE,"%d",pModel->GetID());
+516c518,520
+< 	for (int n = 0; n < m_iPartNum; ++n)
+---
+> 
+> 	int n = 0;
+> 	for ( n = 0; n < m_iPartNum; ++n)
+557a562,563
+> 	if(iID < 0)
+> 		return;
+578c584,585
+< 	for (int n = 0; n < m_iPartNum; ++n)
+---
+> 	int n = 0;
+> 	for ( n = 0; n < m_iPartNum; ++n)
+597c604,605
+< 	for (int n = 0; n < m_iPartNum; ++n)
+---
+> 	int n = 0;
+> 	for ( n = 0; n < m_iPartNum; ++n)
+644c652,653
+< 	for (int n = 0; n < m_iPartNum; ++n)
+---
+> 	int n = 0;
+> 	for ( n = 0; n < m_iPartNum; ++n)
+665a675
+> 	
+710c720,722
+< 	for (int n = 0; n < m_iPartNum; ++n)
+---
+> 
+> 	int n = 0;
+> 	for ( n = 0; n < m_iPartNum; ++n)
+789c801,802
+< 	for (int n = 0; n < m_iPartNum; ++n)
+---
+> 	int n = 0;
+> 	for ( n = 0; n < m_iPartNum; ++n)
+851,852c864,865
+< 					_snprintf_s(pszPath, _TRUNCATE,"texture/effect/%s",strName.c_str());
+< 					_snprintf_s(pszNewPath, _TRUNCATE,"effect/new/texture/%s",strName.c_str());
+---
+> 					_snprintf_s(pszPath,MAX_PATH, _TRUNCATE,"texture/effect/%s",strName.c_str());
+> 					_snprintf_s(pszNewPath,MAX_PATH, _TRUNCATE,"effect/new/texture/%s",strName.c_str());
+959,960c972
+< 	 short i = 0;
+< 	for( i = 0; i < 5; i++ )
+---
+> 	for( short i = 0; i < 5; i++ )
+962c974
+< 		_snprintf_s(str, _TRUNCATE,"皮肤%d",i+1);
+---
+> 		_snprintf_s(str,64, _TRUNCATE,"皮肤%d",i+1);
+1095c1107
+< 	_snprintf_s(psID, _TRUNCATE,"%d",_iID);
+---
+> 	_snprintf_s(psID,32,_TRUNCATE, "%d",_iID);
+1118c1130
+< 	_snprintf_s(psID, _TRUNCATE,"%d",_iID);
+---
+> 	_snprintf_s(psID,32, _TRUNCATE,"%d",_iID);
+1177c1189
+< 		_snprintf_s(pszName, _TRUNCATE,"%s%d",pszTex,n);
+---
+> 		_snprintf_s(pszName,32,_TRUNCATE, "%s%d",pszTex,n);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPParticleSys.cpp /c/games/top-recode/source/src/LightEngine/MPParticleSys.cpp
+3c3
+< //#include <mindpower.h>
+---
+> //#include <MindPower.h>
+104,105c104,108
+< 	//if(_bMediay)
+< 	{SAFE_DELETE_ARRAY(_CPPart);}
+---
+> 	if(_CPPart && _CPPart->m_iEffNum > 0 && _CPPart->m_iEffNum < 20)
+> 	{
+> 		SAFE_DELETE_ARRAY(_CPPart);
+> 		_CPPart = NULL;
+> 	}
+509,510c512
+< 		int n = 0;
+< 	for( n = 0; n < tw; n++)
+---
+> 		for(int n = 0; n < tw; n++)
+578,579c580,583
+< 	//if(_bMediay)
+< 	{	SAFE_DELETE_ARRAY(_CPPart);		}
+---
+> 	if(_CPPart && _CPPart->m_iEffNum > 0 && _CPPart->m_iEffNum < 20)
+> 	{	
+> 		SAFE_DELETE_ARRAY(_CPPart);	
+> 	}
+581a586
+> 	_CPPart = NULL;
+657c662
+< 			//_snprintf_s(pszn, _TRUNCATE, "texture\\effect\\%s",_strTexName.c_str());
+---
+> 			//_snprintf_s(pszn, "texture\\effect\\%s",_strTexName.c_str());
+698a704,705
+> 	if(!_pTex)
+> 		return;
+710c717
+< 	//		//_snprintf_s(pszn, _TRUNCATE, "texture\\effect\\%s",_strTexName.c_str());
+---
+> 	//		//_snprintf_s(pszn, "texture\\effect\\%s",_strTexName.c_str());
+811a819,821
+> 	_vecFrameSize.resize(_wFrameCount);
+> 	_vecFrameColor.resize(_wFrameCount);
+> 	_vecFrameAngle.resize(_wFrameCount);
+818,819c828
+< 	int n = 0;
+< 	for( n = 0; n < _wFrameCount; n++)
+---
+> 	for(int n = 0; n < _wFrameCount; n++)
+1124d1132
+< 	WORD n = 0;
+1133c1141
+< 		for( n = 0; n < _iParNum; ++n)
+---
+> 		for(WORD n = 0; n < _iParNum; ++n)
+1281,1282c1289
+< 	//	WORD n = 0;
+< 	//	for( n = 0; n < _iParNum; ++n)
+---
+> 	//	for(WORD n = 0; n < _iParNum; ++n)
+1320,1321c1327
+< 			WORD n = 0;
+< 	for( n = 0; n < (WORD)_vecText.size(); ++n)
+---
+> 			for(WORD n = 0; n < (WORD)_vecText.size(); ++n)
+1380,1381c1386
+< 			WORD n = 0;
+< 	for( n = 0; n < _iParNum; ++n)
+---
+> 			for(WORD n = 0; n < _iParNum; ++n)
+1460,1461c1465
+< 			WORD n = 0;
+< 	for( n = 0; n < _iParNum; ++n)
+---
+> 			for(WORD n = 0; n < _iParNum; ++n)
+1498,1499c1502
+< 		WORD n = 0;
+< 	for( n = 0; n < _iParNum; ++n)
+---
+> 		for(WORD n = 0; n < _iParNum; ++n)
+1507a1511,1513
+> 			if(!pPart)
+> 				continue;
+> 
+1572,1573c1578
+< 		WORD n = 0;
+< 	for( n = 0; n < _wFrameCount; ++n)
+---
+> 		for(WORD n = 0; n < _wFrameCount; ++n)
+1588,1589c1593
+< 			WORD n = 0;
+< 	for( n = 0; n < _wFrameCount; ++n)
+---
+> 			for(WORD n = 0; n < _wFrameCount; ++n)
+1602,1603c1606
+< 		WORD n = 0;
+< 	for( n = 0; n < _wFrameCount; ++n)
+---
+> 		for(WORD n = 0; n < _wFrameCount; ++n)
+1707,1708c1710
+< 	WORD n = 0;
+< 	for( n = 0; n < _iParNum; ++n)
+---
+> 	for(WORD n = 0; n < _iParNum; ++n)
+1783,1784c1785
+< 		//	WORD n = 0;
+< 		//	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 		//	for(WORD n = 0; n < pPart->_iParNum; ++n)
+1791,1792c1792
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+1919,1920c1919
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+2050,2051c2049
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+2197,2198c2195
+< 		//	WORD n = 0;
+< 		//	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 		//	for(WORD n = 0; n < pPart->_iParNum; ++n)
+2204,2205c2201
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+2262,2263c2258
+< 	int n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(int n = 0; n < pPart->_iParNum; ++n)
+2344,2345c2339
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+2473,2474c2467
+< 			WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 			for(WORD n = 0; n < pPart->_iParNum; ++n)
+2481,2482c2474
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+2569,2570c2561
+< 	int n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(int n = 0; n < pPart->_iParNum; ++n)
+2613,2614c2604
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+2694,2695c2684
+< 	int n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(int n = 0; n < pPart->_iParNum; ++n)
+2747,2748c2736
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+2876,2877c2864
+< 	int n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(int n = 0; n < pPart->_iParNum; ++n)
+2924,2925c2911
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+3231,3232c3217
+< 	//int n = 0;
+< 	//for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	//for(int n = 0; n < pPart->_iParNum; ++n)
+3290,3291c3275
+< 	//int m = 0;
+< 	//for( m = 0; m < pPart->_wFrameCount - 1; ++m)
+---
+> 	//for(int m = 0; m < pPart->_wFrameCount - 1; ++m)
+3301,3302c3285
+< 	//	int n = 0;
+< 	//	for( n = 0; n < iNum; ++n)
+---
+> 	//	for(int n = 0; n < iNum; ++n)
+3360,3361c3343
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+3565,3566c3547
+< 			WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 			for(WORD n = 0; n < pPart->_iParNum; ++n)
+3573,3574c3554
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+3740,3741c3720
+< 			WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 			for(WORD n = 0; n < pPart->_iParNum; ++n)
+3748,3749c3727
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+3844,3845c3822
+< 	int n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(int n = 0; n < pPart->_iParNum; ++n)
+3889,3890c3866
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+4012,4013c3988
+< 	WORD n = 0;
+< 	for( n = 0; n < pPart->_iParNum; ++n)
+---
+> 	for(WORD n = 0; n < pPart->_iParNum; ++n)
+4168a4144,4145
+> 		//fwrite(_vecPointRange._Myfirst,sizeof(D3DXVECTOR3),_wVecNum,t_pFile);
+> 		//TODO
+4194,4195c4171
+< 	//char *pszDataName;
+< 	//_strlwr_s(pszDataName= _strdup( t_pszName ), strlen( t_pszName ) + 1 );
+---
+> 	//char *pszDataName = _strlwr( _strdup( t_pszName ) );
+4229c4205
+< 			//_strlwr_s(pszDataName= _strdup( t_pszName ), strlen( t_pszName ) + 1 );
+---
+> 		//pszDataName = _strlwr( _strdup( t_pszName ) );
+4240a4217
+> 
+4320a4298,4299
+> 			//fread(_vecPointRange._Myfirst,sizeof(D3DXVECTOR3),_wVecNum,t_pFile);
+> 			//TODO
+4359,4360c4338
+< 	//char *pszDataName;
+< 	//_strlwr_s(pszDataName= _strdup( t_pszName ), strlen( t_pszName ) + 1 );
+---
+> 	//char *pszDataName = _strlwr( _strdup( t_pszName ) );
+4387c4365
+< 		//_strlwr_s(pszDataName= _strdup( t_pszName ), strlen( t_pszName ) + 1 );
+---
+> 		//pszDataName = _strlwr( _strdup( t_pszName ) );
+4493a4472,4473
+> 			//pbuf->mread(_vecPointRange._Myfirst,sizeof(D3DXVECTOR3),_wVecNum);
+> 			//TODO
+4570,4571c4550
+< 	int n = 0;
+< 	for( n = 0; n < part1->_wFrameCount; n++)
+---
+> 	for(int n = 0; n < part1->_wFrameCount; n++)
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPRender.cpp /c/games/top-recode/source/src/LightEngine/MPRender.cpp
+10a11
+> #include "ErrorReport.h"
+11a13,17
+> #ifdef _SKYBOX_
+> #include "TextureManager.h"
+> #endif
+> 
+> #ifdef __VIM3D__
+14,15c20,21
+< 
+< bool bUsePixelShader = true;
+---
+> #endif
+> #include "MyMemory.h"
+49a56,60
+> 
+> #ifdef _SKYBOX_
+> 	m_pTextureManager = NULL;
+> 	_fFarClip  = 3000.0f;
+> #else
+50a62
+> #endif
+58a71
+> 	SAFE_DELETE(_pFont);
+62a76
+> #ifdef __VIM3D__
+65c79
+< 
+---
+> #endif
+69a84,93
+> 
+> #ifdef _SKYBOX_
+> 	if( m_pTextureManager )
+> 	{
+> 		delete m_pTextureManager;
+> 		m_pTextureManager = NULL;
+> 		g_pTextureManager = NULL;
+> 	}
+> #endif
+> 
+73c97
+<     LG("end", "begin release mesh lib\n");
+---
+> //  LG("end", "begin release mesh lib\n");
+77c101
+<     LG("end", "end release mesh lib\n");
+---
+> //  LG("end", "end release mesh lib\n");
+79d102
+<     // by lsh has been released in mesh lib
+85a109
+> #ifdef __VIM3D__
+91c115
+< 
+---
+> #endif
+114c138
+< 	// Modified by clp 在全屏下同样设置垂直同步，因此将后缓冲数量改为2
+---
+> 	// 在全屏下同样设置垂直同步，因此将后缓冲数量改为2
+138c162
+< 	// Modified by clp 在全屏下同样设置垂直同步
+---
+> 	//  在全屏下同样设置垂直同步
+145a170,171
+> 		d3dcp.present_param.SwapEffect = bFullScreen ? D3DSWAPEFFECT_DISCARD : D3DSWAPEFFECT_COPY_VSYNC ;
+> 		d3dcp.present_param.BackBufferCount = 1; //老机器内存用少点
+148,151d173
+< 	//	add by	jze	begin!
+< 	bUsePixelShader	=	_d3dCaps.PixelShaderVersion >= D3DPS_VERSION(1,4) ? true : false;
+< 	//	add	by	jze	end!
+< 
+172c194
+<             strncpy_s(err_str, "Create DirectX error", _TRUNCATE);
+---
+>             _tcsncpy_s(err_str, "Create DirectX error", _TRUNCATE );
+176,177c198,203
+<             LG("init",RES_STRING(CL_MPRENDER_CPP_00001));
+< 			strncpy_s(err_str, "Create DirectX Device error", _TRUNCATE);
+---
+>             //修复客户端因显卡内存不足，创建失败，RES_STRING 导致 ValidateLocale 报错的问题
+>             //Engine中不可使用CResourceBundleManage,因为这个只在主程序中初始化，没有在DLL中初始化，
+>             //如果DLL中也想使用，应该从主程序中传入指针 
+>             //LG("init",RES_STRING(CL_MPRender_CPP_00001)); 
+> 															
+>             _tcsncpy_s(err_str, "Create DirectX Device error", _TRUNCATE);
+180c206
+< 			strncpy_s(err_str, "Invalid Installed Directx Version", _TRUNCATE);
+---
+>             _tcsncpy_s(err_str, "Invalid Installed Directx Version", _TRUNCATE);
+183c209
+<             strncpy_s(err_str, "Unknown Internal Error", _TRUNCATE);
+---
+>             _tcsncpy_s(err_str, "Unknown Internal Error", _TRUNCATE );
+186c212
+<         LG("init", "msg%s", err_str);
+---
+>         ErrorLog(err_str);
+220d245
+<     // begin by lsh
+234a260
+> #ifdef __VIM3D__
+255c281,282
+< 	strncat_s( Result, "VIMConfig.ini", _TRUNCATE);
+---
+> 	size_t Length = strlen( Result ) + strlen( "VIMConfig.ini" ) + 1;
+> 	strcat_s( Result, Length, "VIMConfig.ini" );
+260a288
+> #endif//__VIM3D__
+261a290,297
+> 	_pFont =  new CMPFont;
+> #ifdef USE_RENDER
+> 	if( !_pFont->CreateFont(this, "System") )
+> 		LG("ERROR","msgCreateSystemFont");
+> #else
+> 	_pFont->CreateFont(GetDevice(), "System");
+> #endif
+> 	_pFont->BindingRes( &ResMgr );
+266a303,312
+> #ifdef _SKYBOX_
+> 	m_pTextureManager = new CTextureManager;
+> 	if(m_pTextureManager==NULL)
+> 	{
+> 		WriteLog(INFO_ERROR, "Can't Create Texture Manager.");
+> 		return false;
+> 	}
+> 	g_pTextureManager = m_pTextureManager;
+> #endif
+> 
+362a409
+> #ifdef __VIM3D__
+369c416
+< 
+---
+> #endif//__VIM3D__
+381d427
+< 
+383,385d428
+< 	//char ws[16];
+< 	//sprintf( ws, "fullscreen %d",(int)_bFullScreen);
+< 	// OutputDebugString( ws );
+401a445
+> #ifdef __VIM3D__
+404c448
+< 	
+---
+> #endif//__VIM3D__
+522a567
+> #ifdef __VIM3D__
+544d588
+< 
+548d591
+< 
+562a606
+> #endif//__VIM3D__
+575a620
+> #ifdef __VIM3D__
+581a627
+> #endif//__VIM3D__
+597a644
+> #ifdef __VIM3D__
+600a648
+> #endif//__VIM3D__
+775a824
+> #ifdef __VIM3D__
+785c834
+< 
+---
+> #endif//__VIM3D__
+863c912
+< 			Print(INFO_FPS, 5, 5, "FPS : %d", _dwFPS);
+---
+> 			Print(INFO_FPS, 5, 80, "FPS : %d", _dwFPS);
+874,877c923
+< 			char fileName[64];
+< 			Util_MakeDir("screenshot\\");
+< 
+< 			char pszName[64];
+---
+> 			Util_MakeDir("screenshot/");
+879,884c925,930
+< 			int nidx = 0;
+< 			while(1)
+< 			{
+< 				_snprintf_s(pszName,_TRUNCATE,"screenshot\\%d\\",nidx);
+< 				if(_access(pszName,0)== -1)
+< 				{
+---
+> 			char pszName[MAX_PATH];
+> 			__time64_t t;
+> 			_time64(&t);
+> 			tm ltime;
+> 			_gmtime64_s( &ltime, &t );
+> 			sprintf_s(pszName, _countof(pszName), "screenshot/%04d-%02d-%02d/",ltime.tm_year+1900,ltime.tm_mon+1,ltime.tm_mday);
+886,890c932,934
+< 					break;
+< 				}
+< 				nidx++;
+< 			}
+< 			_snprintf_s(fileName,_TRUNCATE,"%scap%05d.bmp",pszName, g_nScreenCap);
+---
+> 
+> 			char fileName[MAX_PATH];
+> 			sprintf_s(fileName,_countof(fileName) ,"%scap%05d.bmp",pszName, g_nScreenCap);
+900c944
+< 			_snprintf_s(szFileName,_TRUNCATE,"screenshot/avi%06d.bmp",g_nAviCnt);
+---
+> 			_snprintf_s(szFileName,64,_TRUNCATE,"screenshot/avi%06d.bmp",g_nAviCnt);
+954c998
+< 	vsnprintf_s(_szInfo, _TRUNCATE, szFormat, list);
+---
+> 	_vsnprintf_s(_szInfo, _TRUNCATE ,szFormat, list);
+1126c1170,1171
+< 				strncat_s( ( char * )strName, sizeof(strName), ".t16" , _TRUNCATE);
+---
+> 				size_t Length = strlen( strName ) + strlen( ".t16" ) + 1;
+> 				strcat_s( ( char * )strName, Length, ".t16" );
+1137c1182
+< 				Log("Save File Time = %d\n", GetTickCount() - dwSaveStart);
+---
+> //				LG("" "Save File Time = %d\n", GetTickCount() - dwSaveStart);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPResManger.cpp /c/games/top-recode/source/src/LightEngine/MPResManger.cpp
+4c4
+< //#include <mindpower.h>
+---
+> //#include <MindPower.h>
+16a17,20
+> #include "MyMemory.h"
+> #include "MPTextureSet.h"
+> #include "MPTerrainSet.h"
+> #include "CPerformance.h"
+112a117
+> 	_vecMeshList.clear();
+165a171,178
+> #define SAFE_DELETE_SET(T)		\
+> 	T* p##T = T::I();		\
+> 	if( p##T )				\
+> {						\
+> 	p##T->Release();	\
+> 	delete p##T;		\
+> }
+> 
+232a246,251
+> 	//CHANGED: Commented these because they've been already released earlier.
+> //	SAFE_DELETE_SET( CGroup_ParamSet );
+> //	SAFE_DELETE_SET( CEff_ParamSet );
+> //	SAFE_DELETE_SET( MPTerrainSet );
+> //	SAFE_DELETE_SET( MPTexSet ); //--暂时不明原因
+> 
+308c327
+< 	if(  m_caps.VertexShaderVersion < D3DVS_VERSION(1,1) || m_caps.PixelShaderVersion < D3DPS_VERSION(1,4) )
+---
+> 	if(  m_caps.VertexShaderVersion < D3DVS_VERSION(1,1) ) //|| m_caps.PixelShaderVersion < D3DPS_VERSION(1,4) )
+319c338
+< 	if(  m_caps.VertexShaderVersion < D3DVS_VERSION(1,1) || m_caps.PixelShaderVersion < D3DPS_VERSION(1,4))
+---
+> 	if(  m_caps.VertexShaderVersion < D3DVS_VERSION(1,1) ) //|| m_caps.PixelShaderVersion < D3DPS_VERSION(1,4))
+320a340
+> 		//IP("soft vs:%08x, ps:%08x\n", m_caps.VertexShaderVersion, m_caps.PixelShaderVersion);
+322c342
+< 		//MessageBox(NULL,"soft","ERROR",0);
+---
+> 		//MessageBox(NULL,"soft","VS:%x PS:%x",0);
+372c392
+< 	LoadDefaultText("effect\\font.txt");
+---
+> 	//LoadDefaultText("effect\\font.txt");
+374c394
+< 	//LoadTotalPartCtrl();
+---
+> 	LoadTotalPartCtrl();
+420c440
+< 	//	if (stricmp(sName.c_str(), _vecTexName[i].c_str()) == 0)
+---
+> 	//	if (stricmp_s(sName.c_str(), _vecTexName[i].c_str()) == 0)
+435c455
+< 	_snprintf_s(szMsg,_TRUNCATE,"缺少特效帖图[%s](文件不存在或特效资源配置文件出错)",
+---
+> 	_snprintf_s(szMsg,64,_TRUNCATE, "缺少特效帖图[%s](文件不存在或特效资源配置文件出错)",
+459c479
+< 		sprintf(t_pszFile, "%s\\%s.dds",_pszTexPath,_vecTexName[iID].c_str());
+---
+> 		_snprintf_s(t_pszFile, MAX_PATH,_TRUNCATE, "%s\\%s.dds",_pszTexPath,_vecTexName[iID].c_str());
+461c481
+< 		_snprintf_s(t_pszFile, _TRUNCATE, "%s\\%s.tga",_pszTexPath,_vecTexName[iID].c_str());
+---
+> 		_snprintf_s(t_pszFile,MAX_PATH,_TRUNCATE, "%s\\%s.tga",_pszTexPath,_vecTexName[iID].c_str());
+468c488
+< 			_snprintf_s(szMsg, _TRUNCATE, "加载特效贴图[id=%d]出错", iID);
+---
+> 			_snprintf_s(szMsg, 64, _TRUNCATE, "加载特效贴图[id=%d]出错", iID);
+507c527
+< 	//	if (stricmp(sName.c_str(), _vecMeshName[i].c_str()) == 0)
+---
+> 	//	if (stricmp_s(sName.c_str(), _vecMeshName[i].c_str()) == 0)
+521c541
+< 	//sprintf(szMsg,"缺少特效模型[%s](文件不存在或特效资源配置文件出错)",
+---
+> 	//_snprintf_s(szMsg,"缺少特效模型[%s](文件不存在或特效资源配置文件出错)",
+551c571
+< 				_snprintf_s(szMsg, _TRUNCATE, "加载特效模型[id=%d]失败", iID);
+---
+> 				_snprintf_s(szMsg,64, _TRUNCATE,"加载特效模型[id=%d]失败", iID);
+567c587,588
+< 				for (int n = _iMeshNum; n < MAXMESH_COUNT; ++n)
+---
+> 				int n = _iMeshNum;
+> 				for ( n = _iMeshNum; n < MAXMESH_COUNT; ++n)
+585c606
+< 							_snprintf_s(szMsg, _TRUNCATE, "缺少特效模型[id=%d]拷贝错误", iID);
+---
+> 							_snprintf_s(szMsg,64,_TRUNCATE, "缺少特效模型[id=%d]拷贝错误", iID);
+676c697
+< 	//	if (stricmp(_vecEffectName[i].c_str(), pszName.c_str()) == 0)
+---
+> 	//	if (stricmp_s(_vecEffectName[i].c_str(), pszName.c_str()) == 0)
+703c724
+< 		_snprintf_s(t_pszFile, _TRUNCATE, "%s\\%s",_pszEFFectPath,_vecEffectName[iID].c_str());
+---
+> 		_snprintf_s(t_pszFile, MAX_PATH, _TRUNCATE,"%s\\%s",_pszEFFectPath,_vecEffectName[iID].c_str());
+735d755
+< 
+820c840
+< 				//sprintf(t_pszFile, "%s\\%s",_pszTexPath,t_sfd.cFileName);
+---
+> 				//_snprintf_s(t_pszFile, "%s\\%s",_pszTexPath,t_sfd.cFileName);
+909c929
+< 			sprintf( path, "%s%s", "animation\\", t_sfd.cFileName );
+---
+> 			_snprintf_s( path, LW_MAX_PATH, _TRUNCATE, "%s%s", "animation\\", t_sfd.cFileName );
+947,948c967,968
+< 	char t_Path[MAX_PATH];
+< 	WIN32_FIND_DATA t_sfd;
+---
+> //	char t_Path[MAX_PATH];
+> //	WIN32_FIND_DATA t_sfd;
+961c981
+< //	strcpy(szOldPath, path_info->GetPath(PATH_TYPE_MODEL_ITEM));
+---
+> //	strcpy_s(szOldPath, path_info->GetPath(PATH_TYPE_MODEL_ITEM));
+1045c1065
+< 				//LG("error","msg:装载模型失败(%s)！", t_sfd.cFileName );
+---
+> 				LG("error","msg:装载模型失败(%s)！", t_sfd.cFileName );
+1052c1072
+< 	//sprintf( szData, "%d", nNum );
+---
+> 	//_snprintf_s( szData, "%d", nNum );
+1154a1175,1176
+> 				LG("test", "Model %d: %s\n", _iMeshNum, t_sfd.cFileName);
+> 
+1187c1209
+< 					//LG("error","msg:装载item模型失败(%s)！", t_sfd.cFileName );
+---
+> 					LG("error","msg:装载item模型失败(%s)！", t_sfd.cFileName );
+1194,1196c1216,1218
+< 		//// 角色模型
+< 		//lstrcpy(t_Path,"model\\character");
+< 		//lstrcat(t_Path,"\\*.lgo");
+---
+> 		// 角色模型
+> 		lstrcpy(t_Path,"model\\character");
+> 		lstrcat(t_Path,"\\*.lgo");
+1198,1208c1220,1230
+< 		//if((t_hFind=FindFirstFile(t_Path,&t_sfd))==INVALID_HANDLE_VALUE)
+< 		//	return true;
+< 		//do{
+< 		//	if(!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+< 		//	{
+< 		//		int length = (int)strlen(t_sfd.cFileName);
+< 		//		char *sname = &t_sfd.cFileName[length - 4];
+< 		//		if(strcmp(sname,".lgo") != 0)
+< 		//		{
+< 		//			continue; 
+< 		//		}
+---
+> 		if((t_hFind=FindFirstFile(t_Path,&t_sfd))==INVALID_HANDLE_VALUE)
+> 			return true;
+> 		do{
+> 			if(!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+> 			{
+> 				int length = (int)strlen(t_sfd.cFileName);
+> 				char *sname = &t_sfd.cFileName[length - 4];
+> 				if(strcmp(sname,".lgo") != 0)
+> 				{
+> 					continue; 
+> 				}
+1210,1215c1232,1237
+< 		//		//全部转换成小写
+< 		//		if( !g_GeomManager.LoadGeomobj( t_sfd.cFileName ) )
+< 		//		{
+< 		//			//LG("error","msg:装载模型失败(%s)！", t_sfd.cFileName );
+< 		//		}
+< 		//	}
+---
+> 				//全部转换成小写
+> 				if( !g_GeomManager.LoadGeomobj( t_sfd.cFileName ) )
+> 				{
+> 					LG("error","msg:装载模型失败(%s)！", t_sfd.cFileName );
+> 				}
+> 			}
+1217,1218c1239,1240
+< 		//}while(FindNextFile(t_hFind,&t_sfd));
+< 		//FindClose(t_hFind);
+---
+> 		}while(FindNextFile(t_hFind,&t_sfd));
+> 		FindClose(t_hFind);
+1268a1291
+> 	_vecEffectParam.resize(_iEffectNum );
+1337c1360,1362
+< 			return false;
+---
+> 			LG("effinfo", "eff文件一个都没有");
+> 		else
+> 		{
+1355c1380
+< 				_snprintf_s(t_pszFile, _TRUNCATE, "%s\\%s",_pszEFFectPath,t_sfd.cFileName);
+---
+> 					_snprintf_s(t_pszFile, MAX_PATH, _TRUNCATE, "%s\\%s",_pszEFFectPath,t_sfd.cFileName);
+1363c1388
+< 					_snprintf_s( szData, _TRUNCATE, "装载特效文件(%s)失败！", t_pszFile );
+---
+> 						_snprintf_s( szData,1024, _TRUNCATE, "装载特效文件(%s)失败！", t_pszFile );
+1380a1406,1407
+> 		}
+> 		
+1442c1469
+< 		_snprintf_s(t_Path,_TRUNCATE,"shader\\eff1.vsh");
+---
+> 		_snprintf_s(t_Path,MAX_PATH,_TRUNCATE, "shader\\eff1.vsh");
+1463c1490
+< 			_snprintf_s(t_Path,_TRUNCATE,"shader\\eff%d.vsh",_iVShaderNum + 1);
+---
+> 			_snprintf_s(t_Path,MAX_PATH, _TRUNCATE,"shader\\eff%d.vsh",_iVShaderNum + 1);
+1478c1505
+< 		_snprintf_s(t_Path,_TRUNCATE,"shader\\font.vsh");
+---
+> 		_snprintf_s(t_Path,MAX_PATH,_TRUNCATE,"shader\\font.vsh");
+1516c1543
+< 		_snprintf_s(t_Path,_TRUNCATE,"shader\\shadeeff.vsh");
+---
+> 		_snprintf_s(t_Path,MAX_PATH,_TRUNCATE,"shader\\shadeeff.vsh");
+1555c1582
+< 		_snprintf_s(t_Path,_TRUNCATE,"shader\\eff2.vsh");
+---
+> 		_snprintf_s(t_Path,MAX_PATH,_TRUNCATE,"shader\\eff2.vsh");
+1631c1658
+< 		_snprintf_s( path, _TRUNCATE, "%s%s", path_info->GetPath( PATH_TYPE_SHADER ), "eff2.vso" );
+---
+> 		_snprintf_s(path,LW_MAX_PATH, _TRUNCATE,"%s%s", path_info->GetPath( PATH_TYPE_SHADER ), "eff2.vso" );
+1711c1738
+< 		_snprintf_s( path, _TRUNCATE, "%s%s", path_info->GetPath( PATH_TYPE_SHADER ), shader_file[i] );
+---
+> 		_snprintf_s(path,LW_MAX_PATH, _TRUNCATE, "%s%s", path_info->GetPath( PATH_TYPE_SHADER ), shader_file[i] );
+1785c1812
+<         sprintf(path, "%s%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i], ext[t]);
+---
+>        _snprintf_s(path,LW_MAX_PATH, _TRUNCATE, "%s%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i], ext[t]);
+1812c1839
+< //			sprintf(t_pszFile, "%s\\%s",_pszEFFectPath,t_sfd.cFileName);
+---
+> //			_snprintf_s(t_pszFile, "%s\\%s",_pszEFFectPath,t_sfd.cFileName);
+1875c1902
+< 				_snprintf_s(t_pszFile, _TRUNCATE, "%s\\%s",_pszEFFectPath,t_sfd.cFileName);
+---
+> 				_snprintf_s(t_pszFile, MAX_PATH, _TRUNCATE,"%s\\%s",_pszEFFectPath,t_sfd.cFileName);
+1901c1928
+< 				sprintf(szFile, "%s\\%s",_pszEFFectPath,pResInfo->szDataName);
+---
+> 				_snprintf_s(szFile, MAX_PATH, _TRUNCATE,"%s\\%s",_pszEFFectPath,pResInfo->szDataName);
+2007c2034
+< 		_snprintf_s(t_Path, _TRUNCATE, "%s\\%s",_pszEFFectPath,_vecPartName[iID].c_str());
+---
+> 		_snprintf_s(t_Path, MAX_PATH, _TRUNCATE,"%s\\%s",_pszEFFectPath,_vecPartName[iID].c_str());
+2054c2081
+< 				sprintf(t_pszFile, "%s\\%s",_pszEFFectPath,t_sfd.cFileName);
+---
+> 				_snprintf_s(t_pszFile, "%s\\%s",_pszEFFectPath,t_sfd.cFileName);
+2059c2086
+< 				_snprintf_s(t_FilePath, _TRUNCATE, "%s\\%s",_pszEFFectPath,_vecPartName[_iPartCtrlNum - 1].c_str());
+---
+> 				_snprintf_s(t_FilePath, MAX_PATH, _TRUNCATE,"%s\\%s",_pszEFFectPath,_vecPartName[_iPartCtrlNum - 1].c_str());
+2341a2369,2376
+> #ifdef __MEM_DEBUG__
+> size_t CMPResManger::GetCurUseMemory()	{ return ::GetCurUseMemory();	}
+> size_t CMPResManger::GetMaxUseMemory()	{ return ::GetMaxUseMemory();	}
+> DWORD  CMPResManger::GetCurObject()		{ return ::GetCurObject();		}
+> DWORD  CMPResManger::GetMaxObject()		{ return ::GetMaxObject();		}
+> void   CMPResManger::EndMemoryCheck()	{ ::EndMemoryCheck();	}
+> #endif
+> 
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPSceneItem.cpp /c/games/top-recode/source/src/LightEngine/MPSceneItem.cpp
+214d213
+< // added by clp
+243c242
+< //    strncpy_s( info.file_name, file, _TRUNCATE);
+---
+> //    strcpy_s( info.file_name, file );
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPSceneObject.cpp /c/games/top-recode/source/src/LightEngine/MPSceneObject.cpp
+9,10c9,10
+< 
+< 
+---
+> #include "CPerformance.h"
+> extern MINDPOWER_API int g_nTemp;
+32a33,34
+> 		for(vector<MPSceneItem*>::iterator it = _link_item_seq.begin(); it!=_link_item_seq.end(); it++)
+> 			_model->ClearItemLink( (*it)->GetObject() );
+35a38
+> 	_link_item_seq.clear();
+49d51
+< 
+211a214,252
+> lwVector3 MPSceneObject::GetObjectSize()
+> {
+> 	if( _model )
+> 	{
+> 		lwVector3	vModelSizeMin( 0.0f, 0.0f, 0.0f );
+> 		lwVector3	vModelSizeMax( 0.0f, 0.0f, 0.0f );
+> 		for ( DWORD i = 0; i < _model->GetPrimitiveNum(); i++ )
+> 		{
+> 			lwVector3*	_seq = _model->GetPrimitive(i)->GetMeshAgent()->GetMesh()->GetMeshInfo()->vertex_seq;
+> 			if ( _seq->x < vModelSizeMin.x )
+> 			{
+> 				vModelSizeMin.x = _seq->x;
+> 			}
+> 			if ( _seq->x > vModelSizeMax.x )
+> 			{
+> 				vModelSizeMax.x = _seq->x;
+> 			}
+> 			if ( _seq->y < vModelSizeMin.y )
+> 			{
+> 				vModelSizeMin.y = _seq->y;
+> 			}
+> 			if ( _seq->y > vModelSizeMax.y )
+> 			{
+> 				vModelSizeMax.y = _seq->y;
+> 			}
+> 			if ( _seq->z < vModelSizeMin.z )
+> 			{
+> 				vModelSizeMin.z = _seq->z;
+> 			}
+> 			if ( _seq->z > vModelSizeMax.z )
+> 			{
+> 				vModelSizeMax.z = _seq->z;
+> 			}
+> 		}
+> 		return lwVector3( vModelSizeMax.x - vModelSizeMin.x, vModelSizeMax.y - vModelSizeMin.y, vModelSizeMax.z - vModelSizeMin.z );
+> 	}
+> 	return 0;
+> }
+> 
+214c255
+<     if( _link_item_num >= LW_MAX_LINK_ITEM_NUM )
+---
+>     if( _link_item_seq.size() >= LW_MAX_LINK_ITEM_NUM )
+226c267,268
+<     _link_item_seq[ _link_item_num++ ] = info->obj;
+---
+> 	_link_item_seq.push_back(info->obj);
+> 	//IP("MPSceneObject(%x)::link=%d\n",  (DWORD)this, _link_item_seq.size());
+233c275
+<     for( DWORD i = 0; i < _link_item_num; i++ )
+---
+> 	for(vector<MPSceneItem*>::iterator it = _link_item_seq.begin(); it!=_link_item_seq.end();)
+235,240c277
+<         if( _link_item_seq[ i ] == obj )
+<         {
+<             _model->ClearItemLink( _link_item_seq[ i ]->GetObject() );
+<             _link_item_num -= 1;
+< 
+<             for( DWORD j = i; j < _link_item_num; j++ )
+---
+> 		if( (*it)==obj )
+242,244c279,280
+<                 _link_item_seq[ j ] = _link_item_seq[ j + 1 ];
+<             }
+< 
+---
+> 			_model->ClearItemLink( (*it)->GetObject() );
+> 			_link_item_seq.erase(it);
+246a283,284
+> 		else
+> 			it++;
+248d285
+< 
+254c291
+<     if( id < 0 || id >= _link_item_num )
+---
+>     if( id < 0 || id >= _link_item_seq.size() )
+305a343
+> 	return 1.0f;
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPShadeMap.cpp /c/games/top-recode/source/src/LightEngine/MPShadeMap.cpp
+2c2
+< //#include <mindpower.h>
+---
+> //#include <MindPower.h>
+10a11
+> #include "MyMemory.h"
+143,144c144
+< 	 int n = 0;
+< 	for( n = 0; n < _iVerNum; n++)
+---
+> 	for( int n = 0; n < _iVerNum; n++)
+214,215c214
+< 	 int nY = 0;
+< 	for( nY = 0; nY < _iGridCrossNum; nY++ )
+---
+> 	for( int nY = 0; nY < _iGridCrossNum; nY++ )
+217,218c216
+< 		 int nX = 0;
+< 	for( nX = 0; nX < _iGridCrossNum; nX++ )
+---
+> 		for( int nX = 0; nX < _iGridCrossNum; nX++ )
+253,254c251
+< 	 int nY = 0;
+< 	for( nY = 0; nY < _iGridCrossNum; nY++ )
+---
+> 	for( int nY = 0; nY < _iGridCrossNum; nY++ )
+256,257c253
+< 		 int nX = 0;
+< 	for( nX = 0; nX < _iGridCrossNum; nX++ )
+---
+> 		for( int nX = 0; nX < _iGridCrossNum; nX++ )
+347,348c343
+< 	 int y = 0;
+< 	for( y = 0; y < _iGridCrossNum + 1; y++ )
+---
+> 	for( int y = 0; y < _iGridCrossNum + 1; y++ )
+350,351c345
+< 		 int x = 0;
+< 	for( x = 0; x < _iGridCrossNum + 1; x++ )
+---
+> 		for( int x = 0; x < _iGridCrossNum + 1; x++ )
+506,507c500
+< 	int n = 0;
+< 	for( n = 0; n < _iVerNum; n++)
+---
+> 	for(int n = 0; n < _iVerNum; n++)
+564,565c557
+< 	 int n = 0;
+< 	for( n = 0; n < _iVerNum; n++)
+---
+> 	for( int n = 0; n < _iVerNum; n++)
+641,642c633
+< 	 int n = 0;
+< 	for( n = 0; n < _iVerNum; n++)
+---
+> 	for( int n = 0; n < _iVerNum; n++)
+729,730c720
+< 	int n = 0;
+< 	for( n = 0; n < _iFrameCount; n++)
+---
+> 	for(int n = 0; n < _iFrameCount; n++)
+747c737
+< 	for( n = 0; n < _iNumTex; n++)
+---
+> 	for(int n = 0; n < _iNumTex; n++)
+769,770c759
+< 	int h = 0;
+< 	for( h = 0;h < iColnum; h++)
+---
+> 	for(int h = 0;h < iColnum; h++)
+772,773c761
+< 		int  w = 0;
+< 	for(  w = 0; w < iRow; w++)
+---
+> 		for(int  w = 0; w < iRow; w++)
+805,806c793
+< 	int n = 0;
+< 	for( n = 0; n < _iFrameCount; n++)
+---
+> 	for(int n = 0; n < _iFrameCount; n++)
+863,864c850
+< 			int n = 0;
+< 	for( n = 0; n < _iVerNum; n++)
+---
+> 			for(int n = 0; n < _iVerNum; n++)
+880,881c866
+< 	 int y = 0;
+< 	for( y = 0; y < _iGridCrossNum + 1; y++ )
+---
+> 	for( int y = 0; y < _iGridCrossNum + 1; y++ )
+883,884c868
+< 		 int x = 0;
+< 	for( x = 0; x < _iGridCrossNum + 1; x++ )
+---
+> 		for( int x = 0; x < _iGridCrossNum + 1; x++ )
+950,951c934
+< 		int n = 0;
+< 	for( n = 0; n < _iVerNum; n++)
+---
+> 		for(int n = 0; n < _iVerNum; n++)
+989,990c972
+< 	 int n = 0;
+< 	for( n = 0; n < _iFrameCount; n++)
+---
+> 	for( int n = 0; n < _iFrameCount; n++)
+1030,1031c1012
+< 	 int n = 0;
+< 	for( n = 0; n < _iFrameCount; n++)
+---
+> 	for( int n = 0; n < _iFrameCount; n++)
+Only in /c/games/top-recode/source/src/LightEngine: MPSkyBox.cpp
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/MPTile.cpp /c/games/top-recode/source/src/LightEngine/MPTile.cpp
+105d104
+<     // begin by lsh
+110d108
+<     // end by lsh
+113,114c111
+<     int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+>     for(int i = 0; i < 4; i++)
+121d117
+<         // begin by lsh
+137d132
+<         // end by lsh
+145,146c140
+< 	int i = 0;
+< 	for( i = 0; i < 4; i++)
+---
+> 	for(int i = 0; i < 4; i++)
+150,151d143
+< 
+<     // begin by lsh
+160d151
+<     // end
+Only in /c/games/top-recode/source/src/LightEngine: mssccprj.scc
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/ShaderLoad.cpp /c/games/top-recode/source/src/LightEngine/ShaderLoad.cpp
+4c4
+< #include "lwgraphicsutil.h"
+---
+> #include "lwGraphicsUtil.h"
+148c148
+<         sprintf(path, "%s%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i], ext[t]);
+---
+>         _snprintf_s(path, LW_MAX_PATH, _TRUNCATE, "%s%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i], ext[t]);
+284c284
+<         _snprintf_s(path, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
+---
+>         _snprintf_s(path,LW_MAX_PATH, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
+315a316
+> #if(defined LW_USE_DX9)
+316a318
+> #endif
+394c396
+<         sprintf(path, "%s%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i], ext[t]);
+---
+>         _snprintf_s(path, LW_MAX_PATH, _TRUNCATE, "%s%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i], ext[t]);
+529c531
+<         _snprintf_s(path, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
+---
+>         _snprintf_s(path,LW_MAX_PATH, _TRUNCATE, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/stdafx.cpp /c/games/top-recode/source/src/LightEngine/stdafx.cpp
+10,11c10,11
+< #include "pi_Alloc.h"
+< #include "pi_Memory.h"
+---
+> //#include "pi_Alloc.h"
+> //#include "pi_Memory.h"
+14,15c14
+< pi_LeakReporter pi_leakReporter("gamememleak.log");
+< //CResourceBundleManage g_ResourceBundleManage("Game.loc"); //Add by lark.li 20080529
+\ No newline at end of file
+---
+> //pi_LeakReporter pi_leakReporter("gamememleak.log");
+Only in /c/games/top-recode/source/src/LightEngine: StdHeader.h
+Only in /c/games/top-recode/source/src/LightEngine: Terrain.cpp
+Only in /c/games/top-recode/source/src/LightEngine: Terrain.h
+Only in /c/games/top-recode/source/src/LightEngine: Texture.cpp
+Only in /c/games/top-recode/source/src/LightEngine: Texture.h
+Only in /c/games/top-recode/source/src/LightEngine: TextureManager.cpp
+Only in /c/games/top-recode/source/src/LightEngine: TextureManager.h
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/TgaCore.cpp /c/games/top-recode/source/src/LightEngine/TgaCore.cpp
+8a9
+> #include "MyMemory.h"
+66c67
+< //	fopen_s(&f, filename, "rb");
+---
+> //	f = fopen(filename, "rb");
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/ViM_helper.cpp /c/games/top-recode/source/src/LightEngine/ViM_helper.cpp
+1a2,5
+> 
+> #ifndef __VIM3D__
+> void Link_required_ViM_helper(){}
+> #else
+4c8,9
+< #include "mprender.h"
+---
+> #include "MPRender.h"
+> #include "MyMemory.h"
+224a230
+> #endif//__VIM3D__
+\ No newline at end of file
+Binary files /c/games/top-recode/source/src/MindPower3D/vssver2.scc and /c/games/top-recode/source/src/LightEngine/vssver2.scc differ
+diff -Ewbr /c/games/top-recode/source/src/MindPower3D/ZRBlock.cpp /c/games/top-recode/source/src/LightEngine/ZRBlock.cpp
+2c2,3
+< 
+---
+> #include "MyMemory.h"
+> #include "CPerformance.h"
+7,13c8
+< 	m_fp = NULL;
+< 	m_nSectionWidth = 8;
+< 	m_nSectionHeight = 8;
+< 	m_bEdit = true;
+< 	m_pOffsetIdx = NULL;
+< 	m_pMapData = NULL;
+< 	m_dwMapPos = 0;
+---
+> 	m = NULL;
+18,110c13,14
+< 	delete m_pDefaultBlock;
+< 	delete m_pOffsetIdx;
+< 	delete m_pMapData;
+< }
+< 
+< BOOL ZRBlock::Load(const char *pszMapName, BOOL bEdit)
+< {
+< 	if(m_fp!=NULL) 
+< 	{
+< 		fclose(m_fp); m_fp = NULL;
+< 	}
+< 	
+< 	FILE *fp = NULL;
+< 	if(bEdit)
+< 	{
+< 		_chmod(pszMapName, _S_IWRITE );
+< 
+< 		fopen_s(&fp, pszMapName, "r+b");
+< 	}
+< 	else
+< 	{
+< 		fopen_s(&fp, pszMapName, "rb");
+< 	}
+< 	if(fp==NULL) 
+< 	{
+< 		LG("map", "msgLoad Map [%s] Error!\n", pszMapName);
+< 		return FALSE;
+< 	}
+< 	
+< 	MPMapFileHeader header;
+< 
+< 	DWORD dwReadSize = 0;
+< 	
+< 	fread(&header, sizeof(MPMapFileHeader), 1, fp);
+< 	dwReadSize += sizeof(MPMapFileHeader);
+< 
+<     if(header.nMapFlag==MP_MAP_FLAG+1)
+<     {
+< 	    fclose(fp);
+< 		LG("map", "msg该地图文件[%s]版本过期, 请使用MapTool打开它来升级版本!", pszMapName);
+< 		return FALSE;
+< 	}
+<     
+< #ifdef NEW_VERSION
+<     if(header.nMapFlag!=MP_MAP_FLAG + 3) 
+< #else
+<     if(header.nMapFlag!=MP_MAP_FLAG + 2)
+< #endif
+< 	{
+< 		fclose(fp);
+< 		LG("map", "msg[%s]不是有效的 MindPower Map File!\n", pszMapName);
+< 		return FALSE;
+< 	}
+< 
+< 	m_nWidth		 = header.nWidth;
+< 	m_nHeight		 = header.nHeight;
+< 	m_nSectionWidth  = header.nSectionWidth;
+< 	m_nSectionHeight = header.nSectionHeight;
+< 
+< 	m_nSectionCntX   = m_nWidth  / m_nSectionWidth;
+< 	m_nSectionCntY   = m_nHeight / m_nSectionHeight;
+< 	m_nSectionCnt    = m_nSectionCntX * m_nSectionCntY;
+< 
+< 	m_bEdit = bEdit;
+< 
+< 	m_fp = fp;
+< 
+<     // 读取全部索引
+<     m_pOffsetIdx = new DWORD[m_nSectionCnt];
+<     fread(m_pOffsetIdx, m_nSectionCnt * 4, 1, m_fp);
+< 	dwReadSize += m_nSectionCnt * 4;
+< 
+< 	if( !m_bEdit )
+< 	{
+< 		m_dwMapPos = ftell( m_fp );
+< 
+< 		fseek( m_fp, 0, SEEK_END );
+< 		DWORD dwPos = ftell( m_fp );
+< 
+< 		DWORD dwMapDataSize = dwPos - dwReadSize;
+< 
+< 		if( dwMapDataSize > m_dwMapDataSize )
+< 		{
+< 			SAFE_DELETE_ARRAY(m_pMapData);
+< 			m_pMapData = new BYTE[dwMapDataSize];
+< 			m_dwMapDataSize = dwMapDataSize;
+< 		}
+< 		fseek( m_fp, dwReadSize, SEEK_SET );
+< 		fread( m_pMapData, dwMapDataSize, 1, m_fp );
+< 	}
+<     ClearSectionArray();
+< 
+< 	return TRUE;
+---
+> 	m = NULL;
+> 	SAFE_DELETE(m_pDefaultBlock);
+115c19
+<     if(m_fp==NULL) return;
+---
+>     assert(m);
+120,121c24,25
+< 	m_fShowCenterX = CenterX;
+< 	m_fShowCenterY = CenterY;
+---
+> 	m->_fShowCenterX = CenterX;
+> 	m->_fShowCenterY = CenterY;
+122a27
+> #ifdef __FPS_DEBUG__
+125,126c30,32
+<     int nCurSectionX = (int)(m_fShowCenterX - (float)range / 2.0f)  / m_nSectionWidth;
+< 	int nCurSectionY = (int)(m_fShowCenterY - (float)range / 2.0f)  / m_nSectionHeight;
+---
+> #endif
+>     int nCurSectionX = (int)(m->_fShowCenterX - (float)range / 2.0f)  / m->_nSectionWidth;
+> 	int nCurSectionY = (int)(m->_fShowCenterY - (float)range / 2.0f)  / m->_nSectionHeight;
+128,129c34,35
+<     int nEndSectionX = (int)(m_fShowCenterX + (float)range / 2.0f)  / m_nSectionWidth;
+< 	int nEndSectionY = (int)(m_fShowCenterY + (float)range / 2.0f)  / m_nSectionHeight;
+---
+>     int nEndSectionX = (int)(m->_fShowCenterX + (float)range / 2.0f)  / m->_nSectionWidth;
+> 	int nEndSectionY = (int)(m->_fShowCenterY + (float)range / 2.0f)  / m->_nSectionHeight;
+134,135c40,41
+< 	if(range  % m_nSectionWidth!=0)   nShowSectionCntX++;
+< 	if(range  % m_nSectionHeight!=0)  nShowSectionCntY++;
+---
+> 	if(range  % m->_nSectionWidth!=0)   nShowSectionCntX++;
+> 	if(range  % m->_nSectionHeight!=0)  nShowSectionCntY++;
+137,138c43
+<     int y = 0;
+< 	for( y = 0; y < nShowSectionCntY; y++)
+---
+>     for(int y = 0; y < nShowSectionCntY; y++)
+142,144c47,48
+< 		if(nSectionY < 0 || nSectionY >= m_nSectionCntY) continue;
+< 		int x = 0;
+< 	for( x = 0; x < nShowSectionCntX; x++)
+---
+> 		if(nSectionY < 0 || nSectionY >= m->_nSectionCntY) continue;
+> 		for(int x = 0; x < nShowSectionCntX; x++)
+148c52
+< 			if(nSectionX < 0 || nSectionX >= m_nSectionCntX) continue;
+---
+> 			if(nSectionX < 0 || nSectionX >= m->_nSectionCntX) continue;
+179a84,85
+> 	assert(pBlock);
+> 	assert(m);
+183c89
+< 	pBlock->dwDataOffset = _ReadSectionDataOffset(nSectionX, nSectionY);
+---
+> 	pBlock->dwDataOffset = m->_ReadSectionDataOffset(nSectionX, nSectionY);
+188c94
+< 	if( m_bEdit )
+---
+> 	if( m->_bEdit )
+190c96
+< 		fseek(m_fp, pBlock->dwDataOffset, SEEK_SET);
+---
+> 		fseek(m->_fp, pBlock->dwDataOffset, SEEK_SET);
+194c100
+< 		dwPos = pBlock->dwDataOffset - m_dwMapPos;
+---
+> 		dwPos = pBlock->dwDataOffset - m->m_dwMapPos;
+197c103
+< 	pBlock->pBlockData = new ZRBlockData[m_nSectionWidth * m_nSectionHeight];
+---
+> 	pBlock->pBlockData = new ZRBlockData[m->_nSectionWidth * m->_nSectionHeight];
+205,206c111,112
+< 	int y = 0;
+< 	for( y = 0; y < m_nSectionHeight; y++)
+---
+> 	//IP("_LoadBlockData(%d,%d) Offset=%u\n", pBlock->nX, pBlock->nY,pBlock->dwDataOffset);
+> 	for(int y = 0; y < m->_nSectionHeight; y++)
+208,209c114
+< 		int x = 0;
+< 	for( x = 0; x < m_nSectionWidth; x++)
+---
+> 		for(int x = 0; x < m->_nSectionWidth; x++)
+211,212c116,117
+< 			ZRBlockData *pB = pBlock->pBlockData + m_nSectionWidth * y + x;
+< 			if( m_bEdit )
+---
+> 			ZRBlockData *pB = pBlock->pBlockData + m->_nSectionWidth * y + x;
+> 			if( m->_bEdit )
+214c119
+< 				fread(&tile, sizeof(tile), 1, m_fp);
+---
+> 				fread(&tile, sizeof(tile), 1, m->_fp);
+218c123
+< 				memcpy( &tile, m_pMapData + dwPos, sizeof(tile) );
+---
+> 				memcpy( &tile, m->m_pMapData + dwPos, sizeof(tile) );
+230c135,136
+< 	if(nX >= m_nWidth || nY >= m_nHeight || nX < 0 || nY < 0) 
+---
+> 	assert(m);
+> 	if(nX >= m->_nWidth || nY >= m->_nHeight || nX < 0 || nY < 0) 
+235,236c141,142
+< 	int nSectionX = nX / m_nSectionWidth;
+< 	int nSectionY = nY / m_nSectionHeight;
+---
+> 	int nSectionX = nX / m->_nSectionWidth;
+> 	int nSectionY = nY / m->_nSectionHeight;
+242,244c148,150
+< 		int nOffX = nX % m_nSectionWidth;
+< 		int nOffY = nY % m_nSectionHeight;
+< 		return pBlock->pBlockData + nOffY * m_nSectionWidth + nOffX;
+---
+> 		int nOffX = nX % m->_nSectionWidth;
+> 		int nOffY = nY % m->_nSectionHeight;
+> 		return pBlock->pBlockData + nOffY * m->_nSectionWidth + nOffX;
+248,257d153
+< }
+< 
+< DWORD ZRBlock::_ReadSectionDataOffset(int nSectionX, int nSectionY)
+< {
+< 	DWORD dwLoc = (nSectionY * m_nSectionCntX + nSectionX);
+<     return *(m_pOffsetIdx + dwLoc);
+<     
+<     fseek(m_fp, sizeof(MPMapFileHeader) + 4 * dwLoc, SEEK_SET);
+< 	DWORD dwDataOffset; fread(&dwDataOffset, 4, 1, m_fp);
+< 	return dwDataOffset;

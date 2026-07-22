@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="网络层">
+      <UniqueIdentifier>{00188733-3d65-47b7-bbaa-7055df2e602c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="应用层">
+      <UniqueIdentifier>{1becf40d-161b-4dc5-b9cd-7b2754d876be}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include=".\UdpSocket.cpp">
+      <Filter>网络层</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UdpClient.cpp">
+      <Filter>应用层</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UdpManage.cpp">
+      <Filter>应用层</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\$(ProjectName)\UdpSocket.h">
+      <Filter>网络层</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\UdpClient.h">
+      <Filter>应用层</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\UdpManage.h">
+      <Filter>应用层</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{fade009d-e6d0-4351-8307-4ec33d6f58e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetThread">
+      <UniqueIdentifier>{84a7c60b-e2c2-4d0b-a4bd-997c7b5a2c88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetProtocol">
+      <UniqueIdentifier>{fc830ea3-59f8-4fc8-b749-ce8f17133e3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WorkThread">
+      <UniqueIdentifier>{2d011c2a-fff5-4df5-885d-756b684c3cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Info">
+      <UniqueIdentifier>{22e69250-feb5-4478-a833-e8b59cf17d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{0945e6bc-1f66-48d7-ad4b-058e98e3a0ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Moliyo">
+      <UniqueIdentifier>http://billingrd.moliyo.com/RDBilling.asmx</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{67DA6AC5-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include=".\ado.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include=".\INIStream.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include=".\iocp.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include=".\lock.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include=".\msgqueue.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include=".\socket2.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include=".\thread.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include=".\netthread.cpp">
+      <Filter>NetThread</Filter>
+    </ClCompile>
+    <ClCompile Include=".\DBLogic.cpp">
+      <Filter>NetProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include=".\MainLogic.cpp">
+      <Filter>NetProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include=".\logthread.cpp">
+      <Filter>WorkThread</Filter>
+    </ClCompile>
+    <ClCompile Include=".\mailthread.cpp">
+      <Filter>WorkThread</Filter>
+    </ClCompile>
+    <ClCompile Include=".\managethread.cpp">
+      <Filter>WorkThread</Filter>
+    </ClCompile>
+    <ClCompile Include=".\storethread.cpp">
+      <Filter>WorkThread</Filter>
+    </ClCompile>
+    <ClCompile Include=".\billing.cpp">
+      <Filter>Info</Filter>
+    </ClCompile>
+    <ClCompile Include=".\main.cpp">
+      <Filter>Info</Filter>
+    </ClCompile>
+    <ClCompile Include=".\VisualWindow.cpp">
+      <Filter>Info</Filter>
+    </ClCompile>
+    <ClCompile Include=".\WebServiceThread.cpp">
+      <Filter>Info</Filter>
+    </ClCompile>
+    <ClCompile Include=".\MyComboBox.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include=".\MyListView.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\$(ProjectName)\ado.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\datatype.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\INIStream.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\iocp.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\lock.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\msgqueue.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\socket2.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\thread.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\netthread.h">
+      <Filter>NetThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\DBLogic.h">
+      <Filter>NetProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\logthread.h">
+      <Filter>WorkThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\mailthread.h">
+      <Filter>WorkThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\managethread.h">
+      <Filter>WorkThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\storethread.h">
+      <Filter>WorkThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\billing.h">
+      <Filter>Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\BillInterface.h">
+      <Filter>Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\infotype.h">
+      <Filter>Info</Filter>
+    </ClInclude>
+    <ClInclude Include=".\resource.h">
+      <Filter>Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\WebServiceThread.h">
+      <Filter>Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\MyComboBox.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\MyListView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Moliyo.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\WebService.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\inc\$(ProjectName)\Moliyo\RDBilling.disco">
+      <Filter>Moliyo</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\inc\$(ProjectName)\Moliyo\RDBilling.wsdl">
+      <Filter>Moliyo</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\inc\$(ProjectName)\Moliyo\results.discomap">
+      <Filter>Moliyo</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\TradeServer.rc" />
+  </ItemGroup>
+</Project>

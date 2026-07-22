@@ -1,0 +1,287 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (Simplified, PRC) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MAIN_WINDOW DIALOGEX 0, 0, 440, 300
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "InfoTools"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_INFO_TAB,"SysTabControl32",0x0,7,7,425,285
+    CONTROL         "",IDC_FRAME,"Static",SS_ETCHEDFRAME,7,19,425,273
+END
+
+IDD_STORE_DLG DIALOGEX 0, 0, 441, 300
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+EXSTYLE WS_EX_OVERLAPPEDWINDOW
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_STORE_LIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,0,0,292,136
+    EDITTEXT        IDC_STORE_NAME,346,9,70,12,ES_AUTOHSCROLL
+    RTEXT           "Name/ID:",IDC_STATIC,302,11,34,8
+    RTEXT           "Class ID:",IDC_STATIC,302,24,34,8
+    RTEXT           "Price:",IDC_STATIC,302,36,34,8
+    RTEXT           "Remark:",IDC_STATIC,302,98,34,8
+    RTEXT           "ID:",IDC_STATIC,302,160,34,8
+    LISTBOX         IDC_ITEM_LIST,346,185,70,30,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Slot:",IDC_STATIC,0,168,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr ID 1:",IDC_STATIC,0,180,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr Val 1:",IDC_STATIC,0,192,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr ID 2:",IDC_STATIC,0,204,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr Val 2:",IDC_STATIC,0,216,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr ID 3:",IDC_STATIC,0,228,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr ID 4:",IDC_STATIC,0,252,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr ID 5:",IDC_STATIC,0,276,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr Val 3:",IDC_STATIC,0,240,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr Val 4:",IDC_STATIC,0,264,36,8,NOT WS_VISIBLE
+    RTEXT           "Attr Val 5:",IDC_STATIC,0,288,36,8,NOT WS_VISIBLE
+    EDITTEXT        IDC_STORE_CLASS,346,22,70,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_STORE_PRICE,346,36,70,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_STORE_REMARK,346,99,70,41,ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL
+    EDITTEXT        IDC_ITEM_ID,346,158,70,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_ITEM_SLOT,48,168,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRID1,48,180,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRVAL1,48,192,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRID2,48,204,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRVAL2,48,216,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRVAL3,48,240,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRVAL4,48,264,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRID4,48,252,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRID3,48,228,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRID5,48,276,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_ATTRVAL5,48,288,70,12,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    PUSHBUTTON      "Add",IDC_ADD_ITEM,300,182,44,16
+    PUSHBUTTON      "Add Store",IDC_ADD_STORE,300,107,44,16
+    GROUPBOX        "Store",IDC_STATIC,297,1,124,144
+    GROUPBOX        "Item",IDC_STATIC,297,150,124,73
+    GROUPBOX        "Delete",IDC_STATIC,297,241,124,27
+    RTEXT           "Store ID:",IDC_STATIC,300,251,36,8
+    EDITTEXT        IDC_STORE_DELID,343,250,40,12,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Delete",IDC_DEL_STORE,387,249,29,14
+    PUSHBUTTON      "Remove",IDC_DEL_ITEM,300,200,44,16
+    RTEXT           "Num:",IDC_STATIC,302,171,34,8
+    EDITTEXT        IDC_ITEM_NUM,346,171,70,12,ES_AUTOHSCROLL
+    RTEXT           "Hot:",IDC_STATIC,302,48,34,8
+    CONTROL         "",IDC_CHK_HOT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,346,49,8,8
+    EDITTEXT        IDC_STORE_NUMBER,346,59,70,12,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_STORE_DAYS,346,72,70,12,ES_AUTOHSCROLL | ES_NUMBER
+    RTEXT           "Number:",IDC_STATIC,302,61,34,8
+    RTEXT           "Hours:",IDC_STATIC,302,73,34,8
+    RTEXT           "Begin:",IDC_STATIC,302,85,34,8
+    EDITTEXT        IDC_STORE_BEGIN,346,85,70,12,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Modify",IDC_MDF_STORE,300,124,44,16
+    CONTROL         "",IDC_DEL_STORE_LIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,0,138,292,126
+    PUSHBUTTON      "Clear",IDC_CLR_STORE,342,226,44,16
+END
+
+IDD_AFFICHE_DLG DIALOGEX 0, 0, 440, 300
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+EXSTYLE WS_EX_OVERLAPPEDWINDOW
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_AFFICHE_LIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,0,0,420,78
+    RTEXT           "Content:",IDC_STATIC,4,103,44,8
+    EDITTEXT        IDC_AFFICHE_REMARK,55,103,168,84,ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL
+    GROUPBOX        "Affiche:",IDC_STATIC,0,80,224,159
+    GROUPBOX        "Store",IDC_STATIC,257,80,163,117
+    RTEXT           "Store ID:",IDC_STATIC,261,93,44,8
+    EDITTEXT        IDC_LINK_STORE_ID,311,91,105,14,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Add Store Link",IDC_ADD_LINK,266,114,68,26
+    LISTBOX         IDC_LINK_STORE_LIST,340,111,77,82,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Delete",IDC_STATIC,256,198,163,41
+    EDITTEXT        IDC_AFFICHE_DELID,312,215,62,14,ES_AUTOHSCROLL | ES_NUMBER
+    RTEXT           "Affiche ID:",IDC_STATIC,261,217,44,8
+    PUSHBUTTON      "Submit",IDC_DEL_AFFICHE,382,215,33,14
+    PUSHBUTTON      "Add Affiche",IDC_ADD_AFFICHE,91,199,60,26
+    PUSHBUTTON      "Remove Store Link",IDC_DEL_LINK,266,158,68,26
+END
+
+IDD_SYSTEM_DLG DIALOGEX 0, 0, 440, 300
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+EXSTYLE WS_EX_OVERLAPPEDWINDOW
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Rate",IDC_STATIC,5,6,91,77
+    EDITTEXT        IDC_EDT_RATE,12,23,73,13,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Modify Rate",IDC_BTN_RATE,38,42,47,16
+    LTEXT           "Crystal = MoBean * Rate",IDC_STATIC,10,66,78,10
+    GROUPBOX        "VIP",IDC_STATIC,118,6,91,77
+    EDITTEXT        IDC_EDT_VIPID,127,23,73,13,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    PUSHBUTTON      "Modify",IDC_BTN_VIPMODIFY,153,59,47,16
+    EDITTEXT        IDC_EDT_VIPPRICE,127,41,73,13,ES_AUTOHSCROLL | ES_NUMBER
+END
+
+IDD_CLASS_DLG DIALOGEX 0, 0, 440, 300
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+EXSTYLE WS_EX_OVERLAPPEDWINDOW
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_CLASS_LIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,0,0,420,78
+    GROUPBOX        "Class",IDC_STATIC,0,105,249,134
+    RTEXT           "ID:",IDC_STATIC,9,134,44,8
+    RTEXT           "Parent ID:",IDC_STATIC,9,178,44,8
+    RTEXT           "Name:",IDC_STATIC,9,156,44,8
+    EDITTEXT        IDC_CLSID,61,132,107,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_CLSNAME,61,154,107,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_CLSPARENT,61,176,107,14,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Remove",IDC_DEL_CLASS,182,132,50,14
+    PUSHBUTTON      "Add",IDC_ADD_CLASS,118,203,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_MAIN_WINDOW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 432
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 292
+    END
+
+    IDD_STORE_DLG, DIALOG
+    BEGIN
+    END
+
+    IDD_AFFICHE_DLG, DIALOG
+    BEGIN
+    END
+
+    IDD_SYSTEM_DLG, DIALOG
+    BEGIN
+    END
+
+    IDD_CLASS_DLG, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_STORE_DLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // Chinese (Simplified, PRC) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DLG_LOGIN DIALOGEX 0, 0, 159, 74
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Login"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    RTEXT           "Password:",IDC_STATIC,27,28,37,13
+    EDITTEXT        IDC_EDIT_PASSWD,69,26,82,15,ES_PASSWORD | ES_AUTOHSCROLL
+    PUSHBUTTON      "Login",IDC_BTN_LOGIN,106,49,45,17
+    RTEXT           "Userid",IDC_STATIC,27,11,37,13
+    EDITTEXT        IDC_EDIT_USERID,69,8,82,15,ES_AUTOHSCROLL
+    RTEXT           "",IDC_LGN_STATE,8,46,95,16
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DLG_LOGIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 152
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 67
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8661B70A-8D22-4082-9E71-00312294DF0F}</ProjectGuid>
+    <RootNamespace>MindPower3D</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)D_DX8</TargetName>
+    <OutDir>../../lib/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(ProjectName)/$(Configuration)/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>$(ProjectName)_DX8</TargetName>
+    <OutDir>../../lib/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(ProjectName)/$(Configuration)/</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN32;_DEBUG;_WINDOWS;USE_MINDPOWER;_WIN32_WINNT=0x0500;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutild.lib;ViMD3DLib_d.lib;Common_d.lib;ICUHelper_d.lib;icudtd.lib;icuucd.lib;icuind.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\VimD3DLib;..\..\lib\Logutil;..\..\lib\Common;..\..\lib\icu;..\..\lib\ICUHelper;..\..\lib\DirectX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;LIBCI.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN32;NDEBUG;_WINDO200.WS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutil.lib;ViMD3DLib.lib;Common.lib;ICUHelper.lib;icudt.lib;icuuc.lib;icuin.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\VimD3DLib;..\..\lib\Logutil;..\..\lib\Common;..\..\lib\icu;..\..\lib\ICUHelper;..\..\lib\DirectX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;libci.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug />
+      <DataExecutionPrevention />
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include=".\AniFile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\Blk.cpp" />
+    <ClCompile Include=".\Color.cpp" />
+    <ClCompile Include=".\d3dutil.cpp" />
+    <ClCompile Include=".\lwAnimCtrl.cpp" />
+    <ClCompile Include=".\lwAnimCtrlObj.cpp" />
+    <ClCompile Include=".\lwAnimKeySetPRS.cpp" />
+    <ClCompile Include=".\lwBitmap.cpp" />
+    <ClCompile Include=".\lwCamera.cpp" />
+    <ClCompile Include=".\lwConsole.cpp" />
+    <ClCompile Include=".\lwCoordinateSys.cpp" />
+    <ClCompile Include=".\lwD3DSettings.cpp" />
+    <ClCompile Include=".\lwDDSFile.cpp" />
+    <ClCompile Include=".\lwDeviceObject.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\lwDirectoryBrowser.cpp" />
+    <ClCompile Include=".\lwEfxTrack.cpp" />
+    <ClCompile Include=".\lwExpObj.cpp" />
+    <ClCompile Include=".\lwFile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\lwFileEncode.cpp" />
+    <ClCompile Include=".\lwFileStream.cpp" />
+    <ClCompile Include=".\lwFileutil.cpp" />
+    <ClCompile Include=".\lwgraphicsutil.cpp" />
+    <ClCompile Include=".\lwGUIDObj.cpp" />
+    <ClCompile Include=".\lwHeap.cpp" />
+    <ClCompile Include=".\lwHelperGeometry.cpp" />
+    <ClCompile Include=".\lwIFunc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\lwInterface.cpp" />
+    <ClCompile Include=".\lwItem.cpp" />
+    <ClCompile Include=".\lwIUtil.cpp" />
+    <ClCompile Include=".\lwmath.cpp" />
+    <ClCompile Include=".\lwMisc.cpp" />
+    <ClCompile Include=".\lwModel.cpp" />
+    <ClCompile Include=".\lwNodeObject.cpp" />
+    <ClCompile Include=".\lwObjectMethod.cpp" />
+    <ClCompile Include=".\lwObjectPool.cpp" />
+    <ClCompile Include=".\lwPathInfo.cpp" />
+    <ClCompile Include=".\lwPhysique.cpp" />
+    <ClCompile Include=".\lwPoseCtrl.cpp" />
+    <ClCompile Include=".\lwprimitive.cpp" />
+    <ClCompile Include=".\lwPrimitiveHelper.cpp" />
+    <ClCompile Include=".\lwRenderCtrlEmb.cpp" />
+    <ClCompile Include=".\lwRenderImp.cpp" />
+    <ClCompile Include=".\lwresourcemgr.cpp" />
+    <ClCompile Include=".\lwSceneMgr.cpp" />
+    <ClCompile Include=".\lwShaderDeclMgr.cpp" />
+    <ClCompile Include=".\lwShaderMgr.cpp" />
+    <ClCompile Include=".\lwStreamObj.cpp" />
+    <ClCompile Include=".\lwSysCharacter.cpp" />
+    <ClCompile Include=".\lwSysGraphics.cpp" />
+    <ClCompile Include=".\lwSystem.cpp" />
+    <ClCompile Include=".\lwSystemInfo.cpp" />
+    <ClCompile Include=".\lwThreadPool.cpp" />
+    <ClCompile Include=".\lwTimer.cpp" />
+    <ClCompile Include=".\lwTreeNode.cpp" />
+    <ClCompile Include=".\lwViewFrustum.cpp" />
+    <ClCompile Include=".\lwxRenderCtrVS.cpp" />
+    <ClCompile Include=".\dxutil.cpp" />
+    <ClCompile Include=".\EffectFile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\Frames.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\Frustum.cpp" />
+    <ClCompile Include=".\Heightmap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\I_Effect.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPCamera.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPCharacter.cpp" />
+    <ClCompile Include=".\MPColorValue.cpp" />
+    <ClCompile Include=".\MPConsole.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPDataStream.cpp" />
+    <ClCompile Include=".\MPEffectCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPEffectMath.cpp" />
+    <ClCompile Include=".\MPEffQuaternion.cpp" />
+    <ClCompile Include=".\MPEffVector3.cpp" />
+    <ClCompile Include=".\MPFont.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPGameApp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPMap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPMapData.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPMath.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPModelEff.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPParticleCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPParticleSys.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPRender.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPResManger.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPSceneItem.cpp" />
+    <ClCompile Include=".\MPSceneObject.cpp" />
+    <ClCompile Include=".\MPShadeMap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPSkyBox.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPStringUtil.cpp" />
+    <ClCompile Include=".\MPTile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\mygraph.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\ShaderLoad.cpp" />
+    <ClCompile Include=".\Singleton.cpp" />
+    <ClCompile Include=".\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\Terrain.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\Texture.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\TextureManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\TgaCore.cpp" />
+    <ClCompile Include=".\ViM_helper.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\ZRBlock.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\$(ProjectName)\d3dutil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\dxutil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\EffectFile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GlobalInc.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\I_Effect.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPCamera.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPCharacter.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPColorValue.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPConsole.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPDataStream.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffectCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffectMath.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffPrerequisites.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffQuaternion.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffVector3.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPFactoryObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPFont.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPGameApp.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPInterface.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPIteratorWrappers.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPMap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPMath.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParameterInterface.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleAffector.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleAffectorFactory.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPparticlectrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleEmitterFactory.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleSys.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPRender.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPResManger.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSceneItem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSceneObject.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPScriptLoader.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPShadeMap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSharedPtr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSingleton.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSkyBox.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPStringUtil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPStringVector.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPTextureSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPTile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MindPower.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MindPowerAPI.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\mygraph.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ShaderLoad.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STLprerequisite.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ZRBlock.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Blk.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Color.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwAnimCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwAnimCtrlObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwAnimKeySetPRS.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwBitmap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwCamera.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwConsole.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwCoordinateSys.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwD3DSettings.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwDDS.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwDDSFile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwDeviceObject.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwDirectoryBrowser.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwEfxTrack.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwExpObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFileEncode.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFileStream.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFileutil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwgraphics.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwgraphicsutil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwHeap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwHelperGeometry.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwInterfaceExt.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwItem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwLinkCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwMisc.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwModel.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwNodeObject.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwObjectPool.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPathInfo.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPhysique.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPoseCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPreDefinition.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPrimitive.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPrimitiveHelper.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwRenderCtrlEmb.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwRenderImp.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwResourceMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSceneMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwShaderDeclMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwShaderMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwStreamObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSyncObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSysCharacter.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSysGraphics.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSystem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSystemInfo.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwThreadPool.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwTimer.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwTreeNode.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwutilsexp.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwViewFrustum.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwxRenderCtrlVS.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Frames.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Frustum.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Heightmap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\stdafx.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\StdHeader.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Terrain.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Texture.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\TextureManager.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\TgaCore.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ViM_helper.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

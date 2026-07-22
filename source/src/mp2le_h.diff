@@ -1,0 +1,536 @@
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/dxutil.h /c/games/top-recode/source/inc/LightEngine/dxutil.h
+28c28
+< HRESULT      DXUtil_FindMediaFile( TCHAR* strPath, TCHAR* strFilename );
+---
+> HRESULT      DXUtil_FindMediaFile( TCHAR* strPath, TCHAR* strFilename, INT PathLen );
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/GlobalInc.h /c/games/top-recode/source/inc/LightEngine/GlobalInc.h
+50c50
+<     _vsnprintf_s( &buf[3], sizeof(buf)-4,_TRUNCATE, format, args );
+---
+>     _vsntprintf_s( &buf[3], 508, _TRUNCATE, format, args );
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/I_Effect.h /c/games/top-recode/source/inc/LightEngine/I_Effect.h
+234c234
+< //#include <mindpower.h>
+---
+> //#include <MindPower.h>
+1076a1077
+> 	void		 SetBillBoard(bool bBoard);
+1155,1160c1156,1157
+< 	void	PlayModel()
+< 	{
+< 		if (!m_pCModel) return;
+< 		if(m_pCModel->IsItem())
+< 			m_pCModel->PlayDefaultAnimation();
+< 	}
+---
+> 	void	PlayModel();
+> 	
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/lwHeader.h /c/games/top-recode/source/inc/LightEngine/lwHeader.h
+17c17
+< #define LW_MALLOC(obj)          malloc(obj)
+---
+> #define LW_MALLOC(obj)          _ALLOC(obj)
+19c19
+< #define LW_FREE(obj)            free(obj)
+---
+> #define LW_FREE(obj)            _FREE(obj)
+105c105
+< typedef unsigned __int64 LW_INT64;
+---
+> typedef __int64 LW_INT64;
+133,135c133,135
+< #define LW_MAKEINT64( l, h ) ((LW_INT64)(((LW_DWORD)(l)) | ((LW_INT64)((LW_DWORD)(h))) << 32))
+< #define LW_LODWORD( i ) ((LW_DWORD)(i))
+< #define LW_HIDWORD( i ) ((LW_DWORD)((((LW_INT64)(i)) >> 32) & 0xffffffff))
+---
+> #define LW_MAKEINT64( l, h ) ( (LW_INT64)( ((LW_DWORD)l) | (((LW_DWORD)h) << 32)) )
+> #define LW_LODWORD( i ) ( (LW_DWORD)( ((LW_INT64)i) & 0x0000ffff ) )
+> #define LW_HIDWORD( i ) ( (LW_DWORD)( (LW_DWORD)(((LW_INT64)i) >> 32) & 0xffff) )
+141a142,143
+> 
+> #pragma warning(disable: 4293)
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/lwInterface.h /c/games/top-recode/source/inc/LightEngine/lwInterface.h
+787,788c787
+< 	virtual LW_RESULT AddStateToSet(DWORD state, DWORD value) PURE_METHOD;
+< 
+---
+> 	virtual LW_RESULT AddStateToSet(DWORD state, DWORD value) PURE_METHOD; //添加 RenderState 如果渲染状态表满了，则返回失败，最多8个 
+1550a1550
+> 	virtual LW_RESULT AddStateToSet(DWORD state, DWORD value) PURE_METHOD; //添加 RenderState 如果渲染状态表满了，则返回失败，最多8个 
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/lwITypes.h /c/games/top-recode/source/inc/LightEngine/lwITypes.h
+9a10,25
+> struct lwColorValue4b
+> {
+> 	union 
+> 	{
+> 		struct 
+> 		{
+> 			BYTE b;
+> 			BYTE g;
+> 			BYTE r;
+> 			BYTE a;
+> 		};
+> 
+> 		DWORD color;
+> 	};
+> };
+> 
+322,337d337
+< struct lwColorValue4b
+< {
+<     union 
+<     {
+<         struct 
+<         {
+<             BYTE b;
+<             BYTE g;
+<             BYTE r;
+<             BYTE a;
+<         };
+< 
+<         DWORD color;
+<     };
+< };
+< 
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/lwObjectMethod.h /c/games/top-recode/source/inc/LightEngine/lwObjectMethod.h
+17d16
+< 	// modified by clp
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/lwShaderTypes.h /c/games/top-recode/source/inc/LightEngine/lwShaderTypes.h
+142a143,144
+> 
+> 
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MindPower.h /c/games/top-recode/source/inc/LightEngine/MindPower.h
+25d24
+< LW_USING
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MindPowerAPI.h /c/games/top-recode/source/inc/LightEngine/MindPowerAPI.h
+1,3c1,2
+< //
+< #pragma once
+< 
+---
+> #ifndef __MINDPOWER_API_H
+> #define __MINDPOWER_API_H
+16d14
+< 
+18d15
+< 
+20a18
+> #endif
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPCharacter.h /c/games/top-recode/source/inc/LightEngine/MPCharacter.h
+3d2
+< 
+9d7
+< 
+11c9,10
+< 
+---
+> #include <vector>
+> using namespace std;
+63,64c62,65
+<     MPLinkInfo _link_item_seq[ LW_MAX_LINK_ITEM_NUM ];
+<     DWORD _link_item_num;
+---
+> //	MPLinkInfo _link_item_seq[ LW_MAX_LINK_ITEM_NUM ];
+> //	DWORD _link_item_num;
+> //  这个变量游戏中大部分都没用到，改用vector能节省 (8*16)-16 = 112 的内存，仍然保证了效率 
+>     vector<MPLinkInfo> _link_item_seq;
+120c121
+<     DWORD GetLinkItemNum() const { return _link_item_num; }
+---
+>     DWORD GetLinkItemNum() const { return (DWORD)_link_item_seq.size(); }
+157,158d157
+< 
+< typedef MPCharacter MPCharacter;
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPColorValue.h /c/games/top-recode/source/inc/LightEngine/MPColorValue.h
+94c94
+< 		assert( fScalar != 0.0 );
+---
+> 		assert( fScalar != 0.0f );
+96c96
+< 		float fInv = 1.0 / fScalar;
+---
+> 		float fInv = 1.0f / fScalar;
+187c187
+< 	assert( fScalar != 0.0 );
+---
+> 	assert( fScalar != 0.0f );
+191c191
+< 	float fInv = 1.0 / fScalar;
+---
+> 	float fInv = 1.0f / fScalar;
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPConsole.h /c/games/top-recode/source/inc/LightEngine/MPConsole.h
+4d3
+< // Created By Ryan Wang
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPEffectMath.h /c/games/top-recode/source/inc/LightEngine/MPEffectMath.h
+173,174d172
+< 	static const std::string BLANK;
+< 
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPEffQuaternion.h /c/games/top-recode/source/inc/LightEngine/MPEffQuaternion.h
+10c10
+< class MINDPOWER_API MPEffQuaternion
+---
+> class MPEffQuaternion
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPEffVector3.h /c/games/top-recode/source/inc/LightEngine/MPEffVector3.h
+10c10
+< class MINDPOWER_API MPEffVector3
+---
+> class MPEffVector3
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPGameApp.h /c/games/top-recode/source/inc/LightEngine/MPGameApp.h
+1,7d0
+< //#################################
+< // MindPower GameApp Header File
+< // Render & GameApp Routines
+< //
+< // Created By Ryan Wang
+< // Last Modified : 2004/02/04 
+< //#################################
+18d10
+< // Added by CLP
+23d14
+< // Added by CLP
+215c206
+< 	// ----- Added by CLP ----- //
+---
+> 
+230d220
+< 	// ----- Added by CLP ----- //
+251d240
+< // Added by CLP
+296d284
+< // Added by CLP
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPMap.h /c/games/top-recode/source/inc/LightEngine/MPMap.h
+6,9d5
+< 
+< 
+< 
+< 
+38c34
+< 
+---
+> class CTerrain;
+40a37,41
+> 	friend class ZRBlock;
+> #ifdef _SKYBOX_
+> 	friend class CTerrain;
+> 	friend class CHeightmap;
+> #endif
+92c93
+<         if(nWidth!=_nShowWidth || nHeight!=_nShowHeight)
+---
+>         if((nWidth!=_nShowWidth) || (nHeight!=_nShowHeight))
+123a125
+> 	BOOL		IsEnableWireFrame()						{ return _bWireFrame;					  }
+138a141,144
+> /*------------------------------------------------------------
+>     效能调试才需要这些变量 by Waiting 2009-06-18
+> ------------------------------------------------------------*/
+> #ifdef __FPS_DEBUG__
+140d145
+< 
+146c151
+<     DWORD       m_dwBatchTime;
+---
+> #endif
+150c155,156
+< protected:
+---
+> 	bool		m_bEdit;
+> public:
+166a173,175
+> #ifdef _SKYBOX_
+> 	CTerrain*					m_pTerrain;
+> #endif
+200,203c209,210
+< 	int							_nSectionWidth;		// 每一块Section的宽度和高度
+< 	int							_nSectionHeight;
+< 	int							_nSectionCntX;		// 地图水平方向上Section的块数
+< 	int							_nSectionCntY;		// 地图垂直方向上Section的块数
+---
+> 	
+> 
+234,235d240
+< 	BOOL						_bEnableNormalLight;
+<     DWORD                       _dwLoadingCnt;
+236a242,244
+> #ifdef __FPS_DEBUG__
+>     DWORD                       _dwLoadingCnt;
+> #endif
+244,245c252,253
+< 	void        CreateSkyDoom(D3DXVECTOR3 center, float radius, char* txPath, bool hemisphere = true); //add by jze 2008.6.27
+< 	void		SetupPixelFog(DWORD Color, DWORD Mode,float Start, float End, float Density); //add by jze 2008.7.3
+---
+> 	void        CreateSkyDoom(D3DXVECTOR3 center, float radius, char* txPath, bool hemisphere = true); 
+> 	void		SetupPixelFog(DWORD Color, DWORD Mode,float Start, float End, float Density); 
+255a264,267
+> #ifdef _SKYBOX_
+> 	bool		SaveHeightBMP(char* szFilename, int width, int height);
+> #endif
+> 
+266a279,284
+> public:
+> 	BOOL						_bEnableNormalLight;
+> 	int							_nSectionWidth;		// 每一块Section的宽度和高度
+> 	int							_nSectionHeight;
+> 	int							_nSectionCntX;		// 地图水平方向上Section的块数
+> 	int							_nSectionCntY;		// 地图垂直方向上Section的块数
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPMath.h /c/games/top-recode/source/inc/LightEngine/MPMath.h
+1,5d0
+< //#########################
+< // Mind Power Math Routines
+< // 历史悠久的数据函数库
+< // Created By Ryan Wang
+< //#########################
+28c23
+< //算法：共线的三点的关系， p1, p2 ,p 是否在p1,p2之间还是在p1,p2在外。: added by billy
+---
+> //算法：共线的三点的关系， p1, p2 ,p 是否在p1,p2之间还是在p1,p2在外。
+37c32
+< //算法：边与面的相交情况  .: added by billy 
+---
+> //算法：边与面的相交情况 
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPModelEff.h /c/games/top-recode/source/inc/LightEngine/MPModelEff.h
+7c7
+< #include "mpresmanger.h"
+---
+> #include "MPresmanger.h"
+38c38,42
+< 	//~CEffectCortrol(void);
+---
+> 	~CEffectCortrol(void)
+> 	{
+> 		m_vecCurCoord.clear();
+> 		m_lpCurTex.clear();
+> 	}
+215c219,220
+< 		if(m_iFrameCount<=0)
+---
+> 		//if(m_iFrameCount<=0)
+> 		if(m_iFrameCount<=0 || m_iCurFrame < 0 || m_iCurFrame > 200) //静态分析修改，边界检查
+485c490
+< 			_snprintf_s(szData, _TRUNCATE, "获取特效信息(ID%d)名称失败！", idx);
+---
+> 			_snprintf_s( szData, 128, _TRUNCATE,"获取特效信息(ID%d)名称失败！", idx );
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPParticleCtrl.h /c/games/top-recode/source/inc/LightEngine/MPParticleCtrl.h
+7c7
+< #include ".\mpparticlesys.h"
+---
+> #include ".\MPparticlesys.h"
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPRender.h /c/games/top-recode/source/inc/LightEngine/MPRender.h
+1,9d0
+< // D3D Render 封装D3D的相关操作
+< // 几个主要功能为 :  View Type管理
+< //                   WorldViewRegion管理
+< // 					 BeginRender, EndRender()
+< //                   Ray Tracing
+< //                   Draw Basic Geometry 
+< //                   Text Print 
+< // Created By Ryan Wang
+< 
+14c5
+< #include "mpfont.h"
+---
+> #include "MPfont.h"
+55c46
+< };  //added by billy 
+---
+> };  
+60a52
+> class CTextureManager;
+250c242
+< public: //added by billy
+---
+> public: 
+266a259,261
+> #ifdef _SKYBOX_
+> 	CTextureManager*		m_pTextureManager;
+> #endif
+330c325
+< 
+---
+> #ifdef __VIM3D__
+333a329
+> #endif
+381d376
+< 
+389d383
+< 
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPResManger.h /c/games/top-recode/source/inc/LightEngine/MPResManger.h
+7c7
+< //#include "mpmodeleff.h"
+---
+> //#include "MPmodeleff.h"
+9c9
+< #include "mpshademap.h"
+---
+> #include "MPshademap.h"
+11c11
+< #include "mpparticlectrl.h"
+---
+> #include "MPparticlectrl.h"
+350a351
+> 
+351a353,362
+> /*------------------------------------------------------------
+>     内存调试才需要这些变量 by Waiting 2009-06-18
+> ------------------------------------------------------------*/
+> #ifdef __MEM_DEBUG__
+> 	size_t GetCurUseMemory();
+> 	size_t GetMaxUseMemory();
+> 	DWORD  GetCurObject();
+> 	DWORD  GetMaxObject();
+> 	void   EndMemoryCheck();
+> #endif
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPResourceSet.h /c/games/top-recode/source/inc/LightEngine/MPResourceSet.h
+38c38
+< 	static MPResourceSet* I() { return _Instance; }
+---
+> 	static MPResourceSet* I() { return m_pInstance; }
+39a40,53
+> 	static MPResourceSet& GetInstance()
+> 	{
+> 		assert(m_pInstance); 
+> 		return *m_pInstance; 
+> 	}
+> 
+> 	static MPResourceSet* GetInstancePtr()
+> 	{
+> 		return m_pInstance; 
+> 	}
+> 
+> 	static MPResourceSet* m_pInstance; // 相当于单键, 把自己记住
+> 
+> public:
+41a56
+> 		m_pInstance = this;
+43d57
+< 		_Instance = this;
+52,54d65
+< 
+< 	static MPResourceSet* _Instance; // 相当于单键, 把自己记住
+< 
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPSceneItem.h /c/games/top-recode/source/inc/LightEngine/MPSceneItem.h
+57d56
+< 	// added by clp
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPSceneObject.h /c/games/top-recode/source/inc/LightEngine/MPSceneObject.h
+19,20c19,22
+<     MPSceneItem* _link_item_seq[ LW_MAX_LINK_ITEM_NUM ];
+<     DWORD _link_item_num;
+---
+> //  这个变量游戏中大部分都没用到，改用vector能节省 (68-16) = 52 的内存，仍然保证了效率 
+> //  MPSceneItem* _link_item_seq[ LW_MAX_LINK_ITEM_NUM ];
+> //	DWORD _link_item_num;
+> 	vector<MPSceneItem*> _link_item_seq;
+60a63
+> 	lwVector3 GetObjectSize();
+64c67
+<     DWORD GetLinkItemNum() const { return _link_item_num; }
+---
+>     DWORD GetLinkItemNum() const { return (DWORD)_link_item_seq.size(); }
+Only in /c/games/top-recode/source/inc/LightEngine: MPSkyBox.h
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPTerrainSet.h /c/games/top-recode/source/inc/LightEngine/MPTerrainSet.h
+46,47c46,47
+< 			//_snprintf_s(szName, _TRUNCATE, "texture/terrain/water/waterbump%04d.bmp", i);
+< 			_snprintf_s(szName, _TRUNCATE, "texture/terrain/water/ocean_h.%02d.bmp", i + 1);
+---
+> 			//_snprintf_s(szName, "texture/terrain/water/waterbump%04d.bmp", i);
+> 			_snprintf_s(szName, 64 ,_TRUNCATE,"texture/terrain/water/ocean_h.%02d.bmp", i + 1);
+53c53
+< 			_snprintf_s(szName, _TRUNCATE, "texture/terrain/alpha/%d.tga", i);
+---
+> 			_snprintf_s(szName,64 ,_TRUNCATE, "texture/terrain/alpha/%d.tga", i);
+126c126
+< 		LG("terrain", "Load Terrain [%s], ID = %d, Type = %d, Texture ID = %d\n", pTerrainInfo->szDataName, pTerrainInfo->nID, pTerrainInfo->btType, pTerrainInfo->nTextureID);
+---
+> //		LG("terrain", "Load Terrain [%s], ID = %d, Type = %d, Texture ID = %d\n", pTerrainInfo->szDataName, pTerrainInfo->nID, pTerrainInfo->btType, pTerrainInfo->nTextureID);
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/MPTextureSet.h /c/games/top-recode/source/inc/LightEngine/MPTextureSet.h
+84a85,87
+> 		if( _nLoadedRawDataCnt<=0 ) 
+> 			return;
+> 
+88c91
+< 		    if(pInfo->pData)
+---
+> 			if(pInfo && pInfo->pData) 
+136,139c139,144
+< 		if(rand()%100 < 2)
+< 		{
+< 			LG("vmem", "vmem = %d k\n", dwMem / 1024);
+< 		}
+---
+> //		static DWORD s_dwOld = 0;
+> //		if( s_dwOld!=dwMem )
+> //		{
+> //			s_dwOld = dwMem;
+> //			LG("vmem", "vmem = %d k\n", dwMem / 1024);
+> //		}
+160,161c165,168
+<         strncpy_s(tex_info.file_name, pTexInfo->szDataName, _TRUNCATE);
+<         _tcslwr_s(tex_info.file_name);
+---
+>         _tcsncpy_s(tex_info.file_name, pTexInfo->szDataName, _TRUNCATE );
+> //出界, 多了1 -Waiting Fix 2009-03-13
+> //      _tcslwr_s(tex_info.file_name, sizeof( tex_info.file_name) + 1 );
+> 		_tcslwr_s(tex_info.file_name, sizeof( tex_info.file_name) );
+221c228
+< 		LG("tex_release", "Load Texture [%s] size = %d %d, id = %d\n",  pTexInfo->szDataName, pTexInfo->sWidth, pTexInfo->sHeight, pInfo->nID);
+---
+> //		LG("tex_release", "Load Texture [%s] size = %d %d, id = %d\n",  pTexInfo->szDataName, pTexInfo->sWidth, pTexInfo->sHeight, pInfo->nID);
+233c240
+<             strcpy(pszSrcName, pTexInfo->szDataName);
+---
+>             strncpy_s(pszSrcName, pTexInfo->szDataName, _TRUNCATE);
+239c246
+<                strcpy(pTexInfo->szDataName, pszSrcName);
+---
+>                strncpy_s(pTexInfo->szDataName, pszSrcName, _TRUNCATE);
+254c261
+< 		strcpy(ddsInfo.szDataName, pInfo->szDataName);
+---
+> 		strncpy_s(ddsInfo.szDataName, pInfo->szDataName, _TRUNCATE);
+278c285
+<                     strcpy(pTexInfo->szDataName, pszSrcName);
+---
+>                     strncpy_s(pTexInfo->szDataName, pszSrcName, _TRUNCATE);
+306c313
+<            strcpy(pTexInfo->szDataName, pszSrcName);
+---
+>            strncpy_s(pTexInfo->szDataName, pszSrcName, _TRUNCATE );
+381,382c388
+<         LG("tex_release", "Release Texture Data [%s], size = %d %d\n", pTexInfo->szDataName, pTexInfo->sWidth, pTexInfo->sHeight);
+<         // by lsh
+---
+> //      LG("tex_release", "Release Texture Data [%s], size = %d %d\n", pTexInfo->szDataName, pTexInfo->sWidth, pTexInfo->sHeight);
+Binary files /c/games/top-recode/source/inc/MindPower3D/vssver2.scc and /c/games/top-recode/source/inc/LightEngine/vssver2.scc differ
+diff -Ewbr /c/games/top-recode/source/inc/MindPower3D/ZRBlock.h /c/games/top-recode/source/inc/LightEngine/ZRBlock.h
+13d12
+< //add by jze 2008.7.16
+59d57
+< //add by jze 2008.7.16
+78a77
+> class MPMap;
+84c83
+< 	BOOL                Load(const char *pszMapName, BOOL bEdit);
+---
+> 	void                Load(MPMap* pMap) { m = pMap; }
+96d94
+< 	DWORD				_ReadSectionDataOffset(int nSectionX, int nSectionY); //读数据
+105,113c103
+< 	FILE*				m_fp;				// 地图文件句柄
+< 
+< 	int					m_fShowCenterX; // 动态读入的中心位置
+< 	int					m_fShowCenterY;
+< 	int					m_nSectionWidth;// 每一块Section的宽度和高度
+< 	int					m_nSectionHeight;
+< 	int					m_nSectionCntX;// 地图水平方向上Section的块数
+< 	int					m_nSectionCntY;
+< 	int                 m_nSectionCnt;
+---
+> 	MPMap*				m;
+118,124d107
+< 	BOOL				m_bEdit;
+< 	DWORD				m_dwMapPos;
+< 	DWORD				m_dwMapDataSize;
+< 	LPBYTE				m_pMapData;
+< 	int					m_nWidth;
+< 	int					m_nHeight;
+< 	DWORD*              m_pOffsetIdx;

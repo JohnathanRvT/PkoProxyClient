@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{4c0b21ba-a2ed-49d5-8976-96091eface71}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include=".\AcceptConnect.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Comm.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\CommRPC.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\DataSocket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\DBCCommon.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\IniFile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\LogStream.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\NTSvcObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Packet.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\PacketQueue.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Point.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Receiver.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\RWMutex.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Sender.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\TaskQueue.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\ThreadPool.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Timer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\$(ProjectName)\AcceptConnect.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Receiver.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\RPCInfo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Sender.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Thread.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\BaseBuf.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Comm.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\CommRPC.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\DataSocket.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\DBCCommon.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\dstring.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\excp.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\IniFile.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\LogStream.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\NTService.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\NTSvcObject.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Packet.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\PacketQueue.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Point.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\PreAlloc.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\robject.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\rstring.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\RunBiDirectChain.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\RunCtrlThrd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\RWMutex.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\ThreadPool.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Timer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\TLSIndex.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\$(ProjectName)\EventMsgRC.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

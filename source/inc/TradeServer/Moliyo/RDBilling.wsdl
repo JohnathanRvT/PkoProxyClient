@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="PSS_GetMemberBill">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PSS_GetMemberBillResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="PSS_GetMemberBillResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthHeader" type="tns:AuthHeader" />
+      <s:complexType name="AuthHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PassWord" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="PSS_RDMemberTDRIns">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MemberPK" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TranID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Credit" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="RecTime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Memo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Type" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="TypeSub" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PSS_RDMemberTDRInsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="PSS_RDMemberTDRInsResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckTrade">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TranFrom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TranID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckTradeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CheckTradeResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="PSS_GetMemberBillSoapIn">
+    <wsdl:part name="parameters" element="tns:PSS_GetMemberBill" />
+  </wsdl:message>
+  <wsdl:message name="PSS_GetMemberBillSoapOut">
+    <wsdl:part name="parameters" element="tns:PSS_GetMemberBillResponse" />
+  </wsdl:message>
+  <wsdl:message name="PSS_GetMemberBillAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="PSS_RDMemberTDRInsSoapIn">
+    <wsdl:part name="parameters" element="tns:PSS_RDMemberTDRIns" />
+  </wsdl:message>
+  <wsdl:message name="PSS_RDMemberTDRInsSoapOut">
+    <wsdl:part name="parameters" element="tns:PSS_RDMemberTDRInsResponse" />
+  </wsdl:message>
+  <wsdl:message name="PSS_RDMemberTDRInsAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="CheckTradeSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckTrade" />
+  </wsdl:message>
+  <wsdl:message name="CheckTradeSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckTradeResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckTradeAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:portType name="RDBillingSoap">
+    <wsdl:operation name="PSS_GetMemberBill">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">会员摩豆余额查询.&lt;br&gt;
+                               返回值: 如果正数正常,如为负数失败.-1为billing异常,其它负数请参数Billing相关文档.&lt;br&gt;
+                               传入参数: UserName用户名</wsdl:documentation>
+      <wsdl:input message="tns:PSS_GetMemberBillSoapIn" />
+      <wsdl:output message="tns:PSS_GetMemberBillSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PSS_RDMemberTDRIns">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">业务名称:研发内置商城扣款方法.&lt;br&gt;
+                              业务描述: 提供统一操作交易操作&lt;br&gt;
+                              传入参数: MemberPK = 用户名  TranID=交易流水号不能超过20位，可以有英文 Credit=交易金额(正数负数均为扣款) Memo=交易说明，Type=游戏区 TypeSub=游戏服务器组&lt;br&gt;
+                              输出参数: RetCode:0:操作成功,-1为billing异常,其它负数请参数Billing相关文档.&lt;br&gt;</wsdl:documentation>
+      <wsdl:input message="tns:PSS_RDMemberTDRInsSoapIn" />
+      <wsdl:output message="tns:PSS_RDMemberTDRInsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckTrade">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">业务名称:检查BILLING系统提定交易是否存在.&lt;br&gt;
+                              业务描述: 检查BILLING系统提定交易是否存在易&lt;br&gt;
+                              传入参数: UserName=用户名 TranFrom=业务代码传011004 TranID=交易流水号 &lt;br&gt;
+                              输出参数: RetCode:0:交易已经存在,-1为billing异常,其它负数请参数Billing相关文档.&lt;br&gt;</wsdl:documentation>
+      <wsdl:input message="tns:CheckTradeSoapIn" />
+      <wsdl:output message="tns:CheckTradeSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RDBillingSoap" type="tns:RDBillingSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="PSS_GetMemberBill">
+      <soap:operation soapAction="http://tempuri.org/PSS_GetMemberBill" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PSS_GetMemberBillAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PSS_RDMemberTDRIns">
+      <soap:operation soapAction="http://tempuri.org/PSS_RDMemberTDRIns" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PSS_RDMemberTDRInsAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckTrade">
+      <soap:operation soapAction="http://tempuri.org/CheckTrade" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CheckTradeAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="RDBillingSoap12" type="tns:RDBillingSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+    <wsdl:operation name="PSS_GetMemberBill">
+      <soap12:operation soapAction="http://tempuri.org/PSS_GetMemberBill" style="document" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      <wsdl:input>
+        <soap12:body use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+        <soap12:header message="tns:PSS_GetMemberBillAuthHeader" part="AuthHeader" use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PSS_RDMemberTDRIns">
+      <soap12:operation soapAction="http://tempuri.org/PSS_RDMemberTDRIns" style="document" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      <wsdl:input>
+        <soap12:body use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+        <soap12:header message="tns:PSS_RDMemberTDRInsAuthHeader" part="AuthHeader" use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckTrade">
+      <soap12:operation soapAction="http://tempuri.org/CheckTrade" style="document" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      <wsdl:input>
+        <soap12:body use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+        <soap12:header message="tns:CheckTradeAuthHeader" part="AuthHeader" use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RDBilling">
+    <wsdl:port name="RDBillingSoap" binding="tns:RDBillingSoap">
+      <soap:address location="http://billingrd.moliyo.com/RDBilling.asmx" />
+    </wsdl:port>
+    <wsdl:port name="RDBillingSoap12" binding="tns:RDBillingSoap12">
+      <soap12:address location="http://billingrd.moliyo.com/RDBilling.asmx" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

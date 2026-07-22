@@ -1,0 +1,1015 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug DX9|Win32">
+      <Configuration>Debug DX9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug DX9|x64">
+      <Configuration>Debug DX9</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release DX9|Win32">
+      <Configuration>Release DX9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release DX9|x64">
+      <Configuration>Release DX9</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>Game_v2.0</ProjectName>
+    <ProjectGuid>{59721C30-5268-4B8B-8096-DD7C2CDCD16F}</ProjectGuid>
+    <RootNamespace>kop</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>15.0.27924.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>../../../client/system/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)D</TargetName>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">
+    <OutDir>../../../client/system/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)DDX9</TargetName>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Platform)D</TargetName>
+    <OutDir>../../../client/system/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Platform)D</TargetName>
+    <OutDir>../../../client/system/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>../../../client/system/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">
+    <OutDir>../../../client/system/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)DX9</TargetName>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Platform)</TargetName>
+    <OutDir>../../../client/system/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Platform)</TargetName>
+    <OutDir>../../../client/system/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/GR
+/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\DirectX;..\..\inc\MindPower3D;..\..\inc\Status;..\..\inc\EncLib;..\..\inc\LIBDBC;..\..\inc\luajit;..\..\inc\Common;..\..\inc\Logutil;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\openssl;..\..\inc\AudioSDL;..\..\inc\SDL;..\..\inc\SDL_mixer;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling />
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BrowseInformation>true</BrowseInformation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Imm32.lib;comsuppwd.lib;Status_d.lib;AudioSDL_d.lib;MindPower3DD.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;LIBDBC_D_CL.lib;Logutild.lib;Common_D.lib;ICUHelper_d.lib;lua51.lib;luajit.lib;icudt.lib;icuucd.lib;icuind.lib;dxguid.lib;ddraw.lib;atls.lib;PAI.lib;Ws2_32.lib;Psapi.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\openssl;..\..\lib\$(Platform)\MindPower3D;..\..\lib\$(Platform)\Status;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\EncLib;..\..\lib\$(Platform)\ServerSdk;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\ipss;..\..\lib\$(Platform)\luajit\debug;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\DirectX;..\..\lib\$(Platform)\LIBDBC;..\..\lib\$(Platform)\AudioSDL;..\..\lib\$(Platform)\SDL;..\..\lib\$(Platform)\SDL_mixer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libci.lib;MSVCRT.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>d3d9.dll;dinput9.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Version>1.1</Version>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/GR
+/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\DirectX;..\..\inc\MindPower3D;..\..\inc\Status;..\..\inc\EncLib;..\..\inc\LIBDBC;..\..\inc\luajit;..\..\inc\Common;..\..\inc\Logutil;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\openssl;..\..\inc\AudioSDL;..\..\inc\SDL;..\..\inc\SDL_mixer;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;_WIN32_WINNT=0x0A00;LW_USE_DX9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BrowseInformation>true</BrowseInformation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Imm32.lib;comsuppwd.lib;Status_d.lib;AudioSDL_d.lib;MindPower3DDDX9.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;LIBDBC_D_CL.lib;Logutild.lib;Common_D.lib;ICUHelper_d.lib;lua51.lib;luajit.lib;icudt.lib;icuucd.lib;icuind.lib;dxguid.lib;ddraw.lib;atls.lib;PAI.lib;Ws2_32.lib;Psapi.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\openssl;..\..\lib\$(Platform)\MindPower3D;..\..\lib\$(Platform)\Status;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\EncLib;..\..\lib\$(Platform)\ServerSdk;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\ipss;..\..\lib\$(Platform)\luajit\debug;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\DirectX;..\..\lib\$(Platform)\LIBDBC;..\..\lib\$(Platform)\AudioSDL;..\..\lib\$(Platform)\SDL;..\..\lib\$(Platform)\SDL_mixer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libci.lib;MSVCRT.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>d3d9.dll;dinput9.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Version>1.1</Version>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalOptions>/GR
+/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\DirectX;..\..\inc\MindPower3D;..\..\inc\Status;..\..\inc\EncLib;..\..\inc\LIBDBC;..\..\inc\luajit;..\..\inc\Common;..\..\inc\Logutil;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\openssl;..\..\inc\AudioSDL;..\..\inc\SDL;..\..\inc\SDL_mixer;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>D3D_DEBUG_INFO;WIN64;_DEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BrowseInformation>true</BrowseInformation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Imm32.lib;comsuppwd.lib;Status_d.lib;AudioSDL_d.lib;MindPower3DD$(Platform).lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;LIBDBC_D_CL.lib;Logutild.lib;Common_D.lib;ICUHelper_d.lib;lua51.lib;luajit.lib;icudt.lib;icuucd.lib;icuind.lib;dxguid.lib;ddraw.lib;atls.lib;Ws2_32.lib;Psapi.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\openssl;..\..\lib\$(Platform)\MindPower3D;..\..\lib\$(Platform)\Status;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\EncLib;..\..\lib\$(Platform)\ServerSdk;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\ipss;..\..\lib\$(Platform)\luajit\debug;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\DirectX;..\..\lib\$(Platform)\LIBDBC;..\..\lib\$(Platform)\AudioSDL;..\..\lib\$(Platform)\SDL;..\..\lib\$(Platform)\SDL_mixer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libci.lib;MSVCRT.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>d3d9.dll;dinput9.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+      <Version>1.1</Version>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">
+    <ClCompile>
+      <AdditionalOptions>/GR
+/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\DirectX;..\..\inc\MindPower3D;..\..\inc\Status;..\..\inc\EncLib;..\..\inc\LIBDBC;..\..\inc\luajit;..\..\inc\Common;..\..\inc\Logutil;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\openssl;..\..\inc\AudioSDL;..\..\inc\SDL;..\..\inc\SDL_mixer;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>D3D_DEBUG_INFO;WIN64;_DEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;_WIN32_WINNT=0x0A00;LW_USE_DX9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BrowseInformation>true</BrowseInformation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Imm32.lib;comsuppwd.lib;Status_d.lib;AudioSDL_d.lib;MindPower3DDDX9$(Platform).lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;LIBDBC_D_CL.lib;Logutild.lib;Common_D.lib;ICUHelper_d.lib;lua51.lib;luajit.lib;icudt.lib;icuucd.lib;icuind.lib;dxguid.lib;ddraw.lib;atls.lib;Ws2_32.lib;Psapi.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\openssl;..\..\lib\$(Platform)\MindPower3D;..\..\lib\$(Platform)\Status;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\EncLib;..\..\lib\$(Platform)\ServerSdk;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\ipss;..\..\lib\$(Platform)\luajit\debug;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\DirectX;..\..\lib\$(Platform)\LIBDBC;..\..\lib\$(Platform)\AudioSDL;..\..\lib\$(Platform)\SDL;..\..\lib\$(Platform)\SDL_mixer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libci.lib;MSVCRT.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>d3d9.dll;dinput9.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+      <Version>1.1</Version>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/GR
+/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\DirectX;..\..\inc\MindPower3D;..\..\inc\Status;..\..\inc\EncLib;..\..\inc\LIBDBC;..\..\inc\luajit;..\..\inc\Common;..\..\inc\Logutil;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\openssl;..\..\inc\AudioSDL;..\..\inc\SDL;..\..\inc\SDL_mixer;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;NARROW;_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ShowIncludes>false</ShowIncludes>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <RegisterOutput>false</RegisterOutput>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Imm32.lib;comsuppw.lib;Status.lib;AudioSDL.lib;MindPower3D.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;LIBDBC_CL.lib;Logutil.lib;Common.lib;ICUHelper.lib;lua51.lib;luajit.lib;icudt.lib;icuuc.lib;icuin.lib;dxguid.lib;ddraw.lib;atls.lib;PAI.lib;Ws2_32.lib;Psapi.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\openssl;..\..\lib\$(Platform)\MindPower3D;..\..\lib\$(Platform)\Status;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\EncLib;..\..\lib\$(Platform)\ServerSdk;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\ipss;..\..\lib\$(Platform)\luajit\release;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\DirectX;..\..\lib\$(Platform)\LIBDBC;..\..\lib\$(Platform)\AudioSDL;..\..\lib\$(Platform)\SDL;..\..\lib\$(Platform)\SDL_mixer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcpmtd.lib;libci.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>d3d9.dll;dinput9.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug />
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
+      <SubSystem>Windows</SubSystem>
+      <SetChecksum>true</SetChecksum>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Version>1.1</Version>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/GR
+/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\DirectX;..\..\inc\MindPower3D;..\..\inc\Status;..\..\inc\EncLib;..\..\inc\LIBDBC;..\..\inc\luajit;..\..\inc\Common;..\..\inc\Logutil;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\openssl;..\..\inc\AudioSDL;..\..\inc\SDL;..\..\inc\SDL_mixer;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;NARROW;_WIN32_WINNT=0x0A00;LW_USE_DX9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ShowIncludes>false</ShowIncludes>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <RegisterOutput>false</RegisterOutput>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Imm32.lib;comsuppw.lib;Status.lib;AudioSDL.lib;MindPower3DDX9.lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;LIBDBC_CL.lib;Logutil.lib;Common.lib;ICUHelper.lib;lua51.lib;luajit.lib;icudt.lib;icuuc.lib;icuin.lib;dxguid.lib;ddraw.lib;atls.lib;PAI.lib;Ws2_32.lib;Psapi.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\openssl;..\..\lib\$(Platform)\MindPower3D;..\..\lib\$(Platform)\Status;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\EncLib;..\..\lib\$(Platform)\ServerSdk;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\ipss;..\..\lib\$(Platform)\luajit\release;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\DirectX;..\..\lib\$(Platform)\LIBDBC;..\..\lib\$(Platform)\AudioSDL;..\..\lib\$(Platform)\SDL;..\..\lib\$(Platform)\SDL_mixer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcpmtd.lib;libci.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>d3d9.dll;dinput9.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug>
+      </AssemblyDebug>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
+      <SubSystem>Windows</SubSystem>
+      <SetChecksum>true</SetChecksum>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Version>1.1</Version>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>/GR
+/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\DirectX;..\..\inc\MindPower3D;..\..\inc\Status;..\..\inc\EncLib;..\..\inc\LIBDBC;..\..\inc\luajit;..\..\inc\Common;..\..\inc\Logutil;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\openssl;..\..\inc\AudioSDL;..\..\inc\SDL;..\..\inc\SDL_mixer;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;NARROW;_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ShowIncludes>false</ShowIncludes>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <RegisterOutput>false</RegisterOutput>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Imm32.lib;comsuppw.lib;Status.lib;AudioSDL.lib;MindPower3D$(Platform).lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;LIBDBC_CL.lib;Logutil.lib;Common.lib;ICUHelper.lib;lua51.lib;luajit.lib;icudt.lib;icuuc.lib;icuin.lib;dxguid.lib;ddraw.lib;atls.lib;Ws2_32.lib;Psapi.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\openssl;..\..\lib\$(Platform)\MindPower3D;..\..\lib\$(Platform)\Status;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\EncLib;..\..\lib\$(Platform)\ServerSdk;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\ipss;..\..\lib\$(Platform)\luajit\release;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\DirectX;..\..\lib\$(Platform)\LIBDBC;..\..\lib\$(Platform)\AudioSDL;..\..\lib\$(Platform)\SDL;..\..\lib\$(Platform)\SDL_mixer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcpmtd.lib;libci.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>d3d9.dll;dinput9.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug>
+      </AssemblyDebug>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
+      <SubSystem>Windows</SubSystem>
+      <SetChecksum>true</SetChecksum>
+      <Version>1.1</Version>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">
+    <ClCompile>
+      <AdditionalOptions>/GR
+/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\DirectX;..\..\inc\MindPower3D;..\..\inc\Status;..\..\inc\EncLib;..\..\inc\LIBDBC;..\..\inc\luajit;..\..\inc\Common;..\..\inc\Logutil;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\openssl;..\..\inc\AudioSDL;..\..\inc\SDL;..\..\inc\SDL_mixer;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;NARROW;_WIN32_WINNT=0x0A00;LW_USE_DX9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ShowIncludes>false</ShowIncludes>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <RegisterOutput>false</RegisterOutput>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;Imm32.lib;comsuppw.lib;Status.lib;AudioSDL.lib;MindPower3DDX9$(Platform).lib;SDL2.lib;SDL2_mixer.lib;SDL2main.lib;LIBDBC_CL.lib;Logutil.lib;Common.lib;ICUHelper.lib;lua51.lib;luajit.lib;icudt.lib;icuuc.lib;icuin.lib;dxguid.lib;ddraw.lib;atls.lib;Ws2_32.lib;Psapi.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\openssl;..\..\lib\$(Platform)\MindPower3D;..\..\lib\$(Platform)\Status;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\EncLib;..\..\lib\$(Platform)\ServerSdk;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\ipss;..\..\lib\$(Platform)\luajit\release;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\DirectX;..\..\lib\$(Platform)\LIBDBC;..\..\lib\$(Platform)\AudioSDL;..\..\lib\$(Platform)\SDL;..\..\lib\$(Platform)\SDL_mixer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcpmtd.lib;libci.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>d3d9.dll;dinput9.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AssemblyDebug>
+      </AssemblyDebug>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
+      <SubSystem>Windows</SubSystem>
+      <SetChecksum>true</SetChecksum>
+      <Version>1.1</Version>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include=".\Actor.cpp" />
+    <ClCompile Include=".\AppScript.cpp" />
+    <ClCompile Include=".\ArcTrack.cpp" />
+    <ClCompile Include=".\AudioThread.cpp" />
+    <ClCompile Include=".\AutoAttack.cpp" />
+    <ClCompile Include=".\CameraCtrl.cpp" />
+    <ClCompile Include=".\Character.cpp" />
+    <ClCompile Include=".\CharacterAction.cpp" />
+    <ClCompile Include=".\CharacterModel.cpp" />
+    <ClCompile Include=".\ChaScript.cpp" />
+    <ClCompile Include=".\ChaState.cpp" />
+    <ClCompile Include=".\ChatRecord.cpp" />
+    <ClCompile Include=".\Connection.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\CRCircle.cpp" />
+    <ClCompile Include=".\CRCursor.cpp" />
+    <ClCompile Include=".\CRCursorObj.cpp" />
+    <ClCompile Include=".\CreateChaScene.cpp" />
+    <ClCompile Include=".\d3des.cpp" />
+    <ClCompile Include=".\DrawPointList.cpp" />
+    <ClCompile Include=".\DSoundInstance.cpp" />
+    <ClCompile Include=".\DSoundManager.cpp" />
+    <ClCompile Include=".\EffDelay.cpp" />
+    <ClCompile Include=".\EffectObj.cpp" />
+    <ClCompile Include=".\Event.cpp" />
+    <ClCompile Include=".\FindPath.cpp" />
+    <ClCompile Include=".\FrndInviteFormMgr.cpp" />
+    <ClCompile Include=".\GameAppFrameMove.cpp" />
+    <ClCompile Include=".\GameAppInit.cpp" />
+    <ClCompile Include=".\GameAppInterface.cpp" />
+    <ClCompile Include=".\GameAppMsg.cpp" />
+    <ClCompile Include=".\GameAppNet.cpp" />
+    <ClCompile Include=".\GameAppRender.cpp" />
+    <ClCompile Include=".\GameConfig.cpp" />
+    <ClCompile Include=".\GameLoading.cpp" />
+    <ClCompile Include=".\GameMovie.cpp" />
+    <ClCompile Include=".\GameWG.cpp" />
+    <ClCompile Include=".\GlobalVar.cpp" />
+    <ClCompile Include=".\GuildData.cpp" />
+    <ClCompile Include=".\GuildListData.cpp" />
+    <ClCompile Include=".\GuildListMgr.cpp" />
+    <ClCompile Include=".\GuildMemberData.cpp" />
+    <ClCompile Include=".\GuildMembersMgr.cpp" />
+    <ClCompile Include=".\HairTool.cpp" />
+    <ClCompile Include=".\HMAttack.cpp" />
+    <ClCompile Include=".\HMManage.cpp" />
+    <ClCompile Include=".\HMSynchroObj.cpp" />
+    <ClCompile Include=".\IsSkillUse.cpp" />
+    <ClCompile Include=".\ItemLit.cpp" />
+    <ClCompile Include=".\ItemLitAnim.cpp" />
+    <ClCompile Include=".\Language.cpp" />
+    <ClCompile Include=".\LitLoad.cpp" />
+    <ClCompile Include=".\LoginScene.cpp" />
+    <ClCompile Include=".\lua_platform.cpp" />
+    <ClCompile Include=".\Main.cpp" />
+    <ClCompile Include=".\MouseDown.cpp" />
+    <ClCompile Include=".\MPEditor.cpp" />
+    <ClCompile Include=".\MusicThread.cpp" />
+    <ClCompile Include=".\NetChat.cpp" />
+    <ClCompile Include=".\NetGuild.cpp" />
+    <ClCompile Include=".\NetIF.cpp" />
+    <ClCompile Include=".\NetPkChat.cpp" />
+    <ClCompile Include=".\NetPkGuild.cpp" />
+    <ClCompile Include=".\NetProtocol.cpp" />
+    <ClCompile Include=".\NPCHelper.cpp" />
+    <ClCompile Include=".\PacketCmd_CS.cpp" />
+    <ClCompile Include=".\PacketCmd_SC.cpp" />
+    <ClCompile Include=".\PackFile.cpp" />
+    <ClCompile Include=".\ProCirculateCC.cpp" />
+    <ClCompile Include=".\ProCirculateCS.cpp" />
+    <ClCompile Include=".\RecruitMemberData.cpp" />
+    <ClCompile Include=".\RecruitMembersMgr.cpp" />
+    <ClCompile Include=".\RenderStateMgr.cpp" />
+    <ClCompile Include=".\Scene.cpp" />
+    <ClCompile Include=".\SceneArea.cpp" />
+    <ClCompile Include=".\SceneCreateNode.cpp" />
+    <ClCompile Include=".\SceneFrameMove.cpp" />
+    <ClCompile Include=".\SceneItem.cpp" />
+    <ClCompile Include=".\SceneLight.cpp" />
+    <ClCompile Include=".\SceneMsg.cpp" />
+    <ClCompile Include=".\SceneNode.cpp" />
+    <ClCompile Include=".\SceneObj.cpp" />
+    <ClCompile Include=".\SceneObjFile.cpp" />
+    <ClCompile Include=".\SceneRender.cpp" />
+    <ClCompile Include=".\SceneScript.cpp" />
+    <ClCompile Include=".\SceneSign.cpp" />
+    <ClCompile Include=".\Script.cpp" />
+    <ClCompile Include=".\SelectChaScene.cpp" />
+    <ClCompile Include=".\ShipFactory.cpp" />
+    <ClCompile Include=".\SMallMap.cpp" />
+    <ClCompile Include=".\SoundCommon.cpp" />
+    <ClCompile Include=".\state_reading.cpp" />
+    <ClCompile Include=".\STAttack.cpp" />
+    <ClCompile Include=".\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\SteadyFrame.cpp" />
+    <ClCompile Include=".\STMove.cpp" />
+    <ClCompile Include=".\STNpcTalk.cpp" />
+    <ClCompile Include=".\STPose.cpp" />
+    <ClCompile Include=".\STReadyDie.cpp" />
+    <ClCompile Include=".\STSeat.cpp" />
+    <ClCompile Include=".\STStateObj.cpp" />
+    <ClCompile Include=".\TalkSessionFormMgr.cpp" />
+    <ClCompile Include=".\TeamInviteFormMgr.cpp" />
+    <ClCompile Include=".\TestDemo.cpp" />
+    <ClCompile Include=".\ThreadBase.cpp" />
+    <ClCompile Include=".\Tools.cpp" />
+    <ClCompile Include=".\UI3DCompent.cpp" />
+    <ClCompile Include=".\UIAllButtonForm.cpp" />
+    <ClCompile Include=".\UIAmphitheaterForm.cpp" />
+    <ClCompile Include=".\UIBakGhostForm.cpp" />
+    <ClCompile Include=".\UIBankForm.cpp" />
+    <ClCompile Include=".\UIBoatForm.cpp" />
+    <ClCompile Include=".\UIBoothForm.cpp" />
+    <ClCompile Include=".\UIBourseForm.cpp" />
+    <ClCompile Include=".\UIBoxForm.cpp" />
+    <ClCompile Include=".\UIBreakForm.cpp" />
+    <ClCompile Include=".\UIChaInfo.cpp" />
+    <ClCompile Include=".\UIChat.cpp" />
+    <ClCompile Include=".\UICheckBox.cpp" />
+    <ClCompile Include=".\UICheckBoxItem.cpp" />
+    <ClCompile Include=".\UIChurchChallenge.cpp" />
+    <ClCompile Include=".\UICloneForm.cpp" />
+    <ClCompile Include=".\UICombo.cpp" />
+    <ClCompile Include=".\UICommand.cpp" />
+    <ClCompile Include=".\UICommandCompent.cpp" />
+    <ClCompile Include=".\UICompent.cpp" />
+    <ClCompile Include=".\UIComposeForm.cpp" />
+    <ClCompile Include=".\UICookingForm.cpp" />
+    <ClCompile Include=".\UICozeForm.cpp" />
+    <ClCompile Include=".\UICursor.cpp" />
+    <ClCompile Include=".\UIDoublePwdForm.cpp" />
+    <ClCompile Include=".\UIDragTitle.cpp" />
+    <ClCompile Include=".\UIEdit.cpp" />
+    <ClCompile Include=".\UIEditData.cpp" />
+    <ClCompile Include=".\UIEditKey.cpp" />
+    <ClCompile Include=".\UIEditor.cpp" />
+    <ClCompile Include=".\UIEditStrategy.cpp" />
+    <ClCompile Include=".\UIEquipForm.cpp" />
+    <ClCompile Include=".\UIFastCommand.cpp" />
+    <ClCompile Include=".\UIFindTeamForm.cpp" />
+    <ClCompile Include=".\UIFont.cpp" />
+    <ClCompile Include=".\UIForgeForm.cpp" />
+    <ClCompile Include=".\UIForgeMoveForm.cpp" />
+    <ClCompile Include=".\UIForm.cpp" />
+    <ClCompile Include=".\UIFormMgr.cpp" />
+    <ClCompile Include=".\UIFoundForm.cpp" />
+    <ClCompile Include=".\UIGlobalVar.cpp" />
+    <ClCompile Include=".\UIGoodsGrid.cpp" />
+    <ClCompile Include=".\UIGraph.cpp" />
+    <ClCompile Include=".\UIGrid.cpp" />
+    <ClCompile Include=".\UIGuiData.cpp" />
+    <ClCompile Include=".\UIGuildApply.cpp" />
+    <ClCompile Include=".\UIGuildChallengeForm.cpp" />
+    <ClCompile Include=".\UIGuildList.cpp" />
+    <ClCompile Include=".\UIGuildMgr.cpp" />
+    <ClCompile Include=".\UIHaircutForm.cpp" />
+    <ClCompile Include=".\UIHeadSay.cpp" />
+    <ClCompile Include=".\UIHelpInfoForm.cpp" />
+    <ClCompile Include=".\UIImage.cpp" />
+    <ClCompile Include=".\UIImeInput.cpp" />
+    <ClCompile Include=".\UIItem.cpp" />
+    <ClCompile Include=".\UIItemCommand.cpp" />
+    <ClCompile Include=".\UIItemReForm.cpp" />
+    <ClCompile Include=".\UIJewelryUpForm.cpp" />
+    <ClCompile Include=".\UILabel.cpp" />
+    <ClCompile Include=".\UIList.cpp" />
+    <ClCompile Include=".\UIListView.cpp" />
+    <ClCompile Include=".\UILotteryForm.cpp" />
+    <ClCompile Include=".\UIMailForm.cpp" />
+    <ClCompile Include=".\UIMakeEquipForm.cpp" />
+    <ClCompile Include=".\UIMemo.cpp" />
+    <ClCompile Include=".\UIMenu.cpp" />
+    <ClCompile Include=".\UIMinimapForm.cpp" />
+    <ClCompile Include=".\UIMisLogForm.cpp" />
+    <ClCompile Include=".\UIMissionForm.cpp" />
+    <ClCompile Include=".\UINpcTalkForm.cpp" />
+    <ClCompile Include=".\UINpcTradeForm.cpp" />
+    <ClCompile Include=".\UINumAnswer.cpp" />
+    <ClCompile Include=".\UIPage.cpp" />
+    <ClCompile Include=".\UIPicList.cpp" />
+    <ClCompile Include=".\UIPicture.cpp" />
+    <ClCompile Include=".\UIPKDialog.cpp" />
+    <ClCompile Include=".\UIPKSilverForm.cpp" />
+    <ClCompile Include=".\UIProgressBar.cpp" />
+    <ClCompile Include=".\UIPurifyForm.cpp" />
+    <ClCompile Include=".\UIRender.cpp" />
+    <ClCompile Include=".\UIRichEdit.cpp" />
+    <ClCompile Include=".\UIScript.cpp" />
+    <ClCompile Include=".\UIScroll.cpp" />
+    <ClCompile Include=".\UISkillCommand.cpp" />
+    <ClCompile Include=".\UISkillList.cpp" />
+    <ClCompile Include=".\UISpiritForm.cpp" />
+    <ClCompile Include=".\UIStartForm.cpp" />
+    <ClCompile Include=".\UIStateForm.cpp" />
+    <ClCompile Include=".\UIStoreForm.cpp" />
+    <ClCompile Include=".\UISystemForm.cpp" />
+    <ClCompile Include=".\UITeam.cpp" />
+    <ClCompile Include=".\UITextButton.cpp" />
+    <ClCompile Include=".\UITextParse.cpp" />
+    <ClCompile Include=".\UITitle.cpp" />
+    <ClCompile Include=".\UITradeForm.cpp" />
+    <ClCompile Include=".\UITreeView.cpp" />
+    <ClCompile Include=".\WorldScene.cpp" />
+    <ClCompile Include="BossHelper.cpp" />
+    <ClCompile Include="GuildInviteFormMgr.cpp" />
+    <ClCompile Include="MonsterHelper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\$(ProjectName)\Actor.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ArcTrack.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\AudioThread.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\AutoAttack.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\BoolSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\CameraCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ChaClientAttr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ChaCreateSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Character.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\CharacterAction.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\CharacterModel.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\CharacterPoseSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ChaState.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ChatIconSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ChatRecord.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Connection.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\CRCircle.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\CRCursor.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\CRCursorObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\CreateChaScene.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\d3des.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\DrawPointList.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\DSoundInstance.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\DSoundManager.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\EffDelay.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\EffectObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\EffectSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ElfSkillSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Event.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\EventSoundSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\FindPath.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\FrndInviteFormMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameApp.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameAppMsg.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameConfig.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameLoading.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameMovie.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GameWG.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GlobalVar.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GuildData.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GuildListData.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GuildListMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GuildMemberData.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GuildMembersMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\HairTool.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\HMAttack.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\HMManage.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\HMSynchroObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\InputBox.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\IsSkillUse.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ItemLit.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ItemLitAnim.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ItemPreSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ItemRefineEffectSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ItemRefineSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ItemTypeSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Language.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\LitLoad.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\LoginScene.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\LuaInterface.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_app.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_camera.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_input.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_network.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_object.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_platform.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_scene.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_ui.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lua_util.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Main.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MapSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MouseDown.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEditor.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MusicSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\NetChat.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\NetGuild.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\NetIF.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\NetProtocol.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\notifyset.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\NPCHelper.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\PacketCmd.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\PackFile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ProCirculate.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\publicfun.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\RecruitMemberData.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\RecruitMembersMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\RenderStateMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Scene.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneArea.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneHeight.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneItem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneItemSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneLight.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneNode.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneObjFile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneObjSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SceneSign.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Script.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SelectChaScene.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ServerSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ShipFactory.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SMallMap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SoundCommon.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SoundInstance.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SoundManager.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\state_reading.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STAttack.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\stdafx.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\SteadyFrame.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STMove.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STNpcTalk.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\StoneSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STPose.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STReadyDie.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STSeat.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STStateObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\TalkSessionFormMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\TeamInviteFormMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\TestDemo.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ThreadBase.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Tools.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Track.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UI3DCompent.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIAllButtonForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIAmphitheaterForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIBakGhostForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIBankForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIBoatForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIBoothForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIBourseForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIBoxForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIBreakForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIChaInfo.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIChat.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICheckBox.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICheckBoxItem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIChurchChallenge.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICloneForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICombo.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICommand.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICommandCompent.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICompent.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIComposeForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICookingForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICozeForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UICursor.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIDoublePwdForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIDragTitle.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIEdit.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIEditData.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIEditKey.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIEditor.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIEditStrategy.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIEquipForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIFastCommand.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIFindTeamForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIFont.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIForgeForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIForgeMoveForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIFormMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIFoundForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGlobalVar.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGoodsGrid.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGraph.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGrid.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGuiData.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGuildApply.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGuildChallengeForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGuildList.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIGuildMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIHaircutForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIHeadSay.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIHelpInfoForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIImage.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIImeInput.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIItem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIItemCommand.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIItemReForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIJewelryUpForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UILabel.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIList.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIListView.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UILotteryForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIMailForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIMakeEquipForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIMemo.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIMenu.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIMinimapForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIMisLogForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIMissionForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UINpcTalkForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UINpcTradeForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UINumAnswer.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIPage.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIPicList.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIPicture.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIPKDialog.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIPKSilverForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIProgressBar.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIPurifyForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIRender.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIRichEdit.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIScript.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIScroll.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UISkillCommand.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UISkillList.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UISpiritForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIStartForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIStateForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIStep.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UIStoreForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UISystemForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UITeam.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UITemplete.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UITextButton.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UITextParse.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UITitle.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UITradeForm.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\UITreeView.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\WorldScene.h" />
+    <ClInclude Include="..\..\inc\Game_v2.0\BossHelper.h" />
+    <ClInclude Include="..\..\inc\Game_v2.0\GuildInviteFormMgr.h" />
+    <ClInclude Include="..\..\inc\Game_v2.0\MonsterHelper.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Tables.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".\GameApp使用指南.txt" />
+    <None Include=".\kop.ico" />
+    <None Include=".\small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\$(ProjectName).rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

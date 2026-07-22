@@ -1,0 +1,2131 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+PkoClient.cs
+PkoCrypt.cs
+PkoPacket.cs
+PkoProxy.cs
+PkoProxyClient.csproj
+PkoTest.cs
+Program.cs
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="PkoClient.cs">
+using System;
+using System.IO;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace PkoProxyClient
+{
+    public class PkoClient
+    {
+        private readonly string _host;
+        private readonly int _port;
+        private readonly ushort _version;
+        private TcpClient _client;
+        private NetworkStream _stream;
+        private PacketEncryptor _encryptor;
+        private string _chapString = "";
+        private string _login = "";
+        private byte[] _passwordBytes = Array.Empty<byte>();
+        private bool _connected = false;
+        private uint _session = 0x80000000;
+        private CancellationTokenSource _cts;
+
+        public PkoClient(string host, int port, ushort version = 100)
+        {
+            _host = host;
+            _port = port;
+            _version = version;
+            _encryptor = new PacketEncryptor();
+        }
+
+        public async Task RunAsync()
+        {
+            _client = new TcpClient();
+            try
+            {
+                LogConsole($"Connecting to target server at {_host}:{_port}...");
+                await _client.ConnectAsync(_host, _port);
+                _stream = _client.GetStream();
+                _connected = true;
+                _cts = new CancellationTokenSource();
+
+                LogConsole("Connected! Starting background packet receiver...");
+                _ = ReceivePacketsAsync(_cts.Token);
+
+                // Start CLI loop
+                await CommandLoopAsync();
+            }
+            catch (Exception ex)
+            {
+                LogConsole($"Error: {ex.Message}");
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+
+        private void Disconnect()
+        {
+            _connected = false;
+            _cts?.Cancel();
+            _stream?.Close();
+            _client?.Close();
+            LogConsole("Disconnected from server.");
+        }
+
+        private async Task ReceivePacketsAsync(CancellationToken cancellationToken)
+        {
+            var reader = new TcpStreamPacketReader(_stream);
+
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    // Check if there are 2 bytes available for heartbeat or size
+                    byte[] packet = await reader.ReadPacketAsync(cancellationToken);
+                    if (packet == null) break;
+
+                    // Handle 2-byte TCP heartbeat
+                    if (packet.Length == 2)
+                    {
+                        // Reply with 2-byte heartbeat 0x0002
+                        byte[] heartbeat = new byte[] { 0, 2 };
+                        await _stream.WriteAsync(heartbeat, 0, 2, cancellationToken);
+                        LogConsole("[S->C] TCP Heartbeat received & answered.");
+                        continue;
+                    }
+
+                    // Parse normal packet
+                    byte[] copy = (byte[])packet.Clone();
+                    ushort packetSize = (ushort)((copy[0] << 8) | copy[1]);
+                    uint session = (uint)((copy[2] << 24) | (copy[3] << 16) | (copy[4] << 8) | copy[5]);
+
+                    // Decrypt if encryption is enabled (excluding unencrypted 931)
+                    ushort packetIdBeforeDec = 0;
+                    if (!_encryptor.Enabled)
+                    {
+                        packetIdBeforeDec = (ushort)((copy[6] << 8) | copy[7]);
+                    }
+
+                    if (_encryptor.Enabled && packetIdBeforeDec != 931)
+                    {
+                        byte[] payload = new byte[copy.Length - 6];
+                        Array.Copy(copy, 6, payload, 0, payload.Length);
+                        _encryptor.Decrypt(payload, DecryptType.SC);
+                        Array.Copy(payload, 0, copy, 6, payload.Length);
+                    }
+
+                    var pktReader = new PkoPacketReader(copy);
+                    pktReader.ReadUint16(); // size
+                    pktReader.ReadUint32(); // session
+                    ushort packetId = pktReader.ReadUint16();
+
+                    LogConsole($"[S->C] Packet ID: {packetId} | Size: {packetSize}");
+
+                    if (packetId == 940) // ChapString
+                    {
+                        _chapString = pktReader.ReadString();
+                        LogConsole($"[Handshake] Received CHAP String: \"{_chapString}\". You can now login!");
+                    }
+                    else if (packetId == 931) // LoginResult
+                    {
+                        ushort result = pktReader.ReadUint16();
+                        LogConsole($"[Login] Result: {result} ({(result == 0 ? "Success" : "Failed")})");
+                        if (result == 0) // result_success is 0 in PKO
+                        {
+                            ushort keyLen = pktReader.ReadUint16();
+                            byte[] encryptionKey = pktReader.ReadBytes(keyLen);
+                            pktReader.SeekFromEnd(8);
+                            bool commEncryption = pktReader.ReadUint32() != 0;
+
+                            if (commEncryption)
+                            {
+                                _encryptor.Init(true, _version, _chapString, _passwordBytes, encryptionKey);
+                                LogConsole("[Crypto] Encryption initialized and active for this session!");
+                            }
+                        }
+                    }
+                    else if (packetId == 537) // Ping from Server
+                    {
+                        LogConsole("[S->C] Ping from Server. Replying with CPingPacket...");
+                        await SendPingAsync(cancellationToken);
+                    }
+                }
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                LogConsole($"Receiver stopped: {ex.Message}");
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+
+        private async Task CommandLoopAsync()
+        {
+            Console.WriteLine("\n=== PKO Standalone C# Playable Client ===");
+            Console.WriteLine("Commands:");
+            Console.WriteLine("  login <user> <password>     - Handshake and login to the server");
+            Console.WriteLine("  select <character_name>     - Select character and begin play");
+            Console.WriteLine("  ping                        - Send ping keep-alive packet");
+            Console.WriteLine("  exit                        - Disconnect and exit");
+            Console.WriteLine("=========================================\n");
+
+            while (_connected)
+            {
+                Console.Write("> ");
+                string line = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                string[] parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                string cmd = parts[0].ToLower();
+
+                if (cmd == "exit")
+                {
+                    break;
+                }
+                else if (cmd == "login")
+                {
+                    if (parts.Length < 3)
+                    {
+                        Console.WriteLine("Usage: login <user> <password>");
+                        continue;
+                    }
+                    if (string.IsNullOrEmpty(_chapString))
+                    {
+                        Console.WriteLine("Waiting for CHAP string from server...");
+                        continue;
+                    }
+                    _login = parts[1];
+                    string rawPassword = parts[2];
+
+                    // Cache password in the encoded form used inside proxy server
+                    _passwordBytes = PasswordEncoder.Encode(rawPassword, _chapString);
+
+                    await SendLoginAsync(_login, rawPassword);
+                }
+                else if (cmd == "select")
+                {
+                    if (parts.Length < 2)
+                    {
+                        Console.WriteLine("Usage: select <character_name>");
+                        continue;
+                    }
+                    await SendBeginPlayAsync(parts[1]);
+                }
+                else if (cmd == "ping")
+                {
+                    await SendPingAsync(_cts.Token);
+                }
+                else
+                {
+                    Console.WriteLine("Unknown command.");
+                }
+            }
+        }
+
+        private async Task SendLoginAsync(string user, string rawPassword)
+        {
+            var writer = new PkoPacketWriter();
+            writer.WriteUint16(0); // Size placeholder
+            writer.WriteUint32(_session);
+            writer.WriteUint16(431); // Packet ID
+
+            writer.WriteString(""); // m_nobill
+            writer.WriteString(user); // m_login
+            writer.WriteUint16((ushort)_passwordBytes.Length);
+            writer.WriteBytes(_passwordBytes);
+            writer.WriteString("00:11:22:33:44:55"); // mac address
+            writer.WriteUint32(0x0100007F); // localhost IP (127.0.0.1)
+            writer.WriteUint16(0); // flag
+            writer.WriteUint16(_version); // version
+
+            // Add extra 2 bytes protection version if target is local proxy or matches protect version
+            writer.WriteByte(0);
+            writer.WriteByte(0);
+
+            byte[] data = writer.ToArray();
+            ushort actualSize = (ushort)data.Length;
+            data[0] = (byte)(actualSize >> 8);
+            data[1] = (byte)(actualSize & 0xFF);
+
+            // Encryption
+            if (_encryptor.Enabled)
+            {
+                byte[] payload = new byte[data.Length - 6];
+                Array.Copy(data, 6, payload, 0, payload.Length);
+                _encryptor.Encrypt(payload, EncryptType.CS);
+                Array.Copy(payload, 0, data, 6, payload.Length);
+            }
+
+            await _stream.WriteAsync(data, 0, data.Length);
+            LogConsole($"[C->S] Sent AccountLogin (431) for user '{user}'");
+        }
+
+        private async Task SendBeginPlayAsync(string charName)
+        {
+            var writer = new PkoPacketWriter();
+            writer.WriteUint16(0); // Size placeholder
+            writer.WriteUint32(_session);
+            writer.WriteUint16(433); // Packet ID (BeginPlay)
+            writer.WriteString(charName);
+
+            byte[] data = writer.ToArray();
+            ushort actualSize = (ushort)data.Length;
+            data[0] = (byte)(actualSize >> 8);
+            data[1] = (byte)(actualSize & 0xFF);
+
+            // Encryption
+            if (_encryptor.Enabled)
+            {
+                byte[] payload = new byte[data.Length - 6];
+                Array.Copy(data, 6, payload, 0, payload.Length);
+                _encryptor.Encrypt(payload, EncryptType.CS);
+                Array.Copy(payload, 0, data, 6, payload.Length);
+            }
+
+            await _stream.WriteAsync(data, 0, data.Length);
+            LogConsole($"[C->S] Sent BeginPlay (433) selecting character '{charName}'");
+        }
+
+        private async Task SendPingAsync(CancellationToken cancellationToken)
+        {
+            var writer = new PkoPacketWriter();
+            writer.WriteUint16(0); // Size placeholder
+            writer.WriteUint32(_session);
+            writer.WriteUint16(17); // Packet ID (Ping)
+
+            byte[] data = writer.ToArray();
+            ushort actualSize = (ushort)data.Length;
+            data[0] = (byte)(actualSize >> 8);
+            data[1] = (byte)(actualSize & 0xFF);
+
+            // Encryption
+            if (_encryptor.Enabled)
+            {
+                byte[] payload = new byte[data.Length - 6];
+                Array.Copy(data, 6, payload, 0, payload.Length);
+                _encryptor.Encrypt(payload, EncryptType.CS);
+                Array.Copy(payload, 0, data, 6, payload.Length);
+            }
+
+            await _stream.WriteAsync(data, 0, data.Length, cancellationToken);
+            LogConsole("[C->S] Sent PingPacket (17)");
+        }
+
+        private void LogConsole(string message)
+        {
+            Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] {message}");
+        }
+    }
+}
+</file>
+
+<file path="PkoCrypt.cs">
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace PkoProxyClient
+{
+    public enum EncryptType
+    {
+        CS = 0,
+        SC = 1
+    }
+
+    public enum DecryptType
+    {
+        CS = 0,
+        SC = 1
+    }
+
+    public static class PkoDes
+    {
+        public const bool ENCRYPT = false;
+        public const bool DECRYPT = true;
+        public const bool ECB = false;
+        public const bool CBC = true;
+
+        // initial permutation IP
+        private static readonly sbyte[] IP_Table = new sbyte[64] {
+            58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4,
+            62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
+            57, 49, 41, 33, 25, 17,  9, 1, 59, 51, 43, 35, 27, 19, 11, 3,
+            61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7
+        };
+        // final permutation IP^-1
+        private static readonly sbyte[] IPR_Table = new sbyte[64] {
+            40, 8, 48, 16, 56, 24, 64, 32, 39, 7, 47, 15, 55, 23, 63, 31,
+            38, 6, 46, 14, 54, 22, 62, 30, 37, 5, 45, 13, 53, 21, 61, 29,
+            36, 4, 44, 12, 52, 20, 60, 28, 35, 3, 43, 11, 51, 19, 59, 27,
+            34, 2, 42, 10, 50, 18, 58, 26, 33, 1, 41,  9, 49, 17, 57, 25
+        };
+        // expansion operation matrix
+        private static readonly sbyte[] E_Table = new sbyte[48] {
+            32,  1,  2,  3,  4,  5,  4,  5,  6,  7,  8,  9,
+            8,  9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
+            16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25,
+            24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32,  1
+        };
+        // 32-bit permutation function P used on the output of the S-boxes
+        private static readonly sbyte[] P_Table = new sbyte[32] {
+            16, 7, 20, 21, 29, 12, 28, 17, 1,  15, 23, 26, 5,  18, 31, 10,
+            2,  8, 24, 14, 32, 27, 3,  9,  19, 13, 30, 6,  22, 11, 4,  25
+        };
+        // permuted choice table (key)
+        private static readonly sbyte[] PC1_Table = new sbyte[56] {
+            57, 49, 41, 33, 25, 17,  9,  1, 58, 50, 42, 34, 26, 18,
+            10,  2, 59, 51, 43, 35, 27, 19, 11,  3, 60, 52, 44, 36,
+            63, 55, 47, 39, 31, 23, 15,  7, 62, 54, 46, 38, 30, 22,
+            14,  6, 61, 53, 45, 37, 29, 21, 13,  5, 28, 20, 12,  4
+        };
+        // permuted choice key (table)
+        private static readonly sbyte[] PC2_Table = new sbyte[48] {
+            14, 17, 11, 24,  1,  5,  3, 28, 15,  6, 21, 10,
+            23, 19, 12,  4, 26,  8, 16,  7, 27, 20, 13,  2,
+            41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48,
+            44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32
+        };
+        // number left rotations of pc1
+        private static readonly sbyte[] LOOP_Table = new sbyte[16] {
+            1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1
+        };
+        // The S-boxes
+        private static readonly byte[,,] S_Box = new byte[8, 4, 16] {
+            {
+                // S1
+                { 14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7 },
+                {  0, 15,  7,  4, 14,  2, 13,  1, 10,  6, 12, 11,  9,  5,  3,  8 },
+                {  4,  1, 14,  8, 13,  6,  2, 11, 15, 12,  9,  7,  3, 10,  5,  0 },
+                { 15, 12,  8,  2,  4,  9,  1,  7,  5, 11,  3, 14, 10,  0,  6, 13 }
+            },
+            {
+                // S2
+                { 15,  1,  8, 14,  6, 11,  3,  4,  9,  7,  2, 13, 12,  0,  5, 10 },
+                {  3, 13,  4,  7, 15,  2,  8, 14, 12,  0,  1, 10,  6,  9, 11,  5 },
+                {  0, 14,  7, 11, 10,  4, 13,  1,  5,  8, 12,  6,  9,  3,  2, 15 },
+                { 13,  8, 10,  1,  3, 15,  4,  2, 11,  6,  7, 12,  0,  5, 14,  9 }
+            },
+            {
+                // S3
+                { 10,  0,  9, 14,  6,  3, 15,  5,  1, 13, 12,  7, 11,  4,  2,  8 },
+                { 13,  7,  0,  9,  3,  4,  6, 10,  2,  8,  5, 14, 12, 11, 15,  1 },
+                { 13,  6,  4,  9,  8, 15,  3,  0, 11,  1,  2, 12,  5, 10, 14,  7 },
+                {  1, 10, 13,  0,  6,  9,  8,  7,  4, 15, 14,  3, 11,  5,  2, 12 }
+            },
+            {
+                // S4
+                {  7, 13, 14,  3,  0,  6,  9, 10,  1,  2,  8,  5, 11, 12,  4, 15 },
+                { 13,  8, 11,  5,  6, 15,  0,  3,  4,  7,  2, 12,  1, 10, 14,  9 },
+                { 10,  6,  9,  0, 12, 11,  7, 13, 15,  1,  3, 14,  5,  2,  8,  4 },
+                {  3, 15,  0,  6, 10,  1, 13,  8,  9,  4,  5, 11, 12,  7,  2, 14 }
+            },
+            {
+                // S5
+                {  2, 12,  4,  1,  7, 10, 11,  6,  8,  5,  3, 15, 13,  0, 14,  9 },
+                { 14, 11,  2, 12,  4,  7, 13,  1,  5,  0, 15, 10,  3,  9,  8,  6 },
+                {  4,  2,  1, 11, 10, 13,  7,  8, 15,  9, 12,  5,  6,  3,  0, 14 },
+                { 11,  8, 12,  7,  1, 14,  2, 13,  6, 15,  0,  9, 10,  4,  5,  3 }
+            },
+            {
+                // S6
+                { 12,  1, 10, 15,  9,  2,  6,  8,  0, 13,  3,  4, 14,  7,  5, 11 },
+                { 10, 15,  4,  2,  7, 12,  9,  5,  6,  1, 13, 14,  0, 11,  3,  8 },
+                {  9, 14, 15,  5,  2,  8, 12,  3,  7,  0,  4, 10,  1, 13, 11,  6 },
+                {  4,  3,  2, 12,  9,  5, 15, 10, 11, 14,  1,  7,  6,  0,  8, 13 }
+            },
+            {
+                // S7
+                {  4, 11,  2, 14, 15,  0,  8, 13,  3, 12,  9,  7,  5, 10,  6,  1 },
+                { 13,  0, 11,  7,  4,  9,  1, 10, 14,  3,  5, 12,  2, 15,  8,  6 },
+                {  1,  4, 11, 13, 12,  3,  7, 14, 10, 15,  6,  8,  0,  5,  9,  2 },
+                {  6, 11, 13,  8,  1,  4, 10,  7,  9,  5,  0, 15, 14,  2,  3, 12 }
+            },
+            {
+                // S8
+                { 13,  2,  8,  4,  6, 15, 11,  1, 10,  9,  3, 14,  5,  0, 12,  7 },
+                {  1, 15, 13,  8, 10,  3,  7,  4, 12,  5,  6, 11,  0, 14,  9,  2 },
+                {  7, 11,  4,  1,  9, 12, 14,  2,  0,  6, 10, 13, 15,  3,  5,  8 },
+                {  2,  1, 14,  7,  4, 10,  8, 13, 15, 12,  9,  0,  3,  5,  6, 11 }
+            }
+        };
+
+        private static void ByteToBit(bool[] Out, byte[] In, int bits)
+        {
+            for (int i = 0; i < bits; ++i)
+                Out[i] = ((In[i >> 3] >> ((7 - i) & 7)) & 1) != 0;
+        }
+
+        private static void BitToByte(byte[] Out, bool[] In, int bits)
+        {
+            Array.Clear(Out, 0, bits >> 3);
+            for (int i = 0; i < bits; ++i)
+            {
+                if (In[i])
+                {
+                    Out[i >> 3] |= (byte)(1 << ((7 - i) & 7));
+                }
+            }
+        }
+
+        private static void RotateL(bool[] In, int len, int loop)
+        {
+            bool[] tmp = new bool[256];
+            Array.Copy(In, tmp, loop);
+            Array.Copy(In, loop, In, 0, len - loop);
+            Array.Copy(tmp, 0, In, len - loop, loop);
+        }
+
+        private static void Xor(bool[] InA, bool[] InB, int len)
+        {
+            for (int i = 0; i < len; ++i)
+                InA[i] ^= InB[i];
+        }
+
+        private static void Transform(bool[] Out, bool[] In, sbyte[] Table, int len)
+        {
+            bool[] tmp = new bool[256];
+            for (int i = 0; i < len; ++i)
+                tmp[i] = In[Table[i] - 1];
+            Array.Copy(tmp, Out, len);
+        }
+
+        private static void S_func(bool[] Out, int outOff, bool[] In, int inOff)
+        {
+            for (int i = 0; i < 8; ++i)
+            {
+                int currIn = inOff + i * 6;
+                int currOut = outOff + i * 4;
+                int j = ((In[currIn + 0] ? 1 : 0) << 1) + (In[currIn + 5] ? 1 : 0);
+                int k = ((In[currIn + 1] ? 1 : 0) << 3) + ((In[currIn + 2] ? 1 : 0) << 2) + ((In[currIn + 3] ? 1 : 0) << 1) + (In[currIn + 4] ? 1 : 0);
+
+                for (int l = 0; l < 4; ++l)
+                {
+                    Out[currOut + l] = ((S_Box[i, j, k] >> (3 - l)) & 1) != 0;
+                }
+            }
+        }
+
+        private static void F_func(bool[] In, bool[] Ki)
+        {
+            bool[] MR = new bool[48];
+            Transform(MR, In, E_Table, 48);
+            Xor(MR, Ki, 48);
+            S_func(In, 0, MR, 0);
+            Transform(In, In, P_Table, 32);
+        }
+
+        private static void SetSubKey(bool[,][] pSubKey, int keyIdx, byte[] Key, int keyOff)
+        {
+            bool[] K = new bool[64];
+            byte[] blockKey = new byte[8];
+            Array.Copy(Key, keyOff, blockKey, 0, 8);
+            ByteToBit(K, blockKey, 64);
+            Transform(K, K, PC1_Table, 56);
+
+            bool[] KL = new bool[28];
+            bool[] KR = new bool[28];
+            Array.Copy(K, 0, KL, 0, 28);
+            Array.Copy(K, 28, KR, 0, 28);
+
+            for (int i = 0; i < 16; ++i)
+            {
+                RotateL(KL, 28, LOOP_Table[i]);
+                RotateL(KR, 28, LOOP_Table[i]);
+                Array.Copy(KL, 0, K, 0, 28);
+                Array.Copy(KR, 0, K, 28, 28);
+                Transform(pSubKey[keyIdx, i], K, PC2_Table, 48);
+            }
+        }
+
+        private static void DES(byte[] Out, int outOff, byte[] In, int inOff, bool[,][] pSubKey, int keyIdx, bool Type)
+        {
+            bool[] M = new bool[64];
+            byte[] blockIn = new byte[8];
+            Array.Copy(In, inOff, blockIn, 0, 8);
+            ByteToBit(M, blockIn, 64);
+            Transform(M, M, IP_Table, 64);
+
+            bool[] Li = new bool[32];
+            bool[] Ri = new bool[32];
+            Array.Copy(M, 0, Li, 0, 32);
+            Array.Copy(M, 32, Ri, 0, 32);
+
+            bool[] tmp = new bool[32];
+            if (Type == ENCRYPT)
+            {
+                for (int i = 0; i < 16; ++i)
+                {
+                    Array.Copy(Ri, tmp, 32);
+                    F_func(Ri, pSubKey[keyIdx, i]);
+                    Xor(Ri, Li, 32);
+                    Array.Copy(tmp, Li, 32);
+                }
+            }
+            else
+            {
+                for (int i = 15; i >= 0; --i)
+                {
+                    Array.Copy(Ri, tmp, 32);
+                    F_func(Ri, pSubKey[keyIdx, i]);
+                    Xor(Ri, Li, 32);
+                    Array.Copy(tmp, Li, 32);
+                }
+            }
+
+            Array.Copy(Li, 0, M, 0, 32);
+            Array.Copy(Ri, 0, M, 32, 32);
+            RotateL(M, 64, 32);
+            Transform(M, M, IPR_Table, 64);
+
+            byte[] blockOut = new byte[8];
+            BitToByte(blockOut, M, 64);
+            Array.Copy(blockOut, 0, Out, outOff, 8);
+        }
+
+        public static byte[] RunPad(byte[] In)
+        {
+            int datalen = In.Length;
+            int res = datalen & 7;
+            int padlen = datalen + 8 - res;
+            byte[] Out = new byte[padlen];
+            Array.Copy(In, Out, datalen);
+            return Out;
+        }
+
+        public static bool RunDes(bool bType, bool bMode, byte[] In, byte[] Out, byte[] Key)
+        {
+            int datalen = In.Length;
+            int keylen = Key.Length;
+
+            if (datalen == 0 || (datalen & 7) != 0 || keylen < 8)
+                return false;
+
+            // Allocate m_SubKey: [3 keys, 16 rounds, 48 subkey bits]
+            bool[,][] m_SubKey = new bool[3, 16][];
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 16; j++)
+                {
+                    m_SubKey[i, j] = new bool[48];
+                }
+            }
+
+            int nKey = (keylen >> 3) > 3 ? 3 : (keylen >> 3);
+            for (int i = 0; i < nKey; i++)
+            {
+                SetSubKey(m_SubKey, i, Key, i << 3);
+            }
+
+            if (bMode == ECB)
+            {
+                int blocks = datalen >> 3;
+                if (nKey == 1)
+                {
+                    for (int i = 0; i < blocks; ++i)
+                    {
+                        DES(Out, i * 8, In, i * 8, m_SubKey, 0, bType);
+                    }
+                }
+                else if (nKey == 2)
+                {
+                    for (int i = 0; i < blocks; ++i)
+                    {
+                        DES(Out, i * 8, In, i * 8, m_SubKey, 0, bType);
+                        DES(Out, i * 8, Out, i * 8, m_SubKey, 1, !bType);
+                        DES(Out, i * 8, Out, i * 8, m_SubKey, 0, bType);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < blocks; ++i)
+                    {
+                        DES(Out, i * 8, In, i * 8, m_SubKey, bType ? 2 : 0, bType);
+                        DES(Out, i * 8, Out, i * 8, m_SubKey, 1, !bType);
+                        DES(Out, i * 8, Out, i * 8, m_SubKey, bType ? 0 : 2, bType);
+                    }
+                }
+            }
+            else
+            {
+                // CBC Mode (if ever needed, translated for completeness)
+                byte[] cvec = new byte[8];
+                byte[] cvin = new byte[8];
+                int blocks = datalen >> 3;
+
+                if (nKey == 1)
+                {
+                    for (int i = 0; i < blocks; ++i)
+                    {
+                        if (bType == ENCRYPT)
+                        {
+                            for (int j = 0; j < 8; ++j)
+                                cvin[j] = (byte)(In[i * 8 + j] ^ cvec[j]);
+                        }
+                        else
+                        {
+                            Array.Copy(In, i * 8, cvin, 0, 8);
+                        }
+
+                        DES(Out, i * 8, cvin, 0, m_SubKey, 0, bType);
+
+                        if (bType == ENCRYPT)
+                        {
+                            Array.Copy(Out, i * 8, cvec, 0, 8);
+                        }
+                        else
+                        {
+                            for (int j = 0; j < 8; ++j)
+                                Out[i * 8 + j] ^= cvec[j];
+                            Array.Copy(cvin, cvec, 8);
+                        }
+                    }
+                }
+                else if (nKey == 2)
+                {
+                    for (int i = 0; i < blocks; ++i)
+                    {
+                        if (bType == ENCRYPT)
+                        {
+                            for (int j = 0; j < 8; ++j)
+                                cvin[j] = (byte)(In[i * 8 + j] ^ cvec[j]);
+                        }
+                        else
+                        {
+                            Array.Copy(In, i * 8, cvin, 0, 8);
+                        }
+
+                        DES(Out, i * 8, cvin, 0, m_SubKey, 0, bType);
+                        DES(Out, i * 8, Out, i * 8, m_SubKey, 1, !bType);
+                        DES(Out, i * 8, Out, i * 8, m_SubKey, 0, bType);
+
+                        if (bType == ENCRYPT)
+                        {
+                            Array.Copy(Out, i * 8, cvec, 0, 8);
+                        }
+                        else
+                        {
+                            for (int j = 0; j < 8; ++j)
+                                Out[i * 8 + j] ^= cvec[j];
+                            Array.Copy(cvin, cvec, 8);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < blocks; ++i)
+                    {
+                        if (bType == ENCRYPT)
+                        {
+                            for (int j = 0; j < 8; ++j)
+                                cvin[j] = (byte)(In[i * 8 + j] ^ cvec[j]);
+                        }
+                        else
+                        {
+                            Array.Copy(In, i * 8, cvin, 0, 8);
+                        }
+
+                        DES(Out, i * 8, cvin, 0, m_SubKey, bType ? 2 : 0, bType);
+                        DES(Out, i * 8, Out, i * 8, m_SubKey, 1, !bType);
+                        DES(Out, i * 8, Out, i * 8, m_SubKey, bType ? 0 : 2, bType);
+
+                        if (bType == ENCRYPT)
+                        {
+                            Array.Copy(Out, i * 8, cvec, 0, 8);
+                        }
+                        else
+                        {
+                            for (int j = 0; j < 8; ++j)
+                                Out[i * 8 + j] ^= cvec[j];
+                            Array.Copy(cvin, cvec, 8);
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+    }
+
+    public static class PacketEncoder
+    {
+        public static bool encrypt_B(byte[] src, byte[] key, bool en = true)
+        {
+            int src_len = src.Length;
+            int key_len = key.Length;
+            if (key_len == 0 || src_len == 0) return false;
+
+            int loop = src_len / key_len;
+            int rcnt = src_len % key_len;
+
+            if (en)
+            {
+                for (int j = 0; j < loop; ++j)
+                {
+                    for (int i = 0; i < key_len; ++i)
+                    {
+                        int idx = j * key_len + i;
+                        sbyte k = (sbyte)key[i];
+                        int shift = k % key_len + 1;
+                        int realShift = ((byte)shift) & 7;
+
+                        src[idx] ^= (byte)k;
+                        if (realShift != 0)
+                        {
+                            src[idx] = (byte)((src[idx] << realShift) | (src[idx] >> (8 - realShift)));
+                        }
+                    }
+                }
+                for (int i = 0; i < rcnt; ++i)
+                {
+                    int idx = loop * key_len + i;
+                    sbyte k = (sbyte)key[i];
+                    int shift = k % key_len + 1;
+                    int realShift = ((byte)shift) & 7;
+
+                    src[idx] ^= (byte)k;
+                    if (realShift != 0)
+                    {
+                        src[idx] = (byte)((src[idx] << realShift) | (src[idx] >> (8 - realShift)));
+                    }
+                }
+            }
+            else
+            {
+                for (int j = 0; j < loop; ++j)
+                {
+                    for (int i = 0; i < key_len; ++i)
+                    {
+                        int idx = j * key_len + i;
+                        sbyte k = (sbyte)key[i];
+                        int shift = k % key_len + 1;
+                        int realShift = ((byte)shift) & 7;
+
+                        if (realShift != 0)
+                        {
+                            src[idx] = (byte)((src[idx] >> realShift) | (src[idx] << (8 - realShift)));
+                        }
+                        src[idx] ^= (byte)k;
+                    }
+                }
+                for (int i = 0; i < rcnt; ++i)
+                {
+                    int idx = loop * key_len + i;
+                    sbyte k = (sbyte)key[i];
+                    int shift = k % key_len + 1;
+                    int realShift = ((byte)shift) & 7;
+
+                    if (realShift != 0)
+                    {
+                        src[idx] = (byte)((src[idx] >> realShift) | (src[idx] << (8 - realShift)));
+                    }
+                    src[idx] ^= (byte)k;
+                }
+            }
+            return true;
+        }
+
+        public static void init_Noise(int nNoise, byte[] szKey)
+        {
+            szKey[0] = (byte)(nNoise & 0x01);
+            szKey[1] = (byte)(nNoise & 0x02);
+            szKey[2] = (byte)(nNoise & 0x04);
+            szKey[3] = (byte)(nNoise & 0x08);
+        }
+
+        public static bool encrypt_Noise(byte[] szKey, byte[] src)
+        {
+            int src_len = src.Length;
+            int nLen = src_len >> 2;
+            if (nLen > 8)
+            {
+                nLen = 8;
+            }
+            int nCount = 0;
+            for (int i = 0; i < nLen; i++)
+            {
+                src[nCount++] ^= szKey[3];
+                src[nCount++] ^= szKey[2];
+                src[nCount++] ^= szKey[1];
+                src[nCount++] ^= szKey[0];
+            }
+
+            if (src_len >= 8)
+            {
+                szKey[0] = (byte)(src[7] ^ (src[3] ^ 1));
+                szKey[1] = (byte)(src[6] ^ (src[2] ^ 2));
+                szKey[2] = (byte)(src[5] ^ (src[1] ^ 3));
+                szKey[3] = (byte)(src[4] ^ (src[0] ^ 4));
+            }
+
+            return true;
+        }
+
+        public static bool decrypt_Noise(byte[] szKey, byte[] src)
+        {
+            int src_len = src.Length;
+            byte[] szTemp = new byte[4];
+            if (src_len >= 8)
+            {
+                szTemp[0] = (byte)(src[7] ^ (src[3] ^ 1));
+                szTemp[1] = (byte)(src[6] ^ (src[2] ^ 2));
+                szTemp[2] = (byte)(src[5] ^ (src[1] ^ 3));
+                szTemp[3] = (byte)(src[4] ^ (src[0] ^ 4));
+            }
+
+            int nLen = src_len >> 2;
+            if (nLen > 8)
+            {
+                nLen = 8;
+            }
+            int nCount = 0;
+            for (int i = 0; i < nLen; i++)
+            {
+                src[nCount++] ^= szKey[3];
+                src[nCount++] ^= szKey[2];
+                src[nCount++] ^= szKey[1];
+                src[nCount++] ^= szKey[0];
+            }
+
+            if (src_len >= 8)
+            {
+                szKey[0] = szTemp[0];
+                szKey[1] = szTemp[1];
+                szKey[2] = szTemp[2];
+                szKey[3] = szTemp[3];
+            }
+
+            return true;
+        }
+    }
+
+    public class PacketEncryptor
+    {
+        private bool m_enabled = false;
+        private byte[] m_session_key = new byte[16];
+        private ushort m_session_key_length = 0;
+        private byte[][] m_keys = new byte[4][];
+
+        private List<byte[]> _candidateSessionKeys = new List<byte[]>();
+        private bool _candidateSelected = false;
+        private ushort _cachedVersion = 0;
+        private string _cachedChapString = "";
+
+        public PacketEncryptor()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                m_keys[i] = new byte[4];
+            }
+        }
+
+        public bool Enabled => m_enabled;
+
+        public void Init(bool enabled, ushort version, string chap_string, byte[] password, byte[] key)
+        {
+            m_enabled = enabled;
+            if (m_enabled)
+            {
+                // MSVC C++ short int is 16-bit signed integer
+                short key_data = (short)(version * version * 0x1232222);
+
+                // Grab last 4 bytes of chap_string
+                byte[] chapBytes = Encoding.ASCII.GetBytes(chap_string);
+                int last4 = 0;
+                if (chapBytes.Length >= 4)
+                {
+                    last4 = BitConverter.ToInt32(chapBytes, chapBytes.Length - 4);
+                }
+                int noise = key_data * last4;
+
+                // Match C++ readString() truncation (which discards the last byte of the written byte array)
+                byte[] passwordKey = password;
+                if (passwordKey.Length > 0)
+                {
+                    byte[] truncated = new byte[passwordKey.Length - 1];
+                    Array.Copy(passwordKey, truncated, truncated.Length);
+                    passwordKey = truncated;
+                }
+
+                // CDES::RunDes (DECRYPT, ECB)
+                byte[] decryptedSessionKey = new byte[key.Length];
+                PkoDes.RunDes(PkoDes.DECRYPT, PkoDes.ECB, key, decryptedSessionKey, passwordKey);
+
+                InitWithSessionKey(version, chap_string, decryptedSessionKey);
+            }
+            else
+            {
+                Array.Clear(m_session_key, 0, m_session_key.Length);
+                m_session_key_length = 0;
+            }
+        }
+
+        public void SetCandidates(List<byte[]> passwordCandidates, ushort version, string chapString, byte[] key)
+        {
+            _candidateSessionKeys.Clear();
+            _candidateSelected = false;
+            _cachedVersion = version;
+            _cachedChapString = chapString;
+
+            foreach (var pwd in passwordCandidates)
+            {
+                byte[] decSessionKey = new byte[key.Length];
+                PkoDes.RunDes(PkoDes.DECRYPT, PkoDes.ECB, key, decSessionKey, pwd);
+                _candidateSessionKeys.Add(decSessionKey);
+            }
+
+            // Default to first candidate
+            if (_candidateSessionKeys.Count > 0)
+            {
+                InitWithSessionKey(version, chapString, _candidateSessionKeys[0]);
+            }
+            m_enabled = true;
+        }
+
+        private void InitWithSessionKey(ushort version, string chapString, byte[] sessionKey)
+        {
+            Array.Copy(sessionKey, m_session_key, Math.Min(m_session_key.Length, sessionKey.Length));
+            m_session_key_length = 6;
+
+            if (!string.IsNullOrEmpty(chapString))
+            {
+                short key_data = (short)(version * version * 0x1232222);
+                byte[] chapBytes = Encoding.ASCII.GetBytes(chapString);
+                int last4 = 0;
+                if (chapBytes.Length >= 4)
+                {
+                    last4 = BitConverter.ToInt32(chapBytes, chapBytes.Length - 4);
+                }
+                int noise = key_data * last4;
+
+                PacketEncoder.init_Noise(noise, m_keys[0]);
+                PacketEncoder.init_Noise(noise, m_keys[1]);
+                PacketEncoder.init_Noise(noise, m_keys[2]);
+                PacketEncoder.init_Noise(noise, m_keys[3]);
+            }
+        }
+
+        public void Encrypt(byte[] data, EncryptType type)
+        {
+            byte[] key = type == EncryptType.CS ? m_keys[2] : m_keys[3];
+            PacketEncoder.encrypt_Noise(key, data);
+
+            byte[] actualSessionKey = new byte[m_session_key_length];
+            Array.Copy(m_session_key, actualSessionKey, m_session_key_length);
+            PacketEncoder.encrypt_B(data, actualSessionKey, true);
+        }
+
+        public void Decrypt(byte[] data, DecryptType type)
+        {
+            if (m_enabled && !_candidateSelected && _candidateSessionKeys.Count > 1)
+            {
+                // Try each candidate session key
+                foreach (var sessionKey in _candidateSessionKeys)
+                {
+                    byte[] testData = (byte[])data.Clone();
+                    InitWithSessionKey(_cachedVersion, _cachedChapString, sessionKey);
+
+                    byte[] testSessionKey = new byte[m_session_key_length];
+                    Array.Copy(m_session_key, testSessionKey, m_session_key_length);
+                    PacketEncoder.encrypt_B(testData, testSessionKey, false);
+                    PacketEncoder.decrypt_Noise(type == DecryptType.CS ? m_keys[0] : m_keys[1], testData);
+
+                    ushort packetId = (ushort)((testData[0] << 8) | testData[1]);
+                    // Valid PKO packet IDs are normally between 1 and 2000
+                    if (packetId > 0 && packetId < 2000)
+                    {
+                        _candidateSelected = true;
+                        InitWithSessionKey(_cachedVersion, _cachedChapString, sessionKey);
+                        break;
+                    }
+                }
+            }
+
+            byte[] key = type == DecryptType.CS ? m_keys[0] : m_keys[1];
+
+            byte[] actualSessionKey = new byte[m_session_key_length];
+            Array.Copy(m_session_key, actualSessionKey, m_session_key_length);
+            PacketEncoder.encrypt_B(data, actualSessionKey, false);
+
+            PacketEncoder.decrypt_Noise(key, data);
+        }
+    }
+
+    public static class PasswordEncoder
+    {
+        public static byte[] Encode(string password, string chap_string)
+        {
+            byte[] srcBytes = Encoding.ASCII.GetBytes(chap_string);
+            byte[] szPad = PkoDes.RunPad(srcBytes);
+
+            byte[] passwordKey = Encoding.ASCII.GetBytes(password);
+            byte[] encoded_password = new byte[szPad.Length];
+
+            PkoDes.RunDes(PkoDes.ENCRYPT, PkoDes.ECB, szPad, encoded_password, passwordKey);
+            return encoded_password;
+        }
+    }
+}
+</file>
+
+<file path="PkoPacket.cs">
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace PkoProxyClient
+{
+    public class PkoPacketReader
+    {
+        private byte[] _data;
+        private int _pos;
+
+        public PkoPacketReader(byte[] data)
+        {
+            _data = data;
+            _pos = 0;
+        }
+
+        public byte ReadByte()
+        {
+            return _data[_pos++];
+        }
+
+        public ushort ReadUint16()
+        {
+            ushort val = (ushort)((_data[_pos] << 8) | _data[_pos + 1]);
+            _pos += 2;
+            return val;
+        }
+
+        public uint ReadUint32()
+        {
+            uint val = (uint)((_data[_pos] << 24) | (_data[_pos + 1] << 16) | (_data[_pos + 2] << 8) | _data[_pos + 3]);
+            _pos += 4;
+            return val;
+        }
+
+        public string ReadString()
+        {
+            ushort len = ReadUint16();
+            if (len == 0) return "";
+            string s = Encoding.ASCII.GetString(_data, _pos, len - 1);
+            _pos += len;
+            return s;
+        }
+
+        public byte[] ReadBytes(int count)
+        {
+            byte[] buf = new byte[count];
+            Array.Copy(_data, _pos, buf, 0, count);
+            _pos += count;
+            return buf;
+        }
+
+        public void SeekFromEnd(int offset)
+        {
+            _pos = _data.Length - offset;
+        }
+
+        public int Remaining => _data.Length - _pos;
+    }
+
+    public class PkoPacketWriter
+    {
+        private List<byte> _data = new List<byte>();
+
+        public void WriteByte(byte b)
+        {
+            _data.Add(b);
+        }
+
+        public void WriteUint16(ushort val)
+        {
+            _data.Add((byte)(val >> 8));
+            _data.Add((byte)(val & 0xFF));
+        }
+
+        public void WriteUint32(uint val)
+        {
+            _data.Add((byte)(val >> 24));
+            _data.Add((byte)(val >> 16));
+            _data.Add((byte)(val >> 8));
+            _data.Add((byte)(val & 0xFF));
+        }
+
+        public void WriteString(string s)
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(s);
+            ushort len = (ushort)(bytes.Length + 1);
+            WriteUint16(len);
+            _data.AddRange(bytes);
+            _data.Add(0); // null terminator
+        }
+
+        public void WriteBytes(byte[] buf)
+        {
+            _data.AddRange(buf);
+        }
+
+        public byte[] ToArray()
+        {
+            return _data.ToArray();
+        }
+    }
+
+    public class TcpStreamPacketReader
+    {
+        private readonly NetworkStream _stream;
+        private readonly byte[] _headerBuffer = new byte[2];
+
+        public TcpStreamPacketReader(NetworkStream stream)
+        {
+            _stream = stream;
+        }
+
+        public async Task<byte[]> ReadPacketAsync(CancellationToken cancellationToken)
+        {
+            int bytesRead = 0;
+            while (bytesRead < 2)
+            {
+                int read = await _stream.ReadAsync(_headerBuffer, bytesRead, 2 - bytesRead, cancellationToken);
+                if (read == 0) return null; // EOF
+                bytesRead += read;
+            }
+
+            ushort size = (ushort)((_headerBuffer[0] << 8) | _headerBuffer[1]);
+            if (size < 2)
+                throw new InvalidDataException($"Invalid packet size: {size}");
+
+            byte[] packet = new byte[size];
+            packet[0] = _headerBuffer[0];
+            packet[1] = _headerBuffer[1];
+
+            int target = size - 2;
+            int offset = 2;
+            while (target > 0)
+            {
+                int read = await _stream.ReadAsync(packet, offset, target, cancellationToken);
+                if (read == 0)
+                    throw new IOException("Connection closed while reading packet body.");
+                offset += read;
+                target -= read;
+            }
+
+            return packet;
+        }
+    }
+}
+</file>
+
+<file path="PkoProxy.cs">
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace PkoProxyClient
+{
+    public class HandshakeState
+    {
+        public string ChapString { get; set; } = "";
+        public string Login { get; set; } = "";
+        public byte[] PasswordBytes { get; set; } = Array.Empty<byte>();
+        public ushort Version { get; set; } = 0;
+        public string PlaintextPassword { get; set; } = "";
+    }
+
+    public class ProxyPacketContext
+    {
+        public int ConnectionId { get; }
+        public string Direction { get; } // "C -> S" or "S -> C"
+        public ushort PacketId { get; set; }
+        public uint Session { get; set; }
+        public byte[] DecryptedPacket { get; set; }
+        public bool IsDropped { get; set; } = false;
+
+        public ProxyPacketContext(int connectionId, string direction, ushort packetId, uint session, byte[] decryptedPacket)
+        {
+            ConnectionId = connectionId;
+            Direction = direction;
+            PacketId = packetId;
+            Session = session;
+            DecryptedPacket = decryptedPacket;
+        }
+    }
+
+    public interface IProxyPlugin
+    {
+        void OnPacket(ProxyPacketContext context);
+    }
+
+    public class PkoProxy
+    {
+        public static readonly System.Collections.Generic.List<IProxyPlugin> Plugins = new System.Collections.Generic.List<IProxyPlugin>();
+
+        private readonly int _localPort;
+        private readonly string _remoteHost;
+        private readonly int _remotePort;
+        private readonly bool _protectionEnabled;
+        private readonly string _logFilePath;
+        private readonly string _plaintextPassword;
+        private TcpListener _listener;
+        private int _connectionCounter = 0;
+
+        public PkoProxy(int localPort, string remoteHost, int remotePort, bool protectionEnabled, string logFilePath = "proxy_packets.log", string plaintextPassword = "")
+        {
+            _localPort = localPort;
+            _remoteHost = remoteHost;
+            _remotePort = remotePort;
+            _protectionEnabled = protectionEnabled;
+            _logFilePath = logFilePath;
+            _plaintextPassword = plaintextPassword;
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            _listener = new TcpListener(IPAddress.Any, _localPort);
+            _listener.Start();
+
+            LogConsole($"Proxy started. Listening on port {_localPort}, forwarding to {_remoteHost}:{_remotePort}...");
+            LogConsole($"Packet sequence protection: {(_protectionEnabled ? "ENABLED" : "DISABLED")}");
+            LogConsole($"Logging unencrypted packets to: {Path.GetFullPath(_logFilePath)}\n");
+
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    TcpClient client = await _listener.AcceptTcpClientAsync(cancellationToken);
+                    int connId = Interlocked.Increment(ref _connectionCounter);
+                    _ = HandleConnectionAsync(client, connId, cancellationToken);
+                }
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                LogConsole($"Proxy listener encountered an error: {ex.Message}");
+            }
+            finally
+            {
+                _listener.Stop();
+                LogConsole("Proxy stopped.");
+            }
+        }
+
+        private async Task HandleConnectionAsync(TcpClient client, int connId, CancellationToken cancellationToken)
+        {
+            LogConsole($"[Connection #{connId}] Client connected from {client.Client.RemoteEndPoint}");
+
+            using (client)
+            using (TcpClient server = new TcpClient())
+            {
+                try
+                {
+                    await server.ConnectAsync(_remoteHost, _remotePort, cancellationToken);
+                    LogConsole($"[Connection #{connId}] Connected to target server at {_remoteHost}:{_remotePort}");
+
+                    using (NetworkStream clientStream = client.GetStream())
+                    using (NetworkStream serverStream = server.GetStream())
+                    {
+                        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+                        // Stateful crypto parameters for this connection
+                        HandshakeState handshakeState = new HandshakeState();
+                        handshakeState.PlaintextPassword = _plaintextPassword;
+                        PacketEncryptor encryptor = new PacketEncryptor();
+
+                        // Task for Client to Server direction
+                        var clientToServerTask = ForwardClientToServerAsync(clientStream, serverStream, connId, encryptor, handshakeState, cts.Token);
+
+                        // Task for Server to Client direction
+                        var serverToClientTask = ForwardServerToClientAsync(serverStream, clientStream, connId, encryptor, handshakeState, cts.Token);
+
+                        await Task.WhenAny(clientToServerTask, serverToClientTask);
+                        cts.Cancel();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogConsole($"[Connection #{connId}] Connection closed due to error: {ex.Message}");
+                }
+                finally
+                {
+                    LogConsole($"[Connection #{connId}] Disconnected.");
+                }
+            }
+        }
+
+        private async Task ForwardClientToServerAsync(NetworkStream clientStream, NetworkStream serverStream, int connId, PacketEncryptor encryptor, HandshakeState state, CancellationToken cancellationToken)
+        {
+            var reader = new TcpStreamPacketReader(clientStream);
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                byte[] packet = await reader.ReadPacketAsync(cancellationToken);
+                if (packet == null) break;
+
+                // Handle 2-byte heartbeat packet
+                if (packet.Length == 2)
+                {
+                    await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+                    continue;
+                }
+
+                // Log raw ciphertext header/ID bytes for diagnosis
+                StringBuilder rawHex = new StringBuilder();
+                for (int i = 0; i < Math.Min(16, packet.Length); i++)
+                {
+                    rawHex.Append($"{packet[i]:X2} ");
+                }
+                LogConsole($"[Connection #{connId}] [Raw C->S Ciphertext] Size: {packet.Length} | Bytes: {rawHex}");
+
+                // Parse/Inspect packet copy before forwarding
+                byte[] copy = (byte[])packet.Clone();
+                ushort packetSize = (ushort)((copy[0] << 8) | copy[1]);
+                uint session = (uint)((copy[2] << 24) | (copy[3] << 16) | (copy[4] << 8) | copy[5]);
+
+                // Decrypt if encryption has been enabled
+                if (encryptor.Enabled)
+                {
+                    // Copy bytes for decryption from index 6 onwards
+                    byte[] payload = new byte[copy.Length - 6];
+                    Array.Copy(copy, 6, payload, 0, payload.Length);
+
+                    encryptor.Decrypt(payload, DecryptType.CS);
+
+                    // Reconstruct decrypted copy
+                    Array.Copy(payload, 0, copy, 6, payload.Length);
+                }
+
+                var pktReader = new PkoPacketReader(copy);
+                pktReader.ReadUint16(); // Skip size
+                pktReader.ReadUint32(); // Skip session
+                ushort packetId = pktReader.ReadUint16();
+
+                // Skip the 4-byte protection sequence number if it is present
+                uint sequence = pktReader.ReadUint32();
+
+                // Handle specific handshake packets to capture info
+                if (packetId == 431) // AccountLogin
+                {
+                    try
+                    {
+                        // Structure of 431: string nobill, string login, ushort pwd_len, bytes password, string mac, ushort flag, ushort version
+                        string nobill = pktReader.ReadString();
+                        string loginVal = pktReader.ReadString();
+                        ushort pwdLen = pktReader.ReadUint16();
+                        byte[] pwdBytes = pktReader.ReadBytes(pwdLen);
+                        string mac = pktReader.ReadString();
+                        ushort flag = pktReader.ReadUint16(); // always 911
+                        ushort versionVal = pktReader.ReadUint16();
+
+                        StringBuilder pwdHex = new StringBuilder();
+                        foreach (byte b in pwdBytes) pwdHex.Append($"{b:X2} ");
+                        LogConsole($"[Connection #{connId}] Captured pwdBytes ({pwdBytes.Length} bytes): {pwdHex}");
+
+                        lock (state)
+                        {
+                            state.Login = loginVal;
+                            state.PasswordBytes = pwdBytes;
+                            state.Version = versionVal;
+                        }
+
+                        LogConsole($"[Connection #{connId}] [C->S Handshake Info] Intercepted Login: {loginVal}, Version: {versionVal}, Mac: {mac}");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogConsole($"[Connection #{connId}] [C->S Parse Error ID 431] {ex.Message}");
+                    }
+                }
+
+                // Run plugins
+                var context = new ProxyPacketContext(connId, "C -> S", packetId, session, copy);
+                foreach (var plugin in Plugins)
+                {
+                    try { plugin.OnPacket(context); } catch { }
+                }
+
+                if (context.IsDropped)
+                {
+                    LogConsole($"[Connection #{connId}] C -> S | Packet ID: {packetId} DROPPED by plugin.");
+                    continue;
+                }
+
+                bool wasModified = !ByteArrayCompare(context.DecryptedPacket, copy);
+                if (wasModified)
+                {
+                    copy = context.DecryptedPacket;
+                    ushort newSize = (ushort)copy.Length;
+                    copy[0] = (byte)(newSize >> 8);
+                    copy[1] = (byte)(newSize & 0xFF);
+
+                    packet = (byte[])copy.Clone();
+                    if (encryptor.Enabled)
+                    {
+                        byte[] payload = new byte[packet.Length - 6];
+                        Array.Copy(packet, 6, payload, 0, payload.Length);
+                        encryptor.Encrypt(payload, EncryptType.CS);
+                        Array.Copy(payload, 0, packet, 6, payload.Length);
+                    }
+                }
+
+                // Log decrypted packet
+                LogPacketDump("C -> S", connId, packetId, session, copy);
+
+                // Forward packet to server
+                await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+            }
+        }
+
+        private async Task ForwardServerToClientAsync(NetworkStream serverStream, NetworkStream clientStream, int connId, PacketEncryptor encryptor, HandshakeState state, CancellationToken cancellationToken)
+        {
+            var reader = new TcpStreamPacketReader(serverStream);
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                byte[] packet = await reader.ReadPacketAsync(cancellationToken);
+                if (packet == null) break;
+
+                // Handle 2-byte heartbeat packet
+                if (packet.Length == 2)
+                {
+                    await clientStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+                    continue;
+                }
+
+                // Log raw ciphertext header/ID bytes for diagnosis
+                StringBuilder rawHex = new StringBuilder();
+                for (int i = 0; i < Math.Min(16, packet.Length); i++)
+                {
+                    rawHex.Append($"{packet[i]:X2} ");
+                }
+                LogConsole($"[Connection #{connId}] [Raw S->C Ciphertext] Size: {packet.Length} | Bytes: {rawHex}");
+
+                // Parse/Inspect packet copy before forwarding
+                byte[] copy = (byte[])packet.Clone();
+                ushort packetSize = (ushort)((copy[0] << 8) | copy[1]);
+                uint session = (uint)((copy[2] << 24) | (copy[3] << 16) | (copy[4] << 8) | copy[5]);
+
+                // Decrypt if encryption has been enabled (excluding 931 which is not encrypted itself)
+                ushort packetIdBeforeDec = 0;
+                if (!encryptor.Enabled)
+                {
+                    packetIdBeforeDec = (ushort)((copy[6] << 8) | copy[7]);
+                }
+
+                if (encryptor.Enabled && packetIdBeforeDec != 931)
+                {
+                    // Copy bytes for decryption from index 6 onwards
+                    byte[] payload = new byte[copy.Length - 6];
+                    Array.Copy(copy, 6, payload, 0, payload.Length);
+
+                    encryptor.Decrypt(payload, DecryptType.SC);
+
+                    // Reconstruct decrypted copy
+                    Array.Copy(payload, 0, copy, 6, payload.Length);
+                }
+
+                var pktReader = new PkoPacketReader(copy);
+                pktReader.ReadUint16(); // Skip size
+                pktReader.ReadUint32(); // Skip session
+                ushort packetId = pktReader.ReadUint16();
+
+                // Inspect Server Handshake Packets
+                if (packetId == 940) // ChapString
+                {
+                    try
+                    {
+                        string chapString = pktReader.ReadString();
+                        lock (state)
+                        {
+                            state.ChapString = chapString;
+                        }
+                        LogConsole($"[Connection #{connId}] [S->C ChapString] Intercepted Value: \"{chapString}\"");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogConsole($"[Connection #{connId}] [S->C Parse Error ID 940] {ex.Message}");
+                    }
+                }
+                else if (packetId == 931) // LoginResult (sent unencrypted)
+                {
+                    try
+                    {
+                        ushort result = pktReader.ReadUint16();
+                        LogConsole($"[Connection #{connId}] [S->C LoginResult] Result Code: {result}");
+
+                        if (result == 0) // result_success is 0 in PKO
+                        {
+                            ushort keyLen = pktReader.ReadUint16();
+                            byte[] encryptionKey = pktReader.ReadBytes(keyLen);
+                            pktReader.SeekFromEnd(8);
+                            uint commEncryptionVal = pktReader.ReadUint32();
+                            bool commEncryption = commEncryptionVal != 0;
+
+                            StringBuilder keyHex = new StringBuilder();
+                            foreach (byte b in encryptionKey) keyHex.Append($"{b:X2} ");
+                            LogConsole($"[Connection #{connId}] [S->C Crypto Handshake] CommEncryption: {commEncryption}, Key ({encryptionKey.Length} bytes): {keyHex}");
+
+                            if (commEncryption)
+                            {
+                                lock (state)
+                                {
+                                    System.Collections.Generic.List<byte[]> candidates = new System.Collections.Generic.List<byte[]>();
+
+                                    // Candidate 1: pwdBytes from wire (24 bytes)
+                                    if (state.PasswordBytes.Length > 0)
+                                    {
+                                        candidates.Add(state.PasswordBytes);
+                                    }
+
+                                    // Candidate 2: pwdBytes truncated (23 bytes)
+                                    if (state.PasswordBytes.Length > 0)
+                                    {
+                                        byte[] trunc = new byte[state.PasswordBytes.Length - 1];
+                                        Array.Copy(state.PasswordBytes, trunc, trunc.Length);
+                                        candidates.Add(trunc);
+                                    }
+
+                                    // Candidate 3: plaintext password MD5 hash (32 bytes)
+                                    if (!string.IsNullOrEmpty(state.PlaintextPassword))
+                                    {
+                                        string md5 = GetMD5Hash(state.PlaintextPassword);
+                                        candidates.Add(Encoding.ASCII.GetBytes(md5));
+                                    }
+
+                                    // Candidate 4: plaintext password itself
+                                    if (!string.IsNullOrEmpty(state.PlaintextPassword))
+                                    {
+                                        candidates.Add(Encoding.ASCII.GetBytes(state.PlaintextPassword));
+                                    }
+
+                                    encryptor.SetCandidates(candidates, state.Version, state.ChapString, encryptionKey);
+                                    LogConsole($"[Connection #{connId}] [Success] Decryption engine initialized with {candidates.Count} candidates!");
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogConsole($"[Connection #{connId}] [S->C Parse Error ID 931] {ex.Message}");
+                    }
+                }
+
+                // Run plugins
+                var context = new ProxyPacketContext(connId, "S -> C", packetId, session, copy);
+                foreach (var plugin in Plugins)
+                {
+                    try { plugin.OnPacket(context); } catch { }
+                }
+
+                if (context.IsDropped)
+                {
+                    LogConsole($"[Connection #{connId}] S -> C | Packet ID: {packetId} DROPPED by plugin.");
+                    continue;
+                }
+
+                bool wasModified = !ByteArrayCompare(context.DecryptedPacket, copy);
+                if (wasModified)
+                {
+                    copy = context.DecryptedPacket;
+                    ushort newSize = (ushort)copy.Length;
+                    copy[0] = (byte)(newSize >> 8);
+                    copy[1] = (byte)(newSize & 0xFF);
+
+                    packet = (byte[])copy.Clone();
+                    if (encryptor.Enabled && packetId != 931)
+                    {
+                        byte[] payload = new byte[packet.Length - 6];
+                        Array.Copy(packet, 6, payload, 0, payload.Length);
+                        encryptor.Encrypt(payload, EncryptType.SC);
+                        Array.Copy(payload, 0, packet, 6, payload.Length);
+                    }
+                }
+
+                // Log decrypted packet
+                LogPacketDump("S -> C", connId, packetId, session, copy);
+
+                // Forward packet to client
+                await clientStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+            }
+        }
+
+        public static string GetMD5Hash(string input)
+        {
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
+
+        private readonly object _consoleLock = new object();
+
+        private void LogConsole(string message)
+        {
+            lock (_consoleLock)
+            {
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] {message}");
+            }
+        }
+
+        private void LogPacketDump(string direction, int connId, ushort packetId, uint session, byte[] decryptedPacket)
+        {
+            ushort size = (ushort)((decryptedPacket[0] << 8) | decryptedPacket[1]);
+            byte[] payload = new byte[decryptedPacket.Length - 8];
+            Array.Copy(decryptedPacket, 8, payload, 0, payload.Length);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"=========================================================================");
+            sb.AppendLine($"[Connection #{connId}] {direction} | Packet ID: {packetId} | Size: {size} | Session: 0x{session:X8}");
+            sb.AppendLine($"-------------------------------------------------------------------------");
+            sb.AppendLine(HexDump(payload));
+            sb.AppendLine();
+
+            string text = sb.ToString();
+
+            // Print summary to console
+            LogConsole($"{direction} | ID: {packetId,3} | Size: {size,4} | Session: 0x{session:X8}");
+
+            // Write detailed dump to log file
+            try
+            {
+                lock (_logFilePath)
+                {
+                    File.AppendAllText(_logFilePath, text);
+                }
+            }
+            catch { }
+
+            // Write structured binary dump for ImHex
+            try
+            {
+                byte dirVal = direction == "C -> S" ? (byte)0 : (byte)1;
+                //byte[] connBytes = BitConverter.GetBytes(connId);
+                //byte[] ticksBytes = BitConverter.GetBytes(DateTime.Now.Ticks);
+                //byte[] lenBytes = BitConverter.GetBytes((ushort)decryptedPacket.Length);
+                //if (BitConverter.IsLittleEndian)
+                //{
+                //    Array.Reverse(lenBytes);
+                //}
+
+                string binPath = Path.ChangeExtension(_logFilePath, ".bin");
+                lock (binPath)
+                {
+                    using (var fs = new FileStream(binPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    {
+                        //fs.WriteByte(0xAA); // Magic separator
+                        fs.WriteByte(dirVal);
+                        //fs.Write(connBytes, 0, 4);
+                        //fs.Write(ticksBytes, 0, 8);
+                        //fs.Write(lenBytes, 0, 2);
+                        fs.Write(decryptedPacket, 0, decryptedPacket.Length);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private static bool ByteArrayCompare(byte[] a1, byte[] a2)
+        {
+            if (a1 == null || a2 == null) return ReferenceEquals(a1, a2);
+            if (a1.Length != a2.Length) return false;
+            for (int i = 0; i < a1.Length; i++)
+                if (a1[i] != a2[i]) return false;
+            return true;
+        }
+
+        public static string HexDump(byte[] bytes, int bytesPerLine = 16)
+        {
+            if (bytes == null) return "<null>";
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i += bytesPerLine)
+            {
+                int chunkLength = Math.Min(bytesPerLine, bytes.Length - i);
+                sb.Append($"{i:X4}: ");
+                for (int j = 0; j < bytesPerLine; j++)
+                {
+                    if (j < chunkLength)
+                        sb.Append($"{bytes[i + j]:X2} ");
+                    else
+                        sb.Append("   ");
+                }
+                sb.Append("  ");
+                for (int j = 0; j < chunkLength; j++)
+                {
+                    char c = (char)bytes[i + j];
+                    if (c >= 32 && c <= 126)
+                        sb.Append(c);
+                    else
+                        sb.Append('.');
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+    }
+}
+</file>
+
+<file path="PkoProxyClient.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
+</file>
+
+<file path="PkoTest.cs">
+using System;
+using System.Text;
+
+namespace PkoProxyClient
+{
+    public static class PkoTest
+    {
+        public static bool RunTests()
+        {
+            Console.WriteLine("Running PKO C# Cryptography Tests...");
+
+            try
+            {
+                // Custom test for B decrypted
+                byte[] data = new byte[] {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
+                byte[] keyB = new byte[] {0x99, 0x3a, 0x3c, 0x7b, 0x27, 0xb1};
+                PacketEncoder.encrypt_B(data, keyB, false);
+
+                Console.Write("C# B decrypted: ");
+                foreach (byte b in data)
+                {
+                    Console.Write($"{b:x2} ");
+                }
+                Console.WriteLine();
+
+                // Custom test to compare with C++ decrypted value
+                byte[] cppKey = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
+                byte[] cppPwd = new byte[23];
+                byte[] pwdChars = Encoding.ASCII.GetBytes("chap12345chap678901234");
+                Array.Copy(pwdChars, cppPwd, 22);
+
+                byte[] outBytes = new byte[8];
+                PkoDes.RunDes(PkoDes.DECRYPT, PkoDes.ECB, cppKey, outBytes, cppPwd);
+
+                Console.Write("C# decrypted: ");
+                foreach (byte b in outBytes)
+                {
+                    Console.Write($"{b:x2} ");
+                }
+                Console.WriteLine();
+
+                // Test 1: DES Pad and Single Key ECB Encrypt/Decrypt
+                byte[] plaintext = Encoding.ASCII.GetBytes("HelloPKOWorld!");
+                byte[] key = Encoding.ASCII.GetBytes("mypassword123"); // 13 bytes, nKey = 1
+
+                byte[] padded = PkoDes.RunPad(plaintext);
+                byte[] encrypted = new byte[padded.Length];
+                byte[] decrypted = new byte[padded.Length];
+
+                if (!PkoDes.RunDes(PkoDes.ENCRYPT, PkoDes.ECB, padded, encrypted, key))
+                {
+                    Console.WriteLine("FAIL: RunDes Encrypt failed");
+                    return false;
+                }
+
+                if (!PkoDes.RunDes(PkoDes.DECRYPT, PkoDes.ECB, encrypted, decrypted, key))
+                {
+                    Console.WriteLine("FAIL: RunDes Decrypt failed");
+                    return false;
+                }
+
+                string decStr = Encoding.ASCII.GetString(decrypted).TrimEnd('\0');
+                if (decStr != "HelloPKOWorld!")
+                {
+                    Console.WriteLine($"FAIL: Decrypted string '{decStr}' does not match original 'HelloPKOWorld!'");
+                    return false;
+                }
+                Console.WriteLine("PASS: CDES ECB 1-key Encryption and Decryption");
+
+                // Test 2: TripleDES ECB 2-Keys and 3-Keys
+                byte[] key2 = Encoding.ASCII.GetBytes("key12345key67890"); // 16 bytes, nKey = 2
+                Array.Clear(encrypted, 0, encrypted.Length);
+                Array.Clear(decrypted, 0, decrypted.Length);
+
+                PkoDes.RunDes(PkoDes.ENCRYPT, PkoDes.ECB, padded, encrypted, key2);
+                PkoDes.RunDes(PkoDes.DECRYPT, PkoDes.ECB, encrypted, decrypted, key2);
+                decStr = Encoding.ASCII.GetString(decrypted).TrimEnd('\0');
+                if (decStr != "HelloPKOWorld!")
+                {
+                    Console.WriteLine($"FAIL: 3DES 2-key decrypted string '{decStr}' incorrect");
+                    return false;
+                }
+                Console.WriteLine("PASS: CDES ECB 2-key 3DES");
+
+                byte[] key3 = Encoding.ASCII.GetBytes("key12345key67890keyabcde"); // 24 bytes, nKey = 3
+                Array.Clear(encrypted, 0, encrypted.Length);
+                Array.Clear(decrypted, 0, decrypted.Length);
+
+                PkoDes.RunDes(PkoDes.ENCRYPT, PkoDes.ECB, padded, encrypted, key3);
+                PkoDes.RunDes(PkoDes.DECRYPT, PkoDes.ECB, encrypted, decrypted, key3);
+                decStr = Encoding.ASCII.GetString(decrypted).TrimEnd('\0');
+                if (decStr != "HelloPKOWorld!")
+                {
+                    Console.WriteLine($"FAIL: 3DES 3-key decrypted string '{decStr}' incorrect");
+                    return false;
+                }
+                Console.WriteLine("PASS: CDES ECB 3-key 3DES");
+
+                // Test 3: PasswordEncoder Encode
+                byte[] pwdEncoded = PasswordEncoder.Encode("my_super_password", "chap12345chap678");
+                if (pwdEncoded == null || pwdEncoded.Length == 0)
+                {
+                    Console.WriteLine("FAIL: PasswordEncoder returned empty bytes");
+                    return false;
+                }
+                Console.WriteLine($"PASS: PasswordEncoder.Encode. Output Length: {pwdEncoded.Length}");
+
+                // Test 4: PacketEncoder encrypt_B and decrypt_B
+                byte[] payload = Encoding.ASCII.GetBytes("A very secure message that we want to encrypt with 'B' algorithm!");
+                byte[] sessionKey = new byte[] { 0x05, 0xF1, 0x32, 0x1A, 0xCC, 0x48 }; // 6 bytes
+                byte[] payloadCopy = (byte[])payload.Clone();
+
+                PacketEncoder.encrypt_B(payloadCopy, sessionKey, true);
+                PacketEncoder.encrypt_B(payloadCopy, sessionKey, false);
+
+                string bDecStr = Encoding.ASCII.GetString(payloadCopy);
+                if (bDecStr != "A very secure message that we want to encrypt with 'B' algorithm!")
+                {
+                    Console.WriteLine($"FAIL: encrypt_B/decrypt_B is not symmetric. Got: '{bDecStr}'");
+                    return false;
+                }
+                Console.WriteLine("PASS: PacketEncoder 'B' Algorithm symmetry");
+
+                // Test 5: PacketEncoder encrypt_Noise and decrypt_Noise (using separate synced keys)
+                byte[] encryptNoiseKey = new byte[] { 0x01, 0x02, 0x04, 0x08 };
+                byte[] decryptNoiseKey = new byte[] { 0x01, 0x02, 0x04, 0x08 };
+                byte[] noisePayload = Encoding.ASCII.GetBytes("PacketWith8+Bytes");
+                byte[] noisePayloadCopy = (byte[])noisePayload.Clone();
+
+                PacketEncoder.encrypt_Noise(encryptNoiseKey, noisePayloadCopy);
+                PacketEncoder.decrypt_Noise(decryptNoiseKey, noisePayloadCopy);
+
+                string noiseDecStr = Encoding.ASCII.GetString(noisePayloadCopy);
+                if (noiseDecStr != "PacketWith8+Bytes")
+                {
+                    Console.WriteLine($"FAIL: Noise Algorithm is not symmetric. Got: '{noiseDecStr}'");
+                    return false;
+                }
+                Console.WriteLine("PASS: PacketEncoder Noise Algorithm symmetry");
+
+                // Test 6: Binary IO
+                var writer = new PkoPacketWriter();
+                writer.WriteUint16(42);
+                writer.WriteUint32(0xDEADBEEF);
+                writer.WriteString("PKORules!");
+                byte[] serialized = writer.ToArray();
+
+                var pktReader = new PkoPacketReader(serialized);
+                ushort u16 = pktReader.ReadUint16();
+                uint u32 = pktReader.ReadUint32();
+                string s = pktReader.ReadString();
+
+                if (u16 != 42 || u32 != 0xDEADBEEF || s != "PKORules!")
+                {
+                    Console.WriteLine($"FAIL: Binary IO mismatch. Got: {u16}, 0x{u32:X}, '{s}'");
+                    return false;
+                }
+                Console.WriteLine("PASS: PkoPacketWriter and PkoPacketReader");
+
+                Console.WriteLine("\nALL TESTS PASSED SUCCESSFULLY!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"FAIL: Exception thrown during tests: {ex.Message}\n{ex.StackTrace}");
+                return false;
+            }
+        }
+    }
+}
+</file>
+
+<file path="Program.cs">
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace PkoProxyClient
+{
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                PrintUsage();
+                return;
+            }
+
+            string command = args[0].ToLower();
+
+            if (command == "test")
+            {
+                bool success = PkoTest.RunTests();
+                Environment.Exit(success ? 0 : 1);
+            }
+            else if (command == "proxy")
+            {
+                int localPort = 1973;
+                string remoteHost = "135.125.152.11";
+                int remotePort = 1973;
+                bool protection = false;
+                string logFile = "proxy_packets.log";
+                string password = "";
+
+                for (int i = 1; i < args.Length; i++)
+                {
+                    if (args[i] == "--local-port" && i + 1 < args.Length)
+                        localPort = int.Parse(args[++i]);
+                    else if (args[i] == "--remote-host" && i + 1 < args.Length)
+                        remoteHost = args[++i];
+                    else if (args[i] == "--remote-port" && i + 1 < args.Length)
+                        remotePort = int.Parse(args[++i]);
+                    else if (args[i] == "--protection")
+                        protection = true;
+                    else if (args[i] == "--log-file" && i + 1 < args.Length)
+                        logFile = args[++i];
+                    else if (args[i] == "--password" && i + 1 < args.Length)
+                        password = args[++i];
+                }
+
+                var proxy = new PkoProxy(localPort, remoteHost, remotePort, protection, logFile, password);
+                var cts = new CancellationTokenSource();
+                Console.CancelKeyPress += (sender, eventArgs) =>
+                {
+                    eventArgs.Cancel = true;
+                    cts.Cancel();
+                };
+
+                await proxy.StartAsync(cts.Token);
+            }
+            else if (command == "client")
+            {
+                string host = "135.125.152.11";
+                int port = 1973;
+                ushort version = 136;
+
+                for (int i = 1; i < args.Length; i++)
+                {
+                    if (args[i] == "--host" && i + 1 < args.Length)
+                        host = args[++i];
+                    else if (args[i] == "--port" && i + 1 < args.Length)
+                        port = int.Parse(args[++i]);
+                    else if (args[i] == "--version" && i + 1 < args.Length)
+                        version = ushort.Parse(args[++i]);
+                }
+
+                var client = new PkoClient(host, port, version);
+                await client.RunAsync();
+            }
+            else
+            {
+                Console.WriteLine($"Unknown command: {command}");
+                PrintUsage();
+            }
+        }
+
+        static void PrintUsage()
+        {
+            Console.WriteLine("PKO C# Multi-Tool");
+            Console.WriteLine("Usage:");
+            Console.WriteLine("  dotnet run -- <command> [arguments]");
+            Console.WriteLine();
+            Console.WriteLine("Commands:");
+            Console.WriteLine("  test    - Run cryptography, encoders, and binary IO tests");
+            Console.WriteLine("  proxy   - Run client-side proxy to inspect & dump unencrypted packets");
+            Console.WriteLine("    Arguments:");
+            Console.WriteLine("      --local-port <port>    Local port to listen on (default: 3333)");
+            Console.WriteLine("      --remote-host <host>   Target server IP/host (default: 127.0.0.1)");
+            Console.WriteLine("      --remote-port <port>   Target server Port (default: 333)");
+            Console.WriteLine("      --protection           Enable sequence number protection parsing");
+            Console.WriteLine("      --log-file <file>      Log file path for dumped packets (default: proxy_packets.log)");
+            Console.WriteLine("      --password <password>  The account password to decrypt the session key correctly");
+            Console.WriteLine();
+            Console.WriteLine("  client  - Connect as a playable client to the server");
+            Console.WriteLine("    Arguments:");
+            Console.WriteLine("      --host <host>          Server IP/host to connect to (default: 127.0.0.1)");
+            Console.WriteLine("      --port <port>          Server Port (default: 333)");
+            Console.WriteLine("      --version <version>    Client game version (default: 100)");
+            Console.WriteLine();
+        }
+    }
+}
+</file>
+
+</files>

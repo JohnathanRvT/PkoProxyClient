@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug DX9|Win32">
+      <Configuration>Debug DX9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug DX9|x64">
+      <Configuration>Debug DX9</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release DX9|Win32">
+      <Configuration>Release DX9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release DX9|x64">
+      <Configuration>Release DX9</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B6F3B419-E2BF-45D9-9AC4-94B7A3719770}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>15.0.27924.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>../../lib/$(Platform)/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)D</TargetName>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">
+    <OutDir>../../lib/$(Platform)/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)DDX9</TargetName>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)D$(Platform)</TargetName>
+    <OutDir>../../lib/$(Platform)/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)DDX9$(Platform)</TargetName>
+    <OutDir>../../lib/$(Platform)/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>../../lib/$(Platform)/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">
+    <OutDir>../../lib/$(Platform)/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <TargetName>$(ProjectName)DX9</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>$(ProjectName)$(Platform)</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>../../lib/$(Platform)/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">
+    <TargetName>$(ProjectName)DX9$(Platform)</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>../../lib/$(Platform)/$(ProjectName)/</OutDir>
+    <IntDir>../../build/$(Platform)/$(ProjectName)/$(Configuration)/</IntDir>
+    <IncludePath>$(DXSDK_DIR)Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN32;_DEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;__VIM3D__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutild.lib;ViMD3DLibD.lib;Common_d.lib;ICUHelper_d.lib;icudt.lib;icuucd.lib;icuind.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\VimD3DLib;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\DirectX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;LIBCI.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN32;_DEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;__VIM3D__;LW_USE_DX9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutild.lib;ViMD3DLibDDX9.lib;Common_d.lib;ICUHelper_d.lib;icudt.lib;icuucd.lib;icuind.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\VimD3DLib;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\DirectX9;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;LIBCI.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>D3D_DEBUG_INFO;_UNLOADRES;WIN64;_DEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;__VIM3D__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutild.lib;ViMD3DLibD.lib;Common_d.lib;ICUHelper_d.lib;icudt.lib;icuucd.lib;icuind.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\VimD3DLib;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\DirectX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;LIBCI.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>D3D_DEBUG_INFO;_UNLOADRES;WIN64;_DEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;__VIM3D__;LW_USE_DX9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutild.lib;ViMD3DLibDDX9.lib;Common_d.lib;ICUHelper_d.lib;icudt.lib;icuucd.lib;icuind.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\VimD3DLib;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\DirectX9;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;LIBCI.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN32;NDEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;__VIM3D__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutil.lib;ViMD3DLib.lib;Common.lib;ICUHelper.lib;icudt.lib;icuuc.lib;icuin.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\VimD3DLib;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\DirectX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;libci.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN32;NDEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;__VIM3D__;LW_USE_DX9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutil.lib;ViMD3DLibDX9.lib;Common.lib;ICUHelper.lib;icudt.lib;icuuc.lib;icuin.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\VimD3DLib;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\DirectX9;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;libci.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;__VIM3D__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutil.lib;ViMD3DLib.lib;Common.lib;ICUHelper.lib;icudt.lib;icuuc.lib;icuin.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\VimD3DLib;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\DirectX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;libci.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">
+    <ClCompile>
+      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\inc\$(ProjectName);..\..\inc\enum_bitmask;..\..\inc\ViMD3DLib;..\..\inc\Logutil;..\..\inc\Common;..\..\inc\ICUHelper;..\..\inc\icu;..\..\inc\DirectX;..\..\inc\openssl;..\..\inc\randutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;__VIM3D__;LW_USE_DX9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Logutil.lib;ViMD3DLibDX9.lib;Common.lib;ICUHelper.lib;icudt.lib;icuuc.lib;icuin.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\lib\$(Platform)\VimD3DLib;..\..\lib\$(Platform)\Logutil;..\..\lib\$(Platform)\Common;..\..\lib\$(Platform)\icu;..\..\lib\$(Platform)\ICUHelper;..\..\lib\$(Platform)\DirectX9;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;libci.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\$(ProjectName)\d3dutil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\dxutil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\EffectFile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\GlobalInc.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\I_Effect.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwClassDecl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwD3D.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwErrorCode.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFrontAPI.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwGuidObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwHeader.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwIFunc.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwInterface.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwITypes.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwITypes2.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwIUtil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwMath.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwObjectMethod.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwShaderTypes.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwStdInc.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MindPower.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MindPowerAPI.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPCamera.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPCharacter.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPColorValue.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPConsole.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPDataStream.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffectAsmMath.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffectCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffectMath.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffPrerequisites.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffQuaternion.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPEffVector3.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPFactoryObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPFont.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPGameApp.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPInterface.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPIteratorWrappers.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPMap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPMath.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPModelEff.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParameterInterface.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleAffector.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleAffectorFactory.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleEmitterFactory.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPParticleSys.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPRender.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPResManger.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPResourceSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSceneItem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSceneObject.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPScriptLoader.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPShadeMap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSharedPtr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPSingleton.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPStringUtil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPStringVector.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPTerrainSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPTextureSet.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\MPTile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\mygraph.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ShaderLoad.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\STLprerequisite.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ZRBlock.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\Blk.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwAnimCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwAnimCtrlObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwAnimKeySetPRS.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwBitmap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwCamera.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwConsole.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwCoordinateSys.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwD3DSettings.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwDDS.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwDDSFile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwDeviceObject.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwDirectoryBrowser.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwEfxTrack.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwExpObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFile.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFileEncode.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFileStream.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwFileutil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwgraphics.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwgraphicsutil.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwHeap.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwHelperGeometry.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwInterfaceExt.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwItem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwLinkCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwMisc.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwModel.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwNodeObject.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwObjectPool.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPathInfo.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPhysique.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPoseCtrl.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPreDefinition.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPrimitive.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwPrimitiveHelper.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwRenderCtrlEmb.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwRenderImp.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwResourceMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSceneMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwShaderDeclMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwShaderMgr.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwStreamObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSyncObj.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSysCharacter.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSysGraphics.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSystem.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwSystemInfo.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwThreadPool.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwTimer.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwTreeNode.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwutilsexp.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwViewFrustum.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\lwxRenderCtrlVS.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\stdafx.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\TgaCore.h" />
+    <ClInclude Include="..\..\inc\$(ProjectName)\ViM_helper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include=".\Blk.cpp" />
+    <ClCompile Include=".\d3dutil.cpp" />
+    <ClCompile Include=".\dxutil.cpp" />
+    <ClCompile Include=".\EffectFile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\I_Effect.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\lwAnimCtrl.cpp" />
+    <ClCompile Include=".\lwAnimCtrlObj.cpp" />
+    <ClCompile Include=".\lwAnimKeySetPRS.cpp" />
+    <ClCompile Include=".\lwBitmap.cpp" />
+    <ClCompile Include=".\lwCamera.cpp" />
+    <ClCompile Include=".\lwConsole.cpp" />
+    <ClCompile Include=".\lwCoordinateSys.cpp" />
+    <ClCompile Include=".\lwD3DSettings.cpp" />
+    <ClCompile Include=".\lwDDSFile.cpp" />
+    <ClCompile Include=".\lwDeviceObject.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\lwDirectoryBrowser.cpp" />
+    <ClCompile Include=".\lwEfxTrack.cpp" />
+    <ClCompile Include=".\lwExpObj.cpp" />
+    <ClCompile Include=".\lwFile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\lwFileEncode.cpp" />
+    <ClCompile Include=".\lwFileStream.cpp" />
+    <ClCompile Include=".\lwFileutil.cpp" />
+    <ClCompile Include=".\lwgraphicsutil.cpp" />
+    <ClCompile Include=".\lwGuidObj.cpp" />
+    <ClCompile Include=".\lwHeap.cpp" />
+    <ClCompile Include=".\lwHelperGeometry.cpp" />
+    <ClCompile Include=".\lwIFunc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\lwInterface.cpp" />
+    <ClCompile Include=".\lwItem.cpp" />
+    <ClCompile Include=".\lwIUtil.cpp" />
+    <ClCompile Include=".\lwmath.cpp" />
+    <ClCompile Include=".\lwMisc.cpp" />
+    <ClCompile Include=".\lwModel.cpp" />
+    <ClCompile Include=".\lwNodeObject.cpp" />
+    <ClCompile Include=".\lwObjectMethod.cpp" />
+    <ClCompile Include=".\lwObjectPool.cpp" />
+    <ClCompile Include=".\lwPathInfo.cpp" />
+    <ClCompile Include=".\lwPhysique.cpp" />
+    <ClCompile Include=".\lwPoseCtrl.cpp" />
+    <ClCompile Include=".\lwPrimitive.cpp" />
+    <ClCompile Include=".\lwPrimitiveHelper.cpp" />
+    <ClCompile Include=".\lwRenderCtrlEmb.cpp" />
+    <ClCompile Include=".\lwRenderImp.cpp" />
+    <ClCompile Include=".\lwResourceMgr.cpp" />
+    <ClCompile Include=".\lwSceneMgr.cpp" />
+    <ClCompile Include=".\lwShaderDeclMgr.cpp" />
+    <ClCompile Include=".\lwShaderMgr.cpp" />
+    <ClCompile Include=".\lwStreamObj.cpp" />
+    <ClCompile Include=".\lwSysCharacter.cpp" />
+    <ClCompile Include=".\lwSysGraphics.cpp" />
+    <ClCompile Include=".\lwSystem.cpp" />
+    <ClCompile Include=".\lwSystemInfo.cpp" />
+    <ClCompile Include=".\lwThreadPool.cpp" />
+    <ClCompile Include=".\lwTimer.cpp" />
+    <ClCompile Include=".\lwTreeNode.cpp" />
+    <ClCompile Include=".\lwViewFrustum.cpp" />
+    <ClCompile Include=".\lwxRenderCtrVS.cpp" />
+    <ClCompile Include=".\MPCamera.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPCharacter.cpp" />
+    <ClCompile Include=".\MPColorValue.cpp" />
+    <ClCompile Include=".\MPConsole.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPDataStream.cpp" />
+    <ClCompile Include=".\MPEffectCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPEffectMath.cpp" />
+    <ClCompile Include=".\MPEffQuaternion.cpp" />
+    <ClCompile Include=".\MPEffVector3.cpp" />
+    <ClCompile Include=".\MPFont.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPGameApp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPMap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPMapData.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPMath.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPModelEff.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPParticleCtrl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPParticleSys.cpp" />
+    <ClCompile Include=".\MPRender.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPResManger.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPSceneItem.cpp" />
+    <ClCompile Include=".\MPSceneObject.cpp" />
+    <ClCompile Include=".\MPShadeMap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\MPStringUtil.cpp" />
+    <ClCompile Include=".\MPTile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\mygraph.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\ShaderLoad.cpp" />
+    <ClCompile Include=".\Singleton.cpp" />
+    <ClCompile Include=".\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\TgaCore.cpp" />
+    <ClCompile Include=".\ViM_helper.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DX9|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DX9|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include=".\ZRBlock.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\inc\MindPower3D\lwMath.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
