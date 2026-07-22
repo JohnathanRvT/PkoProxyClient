@@ -65,6 +65,305 @@ namespace PkoProxyClient
     }
 
     /// <summary>
+    /// Holds session-specific TCP stream reference and encryptor states for a specific client connection,
+    /// enabling packet injection directly into the server stream.
+    /// </summary>
+    public class ProxySession
+    {
+        public int ConnectionId { get; set; }
+        public NetworkStream? ServerStream { get; set; }
+        public PacketEncryptor? Encryptor { get; set; }
+        public uint SessionId { get; set; }
+        public uint PlayerWorldId { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a basic tracked monster/character entity visible to the client.
+    /// </summary>
+    public class MobInfo
+    {
+        public uint WorldId { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    /// <summary>
+    /// Represents a tracked scene item on the ground visible to the client.
+    /// </summary>
+    public class ItemInfo
+    {
+        public uint WorldId { get; set; }
+        public uint Handle { get; set; }
+        public uint ItemId { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
+    /// <summary>
+    /// Intelligent automated farming bot proxy plugin.
+    /// Intercepts chat commands starting with /bot, keeps track of nearby mobs and items by listening to
+    /// see/endsee packets (504, 505, 506, 507), and runs a background farming loop injecting attack and loot packets.
+    /// </summary>
+    public class AutoBotPlugin : IProxyPlugin
+    {
+        public string Name => "AutoBot";
+        public bool Enabled { get; set; } = false;
+
+        private readonly System.Collections.Generic.Dictionary<uint, MobInfo> _mobs = new System.Collections.Generic.Dictionary<uint, MobInfo>();
+        private readonly System.Collections.Generic.Dictionary<uint, ItemInfo> _items = new System.Collections.Generic.Dictionary<uint, ItemInfo>();
+        private uint _playerWorldId = 0;
+        private int _lastConnectionId = 0;
+        private readonly object _lock = new object();
+        private readonly System.Threading.Timer _loopTimer;
+
+        public AutoBotPlugin()
+        {
+            _loopTimer = new System.Threading.Timer(OnBotLoop, null, 1500, 1500);
+        }
+
+        public void OnPacket(ProxyPacketContext context)
+        {
+            _lastConnectionId = context.ConnectionId;
+
+            // Capture player world ID from CMD_CM_BEGINACTION (6)
+            if (context.Direction == "C -> S" && context.PacketId == 6)
+            {
+                var pktReader = new PkoPacketReader(context.DecryptedPacket);
+                _ = pktReader.ReadUint16(); // skip size
+                _ = pktReader.ReadUint32(); // skip session
+                _ = pktReader.ReadUint16(); // skip packetId (6)
+                uint charWorldId = pktReader.ReadUint32();
+                lock (_lock)
+                {
+                    _playerWorldId = charWorldId;
+                }
+            }
+
+            // Capture /bot chat command inputs inside CMD_CM_SAY (1)
+            if (context.Direction == "C -> S" && context.PacketId == 1)
+            {
+                var pktReader = new PkoPacketReader(context.DecryptedPacket);
+                _ = pktReader.ReadUint16(); // skip size
+                _ = pktReader.ReadUint32(); // skip session
+                _ = pktReader.ReadUint16(); // skip packetId (1)
+
+                try
+                {
+                    string chatMsg = pktReader.ReadString();
+                    if (chatMsg.StartsWith("/bot_start"))
+                    {
+                        Enabled = true;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Bot Loop STARTED!");
+                        Console.ResetColor();
+                        context.IsDropped = true; // Drop command packet so it is never sent to the server
+                    }
+                    else if (chatMsg.StartsWith("/bot_stop"))
+                    {
+                        Enabled = false;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Bot Loop STOPPED!");
+                        Console.ResetColor();
+                        context.IsDropped = true; // Drop command packet
+                    }
+                    else if (chatMsg.StartsWith("/bot_status"))
+                    {
+                        lock (_lock)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Status: Enabled={Enabled} | Known Mobs={_mobs.Count} | Known Items={_items.Count} | Player ID=0x{_playerWorldId:X}");
+                            Console.ResetColor();
+                        }
+                        context.IsDropped = true; // Drop command packet
+                    }
+                }
+                catch { }
+            }
+
+            // Track entities and items on the ground (S -> C packets)
+            if (context.Direction == "S -> C")
+            {
+                // CMD_MC_CHABEGINSEE (504)
+                if (context.PacketId == 504)
+                {
+                    try
+                    {
+                        var pktReader = new PkoPacketReader(context.DecryptedPacket);
+                        _ = pktReader.ReadUint16(); // size
+                        _ = pktReader.ReadUint32(); // session
+                        _ = pktReader.ReadUint16(); // ID (504)
+                        _ = pktReader.ReadByte();   // chSeeType
+                        _ = pktReader.ReadUint32(); // ulChaID
+                        uint ulWorldID = pktReader.ReadUint32();
+                        _ = pktReader.ReadUint32(); // ulCommID
+                        _ = pktReader.ReadString(); // szCommName
+                        _ = pktReader.ReadByte();   // chGMLv
+                        _ = pktReader.ReadUint32(); // lHandle
+                        _ = pktReader.ReadByte();   // chCtrlType
+                        string szName = pktReader.ReadString();
+
+                        lock (_lock)
+                        {
+                            _mobs[ulWorldID] = new MobInfo { WorldId = ulWorldID, Name = szName };
+                        }
+                    }
+                    catch { }
+                }
+
+                // CMD_MC_CHAENDSEE (505)
+                if (context.PacketId == 505)
+                {
+                    try
+                    {
+                        var pktReader = new PkoPacketReader(context.DecryptedPacket);
+                        _ = pktReader.ReadUint16(); // size
+                        _ = pktReader.ReadUint32(); // session
+                        _ = pktReader.ReadUint16(); // ID (505)
+                        _ = pktReader.ReadByte();   // chSeeType
+                        uint lWorldID = pktReader.ReadUint32();
+
+                        lock (_lock)
+                        {
+                            _mobs.Remove(lWorldID);
+                        }
+                    }
+                    catch { }
+                }
+
+                // CMD_MC_ITEMBEGINSEE (506)
+                if (context.PacketId == 506)
+                {
+                    try
+                    {
+                        var pktReader = new PkoPacketReader(context.DecryptedPacket);
+                        _ = pktReader.ReadUint16(); // size
+                        _ = pktReader.ReadUint32(); // session
+                        _ = pktReader.ReadUint16(); // ID (506)
+                        uint lWorldID = pktReader.ReadUint32();
+                        uint lHandle = pktReader.ReadUint32();
+                        uint lID = pktReader.ReadUint32();
+                        int x = (int)pktReader.ReadUint32();
+                        int y = (int)pktReader.ReadUint32();
+
+                        lock (_lock)
+                        {
+                            _items[lWorldID] = new ItemInfo { WorldId = lWorldID, Handle = lHandle, ItemId = lID, X = x, Y = y };
+                        }
+                    }
+                    catch { }
+                }
+
+                // CMD_MC_ITEMENDSEE (507)
+                if (context.PacketId == 507)
+                {
+                    try
+                    {
+                        var pktReader = new PkoPacketReader(context.DecryptedPacket);
+                        _ = pktReader.ReadUint16(); // size
+                        _ = pktReader.ReadUint32(); // session
+                        _ = pktReader.ReadUint16(); // ID (507)
+                        uint lWorldID = pktReader.ReadUint32();
+
+                        lock (_lock)
+                        {
+                            _items.Remove(lWorldID);
+                        }
+                    }
+                    catch { }
+                }
+            }
+        }
+
+        private void OnBotLoop(object? state)
+        {
+            if (!Enabled || _lastConnectionId == 0) return;
+
+            uint targetPlayerId = 0;
+            uint targetSessionId = 0;
+            lock (_lock)
+            {
+                targetPlayerId = _playerWorldId;
+            }
+
+            if (targetPlayerId == 0) return;
+
+            // Retrieve proxy session metrics
+            lock (PkoProxy.ActiveSessions)
+            {
+                if (PkoProxy.ActiveSessions.TryGetValue(_lastConnectionId, out var session))
+                {
+                    targetSessionId = session.SessionId;
+                    session.PlayerWorldId = targetPlayerId;
+                }
+            }
+
+            if (targetSessionId == 0) return;
+
+            // 1. Target picking up ground items first
+            ItemInfo? pickItem = null;
+            lock (_lock)
+            {
+                foreach (var item in _items.Values)
+                {
+                    pickItem = item;
+                    break;
+                }
+            }
+
+            if (pickItem != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Looting Item: WorldId={pickItem.WorldId}, Handle={pickItem.Handle}");
+                Console.ResetColor();
+
+                var writer = new PkoPacketWriter();
+                writer.WriteUint16(0); // size placeholder
+                writer.WriteUint32(targetSessionId);
+                writer.WriteUint16(6); // CMD_CM_BEGINACTION
+                writer.WriteUint32(targetPlayerId);
+                writer.WriteByte(8); // enumACTION_ITEM_PICK
+                writer.WriteUint32(pickItem.WorldId);
+                writer.WriteUint32(pickItem.Handle);
+
+                _ = PkoProxy.InjectClientPacketAsync(_lastConnectionId, writer.ToArray());
+                return;
+            }
+
+            // 2. If no items are found, execute physical attack on visible mobs
+            MobInfo? attackMob = null;
+            lock (_lock)
+            {
+                foreach (var mob in _mobs.Values)
+                {
+                    if (mob.WorldId == targetPlayerId) continue;
+                    attackMob = mob;
+                    break;
+                }
+            }
+
+            if (attackMob != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Attacking Mob: {attackMob.Name} (WorldId={attackMob.WorldId})");
+                Console.ResetColor();
+
+                var writer = new PkoPacketWriter();
+                writer.WriteUint16(0); // size placeholder
+                writer.WriteUint32(targetSessionId);
+                writer.WriteUint16(6); // CMD_CM_BEGINACTION
+                writer.WriteUint32(targetPlayerId);
+                writer.WriteByte(2); // enumACTION_SKILL
+                writer.WriteByte(1); // chMove (direct physical attack)
+                writer.WriteByte(0); // byFightID
+                writer.WriteUint32(0); // lSkillID (0 = basic attack)
+                writer.WriteUint32(attackMob.WorldId); // lTarInfo1 (target mob ID)
+                writer.WriteUint32(0); // lTarInfo2
+
+                _ = PkoProxy.InjectClientPacketAsync(_lastConnectionId, writer.ToArray());
+            }
+        }
+    }
+
+    /// <summary>
     /// Plugin responsible for logging detailed packet dumps to local .log and .bin (ImHex) files.
     /// </summary>
     public class LogToFilePlugin : IProxyPlugin
@@ -179,6 +478,7 @@ namespace PkoProxyClient
     public class PkoProxy
     {
         public static readonly System.Collections.Generic.List<IProxyPlugin> Plugins = new System.Collections.Generic.List<IProxyPlugin>();
+        public static readonly System.Collections.Generic.Dictionary<int, ProxySession> ActiveSessions = new System.Collections.Generic.Dictionary<int, ProxySession>();
 
         private readonly int _localPort;
         private readonly string _remoteHost;
@@ -202,6 +502,40 @@ namespace PkoProxyClient
             Plugins.Clear();
             Plugins.Add(new ConsoleColorPacketLoggerPlugin());
             Plugins.Add(new LogToFilePlugin(_logFilePath));
+            Plugins.Add(new AutoBotPlugin());
+        }
+
+        /// <summary>
+        /// Injects an unencrypted packet into an active connection server stream.
+        /// It formats the Big-Endian length, encrypts the payload, and sends it directly.
+        /// </summary>
+        public static async Task InjectClientPacketAsync(int connectionId, byte[] decryptedPacket)
+        {
+            ProxySession? session;
+            lock (ActiveSessions)
+            {
+                ActiveSessions.TryGetValue(connectionId, out session);
+            }
+
+            if (session != null && session.ServerStream != null && session.Encryptor != null)
+            {
+                byte[] packet = (byte[])decryptedPacket.Clone();
+
+                // Form length prefix
+                ushort size = (ushort)packet.Length;
+                packet[0] = (byte)(size >> 8);
+                packet[1] = (byte)(size & 0xFF);
+
+                if (session.Encryptor.Enabled)
+                {
+                    byte[] payload = new byte[packet.Length - 6];
+                    Array.Copy(packet, 6, payload, 0, payload.Length);
+                    session.Encryptor.Encrypt(payload, EncryptType.CS);
+                    Array.Copy(payload, 0, packet, 6, payload.Length);
+                }
+
+                await session.ServerStream.WriteAsync(packet, 0, packet.Length);
+            }
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -250,19 +584,42 @@ namespace PkoProxyClient
                     {
                         using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
                         {
-                            // Stateful crypto parameters for this connection
-                            HandshakeState handshakeState = new HandshakeState();
-                            handshakeState.PlaintextPassword = _plaintextPassword;
-                            PacketEncryptor encryptor = new PacketEncryptor();
+                            // Register active session
+                            var sessionState = new ProxySession
+                            {
+                                ConnectionId = connId,
+                                ServerStream = serverStream
+                            };
+                            lock (ActiveSessions)
+                            {
+                                ActiveSessions[connId] = sessionState;
+                            }
 
-                            // Task for Client to Server direction
-                            var clientToServerTask = ForwardClientToServerAsync(clientStream, serverStream, connId, encryptor, handshakeState, cts.Token);
+                            try
+                            {
+                                // Stateful crypto parameters for this connection
+                                HandshakeState handshakeState = new HandshakeState();
+                                handshakeState.PlaintextPassword = _plaintextPassword;
+                                PacketEncryptor encryptor = new PacketEncryptor();
 
-                            // Task for Server to Client direction
-                            var serverToClientTask = ForwardServerToClientAsync(serverStream, clientStream, connId, encryptor, handshakeState, cts.Token);
+                                sessionState.Encryptor = encryptor;
 
-                            await Task.WhenAny(clientToServerTask, serverToClientTask);
-                            cts.Cancel();
+                                // Task for Client to Server direction
+                                var clientToServerTask = ForwardClientToServerAsync(clientStream, serverStream, connId, encryptor, handshakeState, cts.Token);
+
+                                // Task for Server to Client direction
+                                var serverToClientTask = ForwardServerToClientAsync(serverStream, clientStream, connId, encryptor, handshakeState, cts.Token);
+
+                                await Task.WhenAny(clientToServerTask, serverToClientTask);
+                                cts.Cancel();
+                            }
+                            finally
+                            {
+                                lock (ActiveSessions)
+                                {
+                                    ActiveSessions.Remove(connId);
+                                }
+                            }
                         }
                     }
                 }
@@ -296,6 +653,15 @@ namespace PkoProxyClient
                 // Parse/Inspect packet copy before forwarding
                 byte[] copy = (byte[])packet.Clone();
                 uint session = (uint)((copy[2] << 24) | (copy[3] << 16) | (copy[4] << 8) | copy[5]);
+
+                // Track Session ID in active session
+                lock (ActiveSessions)
+                {
+                    if (ActiveSessions.TryGetValue(connId, out var activeSess))
+                    {
+                        activeSess.SessionId = session;
+                    }
+                }
 
                 // Decrypt if encryption has been enabled
                 if (encryptor.Enabled)
@@ -356,7 +722,7 @@ namespace PkoProxyClient
 
                 if (context.IsDropped)
                 {
-                    LogConsole($"[Connection #{connId}] C -> S | Packet ID: {packetId} DROPPED by plugin.");
+                    LogConsole($"[Connection #{connId}] C -> S | {PkoCommandTranslator.GetCommandName(packetId)} ({packetId}) DROPPED by plugin.");
                     continue;
                 }
 
@@ -517,7 +883,7 @@ namespace PkoProxyClient
 
                 if (context.IsDropped)
                 {
-                    LogConsole($"[Connection #{connId}] S -> C | Packet ID: {packetId} DROPPED by plugin.");
+                    LogConsole($"[Connection #{connId}] S -> C | {PkoCommandTranslator.GetCommandName(packetId)} ({packetId}) DROPPED by plugin.");
                     continue;
                 }
 
