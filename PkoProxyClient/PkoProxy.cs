@@ -75,6 +75,8 @@ namespace PkoProxyClient
         public PacketEncryptor? Encryptor { get; set; }
         public uint SessionId { get; set; }
         public uint PlayerWorldId { get; set; }
+        public uint NextPacketCount { get; set; } = 0;
+        public bool PacketCountInitialized { get; set; } = false;
     }
 
     /// <summary>
@@ -131,6 +133,7 @@ namespace PkoProxyClient
                 _ = pktReader.ReadUint16(); // skip size
                 _ = pktReader.ReadUint32(); // skip session
                 _ = pktReader.ReadUint16(); // skip packetId (6)
+                _ = pktReader.ReadUint32(); // skip packetCount (4 bytes)
                 uint charWorldId = pktReader.ReadUint32();
                 lock (_lock)
                 {
@@ -279,6 +282,8 @@ namespace PkoProxyClient
 
             uint targetPlayerId = 0;
             uint targetSessionId = 0;
+            uint countToUse = 0;
+
             lock (_lock)
             {
                 targetPlayerId = _playerWorldId;
@@ -286,13 +291,14 @@ namespace PkoProxyClient
 
             if (targetPlayerId == 0) return;
 
-            // Retrieve proxy session metrics
+            // Retrieve proxy session metrics & packet count under lock
             lock (PkoProxy.ActiveSessions)
             {
                 if (PkoProxy.ActiveSessions.TryGetValue(_lastConnectionId, out var session))
                 {
                     targetSessionId = session.SessionId;
                     session.PlayerWorldId = targetPlayerId;
+                    countToUse = session.NextPacketCount++;
                 }
             }
 
@@ -312,13 +318,14 @@ namespace PkoProxyClient
             if (pickItem != null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Looting Item: WorldId={pickItem.WorldId}, Handle={pickItem.Handle}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Looting Item: WorldId={pickItem.WorldId}, Handle={pickItem.Handle} | Count={countToUse}");
                 Console.ResetColor();
 
                 var writer = new PkoPacketWriter();
                 writer.WriteUint16(0); // size placeholder
                 writer.WriteUint32(targetSessionId);
                 writer.WriteUint16(6); // CMD_CM_BEGINACTION
+                writer.WriteUint32(countToUse); // write tracking packetCount
                 writer.WriteUint32(targetPlayerId);
                 writer.WriteByte(8); // enumACTION_ITEM_PICK
                 writer.WriteUint32(pickItem.WorldId);
@@ -343,13 +350,14 @@ namespace PkoProxyClient
             if (attackMob != null)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Attacking Mob: {attackMob.Name} (WorldId={attackMob.WorldId})");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Attacking Mob: {attackMob.Name} (WorldId={attackMob.WorldId}) | Count={countToUse}");
                 Console.ResetColor();
 
                 var writer = new PkoPacketWriter();
                 writer.WriteUint16(0); // size placeholder
                 writer.WriteUint32(targetSessionId);
                 writer.WriteUint16(6); // CMD_CM_BEGINACTION
+                writer.WriteUint32(countToUse); // write tracking packetCount
                 writer.WriteUint32(targetPlayerId);
                 writer.WriteByte(2); // enumACTION_SKILL
                 writer.WriteByte(1); // chMove (direct physical attack)
@@ -654,15 +662,6 @@ namespace PkoProxyClient
                 byte[] copy = (byte[])packet.Clone();
                 uint session = (uint)((copy[2] << 24) | (copy[3] << 16) | (copy[4] << 8) | copy[5]);
 
-                // Track Session ID in active session
-                lock (ActiveSessions)
-                {
-                    if (ActiveSessions.TryGetValue(connId, out var activeSess))
-                    {
-                        activeSess.SessionId = session;
-                    }
-                }
-
                 // Decrypt if encryption has been enabled
                 if (encryptor.Enabled)
                 {
@@ -683,6 +682,36 @@ namespace PkoProxyClient
 
                 // Skip the 4-byte protection sequence number if it is present (which might be read by ReadUint32)
                 _ = pktReader.ReadUint32();
+
+                // Track Session ID, capture, and rewrite the sequential packetCount
+                bool forceReencrypt = false;
+                lock (ActiveSessions)
+                {
+                    if (ActiveSessions.TryGetValue(connId, out var activeSess))
+                    {
+                        activeSess.SessionId = session;
+
+                        // Check if packet contains packetCount (length must be at least 12 bytes)
+                        if (copy.Length >= 12)
+                        {
+                            uint clientCount = (uint)((copy[8] << 24) | (copy[9] << 16) | (copy[10] << 8) | copy[11]);
+                            if (!activeSess.PacketCountInitialized)
+                            {
+                                activeSess.NextPacketCount = clientCount;
+                                activeSess.PacketCountInitialized = true;
+                            }
+
+                            // Overwrite copy's packetCount with our synchronized tracker count
+                            uint countToUse = activeSess.NextPacketCount++;
+                            copy[8] = (byte)(countToUse >> 24);
+                            copy[9] = (byte)(countToUse >> 16);
+                            copy[10] = (byte)(countToUse >> 8);
+                            copy[11] = (byte)(countToUse & 0xFF);
+
+                            forceReencrypt = true;
+                        }
+                    }
+                }
 
                 // Handle specific handshake packets to capture info
                 if (packetId == 431) // AccountLogin
@@ -726,7 +755,7 @@ namespace PkoProxyClient
                     continue;
                 }
 
-                bool wasModified = !ByteArrayCompare(context.DecryptedPacket, copy);
+                bool wasModified = forceReencrypt || !ByteArrayCompare(context.DecryptedPacket, copy);
                 if (wasModified)
                 {
                     copy = context.DecryptedPacket;
