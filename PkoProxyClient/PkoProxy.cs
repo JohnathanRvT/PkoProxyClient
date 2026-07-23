@@ -198,8 +198,8 @@ namespace PkoProxyClient
                 _ = pktReader.ReadUint16(); // skip size
                 _ = pktReader.ReadUint32(); // skip session
                 _ = pktReader.ReadUint16(); // skip packetId (6)
-                _ = pktReader.ReadUint32(); // skip packetCount (4 bytes)
-                uint charWorldId = pktReader.ReadUint32();
+                uint charWorldId = pktReader.ReadUint32(); // ulWorldID is at bytes 8-11
+                _ = pktReader.ReadUint32(); // skip packetCount (4 bytes) at bytes 12-15
                 lock (_lock)
                 {
                     _playerWorldId = charWorldId;
@@ -388,8 +388,8 @@ namespace PkoProxyClient
                 writer.WriteUint16(0); // size placeholder
                 writer.WriteUint32(targetSessionId);
                 writer.WriteUint16(6); // CMD_CM_BEGINACTION
-                writer.WriteUint32(0); // write sequence placeholder (rewritten centrally by ProxySession)
-                writer.WriteUint32(targetPlayerId);
+                writer.WriteUint32(targetPlayerId); // 1. targetPlayerId (ulWorldID) at bytes 8-11
+                writer.WriteUint32(0); // 2. write sequence placeholder at bytes 12-15
                 writer.WriteByte(8); // enumACTION_ITEM_PICK
                 writer.WriteUint32(pickItem.WorldId);
                 writer.WriteUint32(pickItem.Handle);
@@ -420,8 +420,8 @@ namespace PkoProxyClient
                 writer.WriteUint16(0); // size placeholder
                 writer.WriteUint32(targetSessionId);
                 writer.WriteUint16(6); // CMD_CM_BEGINACTION
-                writer.WriteUint32(0); // write sequence placeholder (rewritten centrally by ProxySession)
-                writer.WriteUint32(targetPlayerId);
+                writer.WriteUint32(targetPlayerId); // 1. targetPlayerId (ulWorldID) at bytes 8-11
+                writer.WriteUint32(0); // 2. write sequence placeholder at bytes 12-15
                 writer.WriteByte(2); // enumACTION_SKILL
                 writer.WriteByte(1); // chMove (direct physical attack)
                 writer.WriteByte(0); // byFightID

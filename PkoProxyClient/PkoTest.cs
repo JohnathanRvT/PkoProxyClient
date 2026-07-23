@@ -271,8 +271,8 @@ namespace PkoProxyClient
                     0, 16,               // Size (16)
                     0x80, 0, 0, 0,       // Session (0x80000000)
                     0, 6,                // Command (6)
-                    0, 0, 0, 1,          // PacketCount (1)
-                    1, 2, 3, 4           // Rest of payload
+                    0, 0, 0, 99,         // ulWorldID (99)
+                    0, 0, 0, 1           // PacketCount (1)
                 };
                 var testPkt = new PkoPacket(mockPacketData);
                 if (testPkt.Size != 16 || testPkt.Session != 0x80000000 || testPkt.Command != 6 || testPkt.PacketCount != 1)
@@ -284,9 +284,9 @@ namespace PkoProxyClient
                 // Check setters
                 testPkt.Size = 20;
                 testPkt.Session = 0x12345678;
-                testPkt.Command = 431;
+                testPkt.Command = 6;
                 testPkt.PacketCount = 42;
-                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 431 || testPkt.PacketCount != 42)
+                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 6 || testPkt.PacketCount != 42)
                 {
                     LogFail("PkoPacket properties setter failed.");
                     return false;
@@ -300,10 +300,11 @@ namespace PkoProxyClient
 
                 // Create a temporary loopback socket/stream to simulate sending
                 byte[] testSeqBytes = new byte[] {
-                    0, 12,
+                    0, 16,
                     0, 0, 0, 0,
-                    0, 1,
-                    0, 0, 0, 50 // initial packetCount is 50
+                    0, 6,
+                    0, 0, 0, 99, // ulWorldID
+                    0, 0, 0, 50  // initial packetCount is 50 at bytes 12-15
                 };
                 var pSeq = new PkoPacket(testSeqBytes);
 
