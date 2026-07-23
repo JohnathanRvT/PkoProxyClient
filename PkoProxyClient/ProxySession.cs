@@ -12,8 +12,22 @@ public class ProxySession
     public PacketEncryptor? Encryptor { get; set; }
     public uint SessionId { get; set; }
     public uint PlayerWorldId { get; set; }
-    public uint NextPacketCount { get; set; } = 1;
-    public bool PacketCountInitialized { get; set; } = false;
+    public uint NextMainPacketCount { get; set; } = 0;
+    public bool MainPacketCountInitialized { get; set; } = false;
+
+    public uint NextSecondaryPacketCount { get; set; } = 1;
+    public bool SecondaryPacketCountInitialized { get; set; } = false;
+
+    public uint NextPacketCount
+    {
+        get => NextMainPacketCount;
+        set => NextMainPacketCount = value;
+    }
+    public bool PacketCountInitialized
+    {
+        get => MainPacketCountInitialized;
+        set => MainPacketCountInitialized = value;
+    }
 
     private readonly object _sendLock = new object();
 
@@ -29,17 +43,30 @@ public class ProxySession
             SessionId = pkt.Session;
             pkt.Size = (ushort)copy.Length;
 
-            if (pkt.HasPacketCount)
+            if (pkt.HasMainPacketCount)
             {
-                if (!PacketCountInitialized)
+                if (!MainPacketCountInitialized)
                 {
-                    if (pkt.PacketCount > 0)
+                    if (pkt.MainPacketCount > 0)
                     {
-                        NextPacketCount = pkt.PacketCount;
-                        PacketCountInitialized = true;
+                        NextMainPacketCount = pkt.MainPacketCount;
+                        MainPacketCountInitialized = true;
                     }
                 }
-                pkt.PacketCount = NextPacketCount++;
+                pkt.MainPacketCount = NextMainPacketCount++;
+            }
+
+            if (pkt.HasSecondaryPacketCount)
+            {
+                if (!SecondaryPacketCountInitialized)
+                {
+                    if (pkt.SecondaryPacketCount > 0)
+                    {
+                        NextSecondaryPacketCount = pkt.SecondaryPacketCount;
+                        SecondaryPacketCountInitialized = true;
+                    }
+                }
+                pkt.SecondaryPacketCount = NextSecondaryPacketCount++;
             }
 
             if (Encryptor != null && Encryptor.Enabled)

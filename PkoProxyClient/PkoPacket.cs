@@ -48,38 +48,75 @@ namespace PkoProxyClient
             }
         }
 
-        public bool HasPacketCount
+        public bool HasMainPacketCount
         {
             get
             {
-                return Command == 6 && RawBytes.Length >= 16;
+                return RawBytes.Length >= 12;
             }
         }
 
-        public uint PacketCount
+        public uint MainPacketCount
         {
             get
             {
-                if (Command == 6)
+                if (RawBytes.Length < 12) return 0;
+                return (uint)((RawBytes[8] << 24) | (RawBytes[9] << 16) | (RawBytes[10] << 8) | RawBytes[11]);
+            }
+            set
+            {
+                if (RawBytes.Length >= 12)
                 {
-                    if (RawBytes.Length < 16) return 0;
-                    return (uint)((RawBytes[12] << 24) | (RawBytes[13] << 16) | (RawBytes[14] << 8) | RawBytes[15]);
+                    RawBytes[8] = (byte)(value >> 24);
+                    RawBytes[9] = (byte)(value >> 16);
+                    RawBytes[10] = (byte)(value >> 8);
+                    RawBytes[11] = (byte)(value & 0xFF);
+                }
+            }
+        }
+
+        public bool HasSecondaryPacketCount
+        {
+            get
+            {
+                return Command == 6 && RawBytes.Length >= 20;
+            }
+        }
+
+        public uint SecondaryPacketCount
+        {
+            get
+            {
+                if (Command == 6 && RawBytes.Length >= 20)
+                {
+                    return (uint)((RawBytes[16] << 24) | (RawBytes[17] << 16) | (RawBytes[18] << 8) | RawBytes[19]);
                 }
                 return 0;
             }
             set
             {
-                if (Command == 6)
+                if (Command == 6 && RawBytes.Length >= 20)
                 {
-                    if (RawBytes.Length >= 16)
-                    {
-                        RawBytes[12] = (byte)(value >> 24);
-                        RawBytes[13] = (byte)(value >> 16);
-                        RawBytes[14] = (byte)(value >> 8);
-                        RawBytes[15] = (byte)(value & 0xFF);
-                    }
+                    RawBytes[16] = (byte)(value >> 24);
+                    RawBytes[17] = (byte)(value >> 16);
+                    RawBytes[18] = (byte)(value >> 8);
+                    RawBytes[19] = (byte)(value & 0xFF);
                 }
             }
+        }
+
+        public bool HasPacketCount
+        {
+            get
+            {
+                return HasMainPacketCount;
+            }
+        }
+
+        public uint PacketCount
+        {
+            get => MainPacketCount;
+            set => MainPacketCount = value;
         }
 
         public PkoPacket(byte[] bytes)

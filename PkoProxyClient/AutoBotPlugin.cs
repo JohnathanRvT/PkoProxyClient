@@ -42,9 +42,10 @@ public class AutoBotPlugin : IProxyPlugin
         try
         {
             var writer = new PkoPacketWriter();
-            writer.WriteUint16(8);                     // Size = 8
+            writer.WriteUint16(0);                     // Size placeholder
             writer.WriteUint32(sessionId);             // Session ID
             writer.WriteUint16(7);                     // CMD_CM_ENDACTION
+            writer.WriteUint32(0);                     // Main Packet Count placeholder
             _ = PkoProxy.InjectClientPacketAsync(_lastConnectionId, writer.ToArray());
             if (ProxyLog.LogDebug)
                 ProxyLog.Write("Bot", "Sent CMD_CM_ENDACTION (7)", ConsoleColor.DarkYellow);
@@ -70,8 +71,9 @@ public class AutoBotPlugin : IProxyPlugin
                 _ = pktReader.ReadUint16(); // size
                 _ = pktReader.ReadUint32(); // session
                 _ = pktReader.ReadUint16(); // packetId
-                uint charWorldId = pktReader.ReadUint32();
-                _ = pktReader.ReadUint32(); // packetCount
+                _ = pktReader.ReadUint32(); // Main Packet Count (bytes 8-11)
+                uint charWorldId = pktReader.ReadUint32(); // Player World ID (bytes 12-15)
+                _ = pktReader.ReadUint32(); // Secondary Packet Count (bytes 16-19)
                 lock (_lock)
                 {
                     _playerWorldId = charWorldId;
@@ -511,9 +513,10 @@ public class AutoBotPlugin : IProxyPlugin
                 writer.WriteUint16(0);                     // Size placeholder
                 writer.WriteUint32(targetSessionId);       // Session
                 writer.WriteUint16(6);                     // CMD_CM_BEGINACTION
-                writer.WriteUint32(targetPlayerId);         // Bytes 8-11: Player ID
-                writer.WriteUint32(0);                     // Bytes 12-15: Sequence Placeholder
-                writer.WriteByte(54);                      // Byte 16: Action Type (54 = TotalPick)
+                writer.WriteUint32(0);                     // Bytes 8-11: Main Packet Count placeholder
+                writer.WriteUint32(targetPlayerId);        // Bytes 12-15: Player ID
+                writer.WriteUint32(0);                     // Bytes 16-19: Secondary Packet Count placeholder
+                writer.WriteByte(54);                      // Byte 20: Action Type (54 = TotalPick)
                 writer.WriteUint16((ushort)itemsToLoot.Count);
 
                 foreach (var item in itemsToLoot)
@@ -545,9 +548,10 @@ public class AutoBotPlugin : IProxyPlugin
                 writer.WriteUint16(0);                     // Size placeholder
                 writer.WriteUint32(targetSessionId);       // Session
                 writer.WriteUint16(6);                     // CMD_CM_BEGINACTION
-                writer.WriteUint32(targetPlayerId);         // Player ID
-                writer.WriteUint32(0);                     // Sequence placeholder
-                writer.WriteByte(1);                       // Move action type
+                writer.WriteUint32(0);                     // Bytes 8-11: Main Packet Count placeholder
+                writer.WriteUint32(targetPlayerId);        // Bytes 12-15: Player ID
+                writer.WriteUint32(0);                     // Bytes 16-19: Secondary Packet Count placeholder
+                writer.WriteByte(1);                       // Byte 20: Move action type
                 writer.WriteUint16(8);                     // Path bytes (1 point * 8 bytes)
                 writer.WriteUint32((uint)closestFarItem.X);
                 writer.WriteUint32((uint)closestFarItem.Y);
@@ -611,17 +615,18 @@ public class AutoBotPlugin : IProxyPlugin
                 writer.WriteUint16(0);                     // Size placeholder (Bytes 0-1)
                 writer.WriteUint32(targetSessionId);       // Session (Bytes 2-5)
                 writer.WriteUint16(6);                     // Command ID = 6 (Bytes 6-7)
-                writer.WriteUint32(targetPlayerId);        // Player World ID (Bytes 8-11)
-                writer.WriteUint32(0);                     // Sequence placeholder (Bytes 12-15)
-                writer.WriteByte(2);                       // Action Type = 2 (enumACTION_SKILL) (Byte 16)
-                writer.WriteByte(2);                       // chMove = 2 (Byte 17)
-                writer.WriteByte(64);                      // byFightID = 64 (Byte 18)
-                writer.WriteUint16(8);                     // Path length in bytes = 8 (Bytes 19-20)
-                writer.WriteUint32((uint)targetX);         // Target X (Bytes 21-24)
-                writer.WriteUint32((uint)targetY);         // Target Y (Bytes 25-28)
-                writer.WriteUint32(1);                     // ulSkillID = 1 (Bytes 29-32)
-                writer.WriteUint32(attackMob.WorldId);     // Target World ID (Bytes 33-36)
-                writer.WriteUint32(attackMob.Handle);      // Target Handle (Bytes 37-40)
+                writer.WriteUint32(0);                     // Bytes 8-11: Main Packet Count placeholder
+                writer.WriteUint32(targetPlayerId);        // Player World ID (Bytes 12-15)
+                writer.WriteUint32(0);                     // Bytes 16-19: Secondary Packet Count placeholder
+                writer.WriteByte(2);                       // Action Type = 2 (enumACTION_SKILL) (Byte 20)
+                writer.WriteByte(2);                       // chMove = 2 (Byte 21)
+                writer.WriteByte(64);                      // byFightID = 64 (Byte 22)
+                writer.WriteUint16(8);                     // Path length in bytes = 8 (Bytes 23-24)
+                writer.WriteUint32((uint)targetX);         // Target X (Bytes 25-28)
+                writer.WriteUint32((uint)targetY);         // Target Y (Bytes 29-32)
+                writer.WriteUint32(1);                     // ulSkillID = 1 (Bytes 33-36)
+                writer.WriteUint32(attackMob.WorldId);     // Target World ID (Bytes 37-40)
+                writer.WriteUint32(attackMob.Handle);      // Target Handle (Bytes 41-44)
 
                 _ = PkoProxy.InjectClientPacketAsync(_lastConnectionId, writer.ToArray());
             }
@@ -679,9 +684,10 @@ public class AutoBotPlugin : IProxyPlugin
                 writer.WriteUint16(0);                     // Size placeholder
                 writer.WriteUint32(targetSessionId);       // Session
                 writer.WriteUint16(6);                     // CMD_CM_BEGINACTION
-                writer.WriteUint32(targetPlayerId);         // Player ID
-                writer.WriteUint32(0);                     // Sequence placeholder
-                writer.WriteByte(1);                       // Move action type
+                writer.WriteUint32(0);                     // Bytes 8-11: Main Packet Count placeholder
+                writer.WriteUint32(targetPlayerId);         // Bytes 12-15: Player ID
+                writer.WriteUint32(0);                     // Bytes 16-19: Secondary Packet Count placeholder
+                writer.WriteByte(1);                       // Byte 20: Move action type
                 writer.WriteUint16(8);                     // Path bytes (1 point * 8 bytes)
                 writer.WriteUint32((uint)wx);
                 writer.WriteUint32((uint)wy);
