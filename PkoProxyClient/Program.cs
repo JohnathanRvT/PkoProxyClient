@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 
 namespace PkoProxyClient
 {
+    /// <summary>
+    /// Entry point class for the PKO C# Multi-Tool.
+    /// Handles CLI commands for running crypt tests, a localized proxy server, or standalone headless client.
+    /// </summary>
     class Program
     {
         static async Task Main(string[] args)
@@ -77,34 +81,55 @@ namespace PkoProxyClient
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Unknown command: {command}");
+                Console.ResetColor();
                 PrintUsage();
             }
         }
 
         static void PrintUsage()
         {
-            Console.WriteLine("PKO C# Multi-Tool");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine(@"
+===================================================
+   ____  _  ______    __  __       _ _   _
+  |  _ \| |/ / ___|  |  \/  |_   _| | |_(_)
+  | |_) | ' / |  _   | |\/| | | | | | __| |
+  |  __/| . \ |_| |  | |  | | |_| | | |_| |
+  |_|   |_|\_\____|  |_|  |_|\__,_|_|\__|_|
+
+        PKO C# Multi-Tool Console Panel
+===================================================");
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Usage:");
-            Console.WriteLine("  dotnet run -- <command> [arguments]");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("  dotnet run --project PkoProxyClient/PkoProxyClient.csproj -- <command> [arguments]");
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Commands:");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("  test    - Run cryptography, encoders, and binary IO tests");
             Console.WriteLine("  proxy   - Run client-side proxy to inspect & dump unencrypted packets");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("    Arguments:");
-            Console.WriteLine("      --local-port <port>    Local port to listen on (default: 3333)");
-            Console.WriteLine("      --remote-host <host>   Target server IP/host (default: 127.0.0.1)");
-            Console.WriteLine("      --remote-port <port>   Target server Port (default: 333)");
+            Console.WriteLine("      --local-port <port>    Local port to listen on (default: 1973)");
+            Console.WriteLine("      --remote-host <host>   Target server IP/host (default: 135.125.152.11)");
+            Console.WriteLine("      --remote-port <port>   Target server Port (default: 1973)");
             Console.WriteLine("      --protection           Enable sequence number protection parsing");
             Console.WriteLine("      --log-file <file>      Log file path for dumped packets (default: proxy_packets.log)");
             Console.WriteLine("      --password <password>  The account password to decrypt the session key correctly");
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("  client  - Connect as a playable client to the server");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("    Arguments:");
-            Console.WriteLine("      --host <host>          Server IP/host to connect to (default: 127.0.0.1)");
-            Console.WriteLine("      --port <port>          Server Port (default: 333)");
-            Console.WriteLine("      --version <version>    Client game version (default: 100)");
-            Console.WriteLine();
+            Console.WriteLine("      --host <host>          Server IP/host to connect to (default: 135.125.152.11)");
+            Console.WriteLine("      --port <port>          Server Port (default: 1973)");
+            Console.WriteLine("      --version <version>    Client game version (default: 136)");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("===================================================\n");
+            Console.ResetColor();
         }
     }
 }

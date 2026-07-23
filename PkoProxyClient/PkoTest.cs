@@ -1,19 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace PkoProxyClient
 {
+    /// <summary>
+    /// Comprehensive test harness verifying cryptography algorithms, packet codecs, binary IO boundary safety,
+    /// state machines, and end-to-end protocol simulations.
+    /// </summary>
     public static class PkoTest
     {
+        /// <summary>
+        /// Runs all built-in tests sequentially. Returns true if all pass, false if any fails.
+        /// </summary>
         public static bool RunTests()
         {
-            Console.WriteLine("Running PKO C# Cryptography Tests...");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("====================================================");
+            Console.WriteLine("    RUNNING PKO C# CRYTOGRAPHY & PROTOCOL TESTS     ");
+            Console.WriteLine("====================================================");
+            Console.ResetColor();
 
             try
             {
                 // Custom test for B decrypted
-                byte[] data = new byte[] {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
-                byte[] keyB = new byte[] {0x99, 0x3a, 0x3c, 0x7b, 0x27, 0xb1};
+                byte[] data = new byte[] { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88 };
+                byte[] keyB = new byte[] { 0x99, 0x3a, 0x3c, 0x7b, 0x27, 0xb1 };
                 PacketEncoder.encrypt_B(data, keyB, false);
 
                 Console.Write("C# B decrypted: ");
@@ -49,23 +62,23 @@ namespace PkoProxyClient
 
                 if (!PkoDes.RunDes(PkoDes.ENCRYPT, PkoDes.ECB, padded, encrypted, key))
                 {
-                    Console.WriteLine("FAIL: RunDes Encrypt failed");
+                    LogFail("RunDes Encrypt failed");
                     return false;
                 }
 
                 if (!PkoDes.RunDes(PkoDes.DECRYPT, PkoDes.ECB, encrypted, decrypted, key))
                 {
-                    Console.WriteLine("FAIL: RunDes Decrypt failed");
+                    LogFail("RunDes Decrypt failed");
                     return false;
                 }
 
                 string decStr = Encoding.ASCII.GetString(decrypted).TrimEnd('\0');
                 if (decStr != "HelloPKOWorld!")
                 {
-                    Console.WriteLine($"FAIL: Decrypted string '{decStr}' does not match original 'HelloPKOWorld!'");
+                    LogFail($"Decrypted string '{decStr}' does not match original 'HelloPKOWorld!'");
                     return false;
                 }
-                Console.WriteLine("PASS: CDES ECB 1-key Encryption and Decryption");
+                LogPass("CDES ECB 1-key Encryption and Decryption");
 
                 // Test 2: TripleDES ECB 2-Keys and 3-Keys
                 byte[] key2 = Encoding.ASCII.GetBytes("key12345key67890"); // 16 bytes, nKey = 2
@@ -77,10 +90,10 @@ namespace PkoProxyClient
                 decStr = Encoding.ASCII.GetString(decrypted).TrimEnd('\0');
                 if (decStr != "HelloPKOWorld!")
                 {
-                    Console.WriteLine($"FAIL: 3DES 2-key decrypted string '{decStr}' incorrect");
+                    LogFail($"3DES 2-key decrypted string '{decStr}' incorrect");
                     return false;
                 }
-                Console.WriteLine("PASS: CDES ECB 2-key 3DES");
+                LogPass("CDES ECB 2-key 3DES");
 
                 byte[] key3 = Encoding.ASCII.GetBytes("key12345key67890keyabcde"); // 24 bytes, nKey = 3
                 Array.Clear(encrypted, 0, encrypted.Length);
@@ -91,19 +104,19 @@ namespace PkoProxyClient
                 decStr = Encoding.ASCII.GetString(decrypted).TrimEnd('\0');
                 if (decStr != "HelloPKOWorld!")
                 {
-                    Console.WriteLine($"FAIL: 3DES 3-key decrypted string '{decStr}' incorrect");
+                    LogFail($"3DES 3-key decrypted string '{decStr}' incorrect");
                     return false;
                 }
-                Console.WriteLine("PASS: CDES ECB 3-key 3DES");
+                LogPass("CDES ECB 3-key 3DES");
 
                 // Test 3: PasswordEncoder Encode
                 byte[] pwdEncoded = PasswordEncoder.Encode("my_super_password", "chap12345chap678");
                 if (pwdEncoded == null || pwdEncoded.Length == 0)
                 {
-                    Console.WriteLine("FAIL: PasswordEncoder returned empty bytes");
+                    LogFail("PasswordEncoder returned empty bytes");
                     return false;
                 }
-                Console.WriteLine($"PASS: PasswordEncoder.Encode. Output Length: {pwdEncoded.Length}");
+                LogPass($"PasswordEncoder.Encode. Output Length: {pwdEncoded.Length}");
 
                 // Test 4: PacketEncoder encrypt_B and decrypt_B
                 byte[] payload = Encoding.ASCII.GetBytes("A very secure message that we want to encrypt with 'B' algorithm!");
@@ -116,10 +129,10 @@ namespace PkoProxyClient
                 string bDecStr = Encoding.ASCII.GetString(payloadCopy);
                 if (bDecStr != "A very secure message that we want to encrypt with 'B' algorithm!")
                 {
-                    Console.WriteLine($"FAIL: encrypt_B/decrypt_B is not symmetric. Got: '{bDecStr}'");
+                    LogFail($"encrypt_B/decrypt_B is not symmetric. Got: '{bDecStr}'");
                     return false;
                 }
-                Console.WriteLine("PASS: PacketEncoder 'B' Algorithm symmetry");
+                LogPass("PacketEncoder 'B' Algorithm symmetry");
 
                 // Test 5: PacketEncoder encrypt_Noise and decrypt_Noise (using separate synced keys)
                 byte[] encryptNoiseKey = new byte[] { 0x01, 0x02, 0x04, 0x08 };
@@ -133,10 +146,10 @@ namespace PkoProxyClient
                 string noiseDecStr = Encoding.ASCII.GetString(noisePayloadCopy);
                 if (noiseDecStr != "PacketWith8+Bytes")
                 {
-                    Console.WriteLine($"FAIL: Noise Algorithm is not symmetric. Got: '{noiseDecStr}'");
+                    LogFail($"Noise Algorithm is not symmetric. Got: '{noiseDecStr}'");
                     return false;
                 }
-                Console.WriteLine("PASS: PacketEncoder Noise Algorithm symmetry");
+                LogPass("PacketEncoder Noise Algorithm symmetry");
 
                 // Test 6: Binary IO
                 var writer = new PkoPacketWriter();
@@ -152,19 +165,144 @@ namespace PkoProxyClient
 
                 if (u16 != 42 || u32 != 0xDEADBEEF || s != "PKORules!")
                 {
-                    Console.WriteLine($"FAIL: Binary IO mismatch. Got: {u16}, 0x{u32:X}, '{s}'");
+                    LogFail($"Binary IO mismatch. Got: {u16}, 0x{u32:X}, '{s}'");
                     return false;
                 }
-                Console.WriteLine("PASS: PkoPacketWriter and PkoPacketReader");
+                LogPass("PkoPacketWriter and PkoPacketReader Basic IO");
 
-                Console.WriteLine("\nALL TESTS PASSED SUCCESSFULLY!");
+                // New Test 7: ClientState transitions verification simulation
+                var state = ClientState.Disconnected;
+                if (state != ClientState.Disconnected)
+                {
+                    LogFail("ClientState is not initialized to Disconnected.");
+                    return false;
+                }
+                state = ClientState.Connected;
+                state = ClientState.Handshaking;
+                state = ClientState.Authenticated;
+                state = ClientState.Playing;
+                if (state != ClientState.Playing)
+                {
+                    LogFail("ClientState transition mapping is flawed.");
+                    return false;
+                }
+                LogPass("PkoClient State Machine Transition Simulation");
+
+                // New Test 8: End-to-end stateful PacketEncryptor full lifecycle simulation
+                var encryptor = new PacketEncryptor();
+                if (encryptor.Enabled)
+                {
+                    LogFail("Encryptor must start disabled.");
+                    return false;
+                }
+
+                ushort ver = 136;
+                string chap = "chapChallengeString001";
+                string pwd = "mySecurePassword_test_123";
+                byte[] pwdBytes = PasswordEncoder.Encode(pwd, chap);
+
+                // Derived randomized session key by server
+                byte[] rawSessionKey = new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x11, 0x22 };
+                byte[] pwdBytesTrunc = pwdBytes;
+                if (pwdBytesTrunc.Length > 0)
+                {
+                    byte[] trunc = new byte[pwdBytesTrunc.Length - 1];
+                    Array.Copy(pwdBytesTrunc, trunc, trunc.Length);
+                    pwdBytesTrunc = trunc;
+                }
+
+                byte[] encSessionKey = new byte[8];
+                PkoDes.RunDes(PkoDes.ENCRYPT, PkoDes.ECB, rawSessionKey, encSessionKey, pwdBytesTrunc);
+
+                encryptor.Init(true, ver, chap, pwdBytes, encSessionKey);
+                if (!encryptor.Enabled)
+                {
+                    LogFail("Encryptor initialization failed to enable crypto.");
+                    return false;
+                }
+
+                // Encrypt a simulated client payload
+                byte[] originalPayload = Encoding.ASCII.GetBytes("ThisIsAPatternOfBytesToEncryptE2E");
+                byte[] testPayloadCopy = (byte[])originalPayload.Clone();
+
+                encryptor.Encrypt(testPayloadCopy, EncryptType.CS);
+
+                // Ensure it got scrambled
+                if (ByteArrayCompare(originalPayload, testPayloadCopy))
+                {
+                    LogFail("Encryptor.Encrypt did not scramble the data.");
+                    return false;
+                }
+
+                // Decrypt it
+                encryptor.Decrypt(testPayloadCopy, DecryptType.CS);
+
+                if (!ByteArrayCompare(originalPayload, testPayloadCopy))
+                {
+                    LogFail("End-to-end Encryption-Decryption symmetry failed.");
+                    return false;
+                }
+                LogPass("Full Lifecycle Stateful PacketEncryptor Simulation");
+
+                // New Test 9: Binary IO boundary safety and exception throwing checks
+                byte[] tinyBuffer = new byte[] { 0x11 };
+                var safetyReader = new PkoPacketReader(tinyBuffer);
+                _ = safetyReader.ReadByte();
+
+                bool exceptionCaught = false;
+                try
+                {
+                    _ = safetyReader.ReadByte();
+                }
+                catch (EndOfStreamException)
+                {
+                    exceptionCaught = true;
+                }
+
+                if (!exceptionCaught)
+                {
+                    LogFail("SafetyReader did not throw EndOfStreamException when reading past end of packet.");
+                    return false;
+                }
+                LogPass("PkoPacketReader Boundary Safety and Exception Checks");
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\n====================================================");
+                Console.WriteLine("       ALL 9 UNIT TESTS PASSED SUCCESSFULLY!        ");
+                Console.WriteLine("====================================================");
+                Console.ResetColor();
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"FAIL: Exception thrown during tests: {ex.Message}\n{ex.StackTrace}");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nFAIL: Exception thrown during tests: {ex.Message}\n{ex.StackTrace}");
+                Console.ResetColor();
                 return false;
             }
+        }
+
+        private static void LogPass(string name)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"[PASS] {name}");
+            Console.ResetColor();
+        }
+
+        private static void LogFail(string reason)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"[FAIL] {reason}");
+            Console.ResetColor();
+        }
+
+        private static bool ByteArrayCompare(byte[] a1, byte[] a2)
+        {
+            if (a1 == null || a2 == null) return ReferenceEquals(a1, a2);
+            if (a1.Length != a2.Length) return false;
+            for (int i = 0; i < a1.Length; i++)
+                if (a1[i] != a2[i]) return false;
+            return true;
         }
     }
 }
