@@ -87,8 +87,8 @@ public class AutoBotPlugin : IProxyPlugin
                         int pointsToSkip = (turnNumBytes / 8) - 1;
                         if (pointsToSkip > 0)
                             _ = pktReader.ReadBytes(pointsToSkip * 8);
-                        int lastX = (int)pktReader.ReadUint32();
-                        int lastY = (int)pktReader.ReadUint32();
+                        int lastX = (int)pktReader.ReadUint32LE();
+                        int lastY = (int)pktReader.ReadUint32LE();
                         lock (_lock)
                         {
                             _playerX = lastX;
@@ -206,6 +206,62 @@ public class AutoBotPlugin : IProxyPlugin
         // Track entities and items (S -> C)
         if (context.Direction == "S -> C")
         {
+            // CMD_MC_ENTERMAP (516) - Map enter, player character base info
+            if (context.PacketId == 516)
+            {
+                try
+                {
+                    var pktReader = new PkoPacketReader(context.DecryptedPacket);
+                    _ = pktReader.ReadUint16(); // size
+                    _ = pktReader.ReadUint32(); // session
+                    _ = pktReader.ReadUint16(); // 516
+
+                    ushort sEnterRet = pktReader.ReadUint16();
+                    if (sEnterRet == 0) // ERR_SUCCESS is 0
+                    {
+                        _ = pktReader.ReadByte();   // bAutoLock
+                        _ = pktReader.ReadByte();   // bKitbagLock
+                        _ = pktReader.ReadByte();   // chEnterType
+                        _ = pktReader.ReadByte();   // bIsNewCha
+                        _ = pktReader.ReadString(); // szMapName
+                        _ = pktReader.ReadByte();   // bCanTeam
+
+                        // Start of ReadChaBasePacket payload:
+                        _ = pktReader.ReadUint32(); // ulChaID
+                        uint ulWorldID = pktReader.ReadUint32(); // Player World ID!
+
+                        _ = pktReader.ReadUint32(); // ulCommID
+                        _ = pktReader.ReadString(); // szCommName
+                        _ = pktReader.ReadByte();   // chGMLv
+                        _ = pktReader.ReadUint32(); // lHandle
+                        _ = pktReader.ReadByte();   // chCtrlType
+                        _ = pktReader.ReadString(); // szName
+                        _ = pktReader.ReadString(); // strMottoName
+                        _ = pktReader.ReadUint16(); // sIcon
+                        _ = pktReader.ReadUint32(); // lGuildID
+                        _ = pktReader.ReadString(); // strGuildName
+                        _ = pktReader.ReadString(); // strGuildMotto
+                        _ = pktReader.ReadString(); // strStallName
+                        _ = pktReader.ReadUint16(); // sState
+                        int x = (int)pktReader.ReadUint32(); // Player X (Big-Endian)
+                        int y = (int)pktReader.ReadUint32(); // Player Y (Big-Endian)
+
+                        lock (_lock)
+                        {
+                            _playerWorldId = ulWorldID;
+                            _playerX = x;
+                            _playerY = y;
+                        }
+
+                        ProxyLog.Write("Bot", $"[MapEnter] Player World ID captured: 0x{ulWorldID:X}, Coords set to ({x},{y})", ConsoleColor.Green);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ProxyLog.Write("Bot", $"ERROR parsing CMD_MC_ENTERMAP: {ex.Message}", ConsoleColor.Red);
+                }
+            }
+
             // CMD_MC_NOTIACTION (508) - Position sync & movement updates
             if (context.PacketId == 508)
             {
@@ -232,8 +288,8 @@ public class AutoBotPlugin : IProxyPlugin
                         {
                             // Skip to the last point of the path
                             reader.ReadBytes(pathNumBytes - 8);
-                            int finalX = (int)reader.ReadUint32();
-                            int finalY = (int)reader.ReadUint32();
+                            int finalX = (int)reader.ReadUint32LE();
+                            int finalY = (int)reader.ReadUint32LE();
 
                             lock (_lock)
                             {

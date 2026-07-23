@@ -340,11 +340,11 @@ namespace PkoProxyClient
                 startMoveWriter.WriteByte(1); // actionType: Move (1)
                 startMoveWriter.WriteUint16(16); // TurnNum (2 points = 16 bytes)
                 // Point 1
-                startMoveWriter.WriteUint32(100);
-                startMoveWriter.WriteUint32(200);
+                startMoveWriter.WriteUint32LE(100);
+                startMoveWriter.WriteUint32LE(200);
                 // Point 2 (Last Point)
-                startMoveWriter.WriteUint32(500);
-                startMoveWriter.WriteUint32(600);
+                startMoveWriter.WriteUint32LE(500);
+                startMoveWriter.WriteUint32LE(600);
 
                 byte[] moveData = startMoveWriter.ToArray();
                 moveData[0] = (byte)(moveData.Length >> 8);
@@ -399,8 +399,8 @@ namespace PkoProxyClient
                 notiWriter.WriteByte(1); // actionType (Move)
                 notiWriter.WriteUint16(0); // sState (0 = ON)
                 notiWriter.WriteUint16(8); // TurnNum (1 point = 8 bytes)
-                notiWriter.WriteUint32(9999); // X
-                notiWriter.WriteUint32(8888); // Y
+                notiWriter.WriteUint32LE(9999); // X
+                notiWriter.WriteUint32LE(8888); // Y
 
                 byte[] notiData = notiWriter.ToArray();
                 notiData[0] = (byte)(notiData.Length >> 8);

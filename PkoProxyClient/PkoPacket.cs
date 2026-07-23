@@ -161,6 +161,18 @@ namespace PkoProxyClient
         }
 
         /// <summary>
+        /// Reads a 4-byte unsigned integer (Little-Endian) and advances the position by 4.
+        /// </summary>
+        public uint ReadUint32LE()
+        {
+            if (_pos + 4 > _data.Length)
+                throw new EndOfStreamException("Attempted to read past the end of the packet.");
+            uint val = (uint)(_data[_pos] | (_data[_pos + 1] << 8) | (_data[_pos + 2] << 16) | (_data[_pos + 3] << 24));
+            _pos += 4;
+            return val;
+        }
+
+        /// <summary>
         /// Reads an ASCII string prefixed by its 2-byte length (which includes the null terminator)
         /// and advances the position accordingly.
         /// </summary>
@@ -246,6 +258,17 @@ namespace PkoProxyClient
             _data.Add((byte)(val >> 16));
             _data.Add((byte)(val >> 8));
             _data.Add((byte)(val & 0xFF));
+        }
+
+        /// <summary>
+        /// Writes a 4-byte unsigned integer (Little-Endian) into the buffer.
+        /// </summary>
+        public void WriteUint32LE(uint val)
+        {
+            _data.Add((byte)(val & 0xFF));
+            _data.Add((byte)((val >> 8) & 0xFF));
+            _data.Add((byte)((val >> 16) & 0xFF));
+            _data.Add((byte)((val >> 24) & 0xFF));
         }
 
         /// <summary>
