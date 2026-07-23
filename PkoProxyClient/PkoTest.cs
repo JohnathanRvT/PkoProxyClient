@@ -285,9 +285,9 @@ namespace PkoProxyClient
                 // Check setters
                 testPkt.Size = 20;
                 testPkt.Session = 0x12345678;
-                testPkt.Command = 431;
+                testPkt.Command = 6;
                 testPkt.PacketCount = 42;
-                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 431 || testPkt.PacketCount != 42)
+                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 6 || testPkt.PacketCount != 42)
                 {
                     LogFail("PkoPacket properties setter failed.");
                     return false;
