@@ -48,7 +48,7 @@ namespace PkoProxyClient
             ProxySession? session;
             lock (ActiveSessions) { ActiveSessions.TryGetValue(connectionId, out session); }
             if (session != null)
-                await session.SendClientPacketAsync(decryptedPacket);
+                await session.SendClientPacketAsync(decryptedPacket, isInjected: true);
             else
                 ProxyLog.Write("General", $"Cannot inject packet: connection {connectionId} not found", ConsoleColor.Red);
         }

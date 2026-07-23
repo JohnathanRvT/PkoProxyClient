@@ -52,7 +52,7 @@ namespace PkoProxyClient
         {
             get
             {
-                return RawBytes.Length >= 12;
+                return Command == 6 && RawBytes.Length >= 16;
             }
         }
 
@@ -60,17 +60,20 @@ namespace PkoProxyClient
         {
             get
             {
-                if (RawBytes.Length < 12) return 0;
-                return (uint)((RawBytes[8] << 24) | (RawBytes[9] << 16) | (RawBytes[10] << 8) | RawBytes[11]);
+                if (Command == 6 && RawBytes.Length >= 16)
+                {
+                    return (uint)((RawBytes[12] << 24) | (RawBytes[13] << 16) | (RawBytes[14] << 8) | RawBytes[15]);
+                }
+                return 0;
             }
             set
             {
-                if (RawBytes.Length >= 12)
+                if (Command == 6 && RawBytes.Length >= 16)
                 {
-                    RawBytes[8] = (byte)(value >> 24);
-                    RawBytes[9] = (byte)(value >> 16);
-                    RawBytes[10] = (byte)(value >> 8);
-                    RawBytes[11] = (byte)(value & 0xFF);
+                    RawBytes[12] = (byte)(value >> 24);
+                    RawBytes[13] = (byte)(value >> 16);
+                    RawBytes[14] = (byte)(value >> 8);
+                    RawBytes[15] = (byte)(value & 0xFF);
                 }
             }
         }
@@ -79,7 +82,7 @@ namespace PkoProxyClient
         {
             get
             {
-                return Command == 6 && RawBytes.Length >= 20;
+                return false;
             }
         }
 
@@ -87,21 +90,10 @@ namespace PkoProxyClient
         {
             get
             {
-                if (Command == 6 && RawBytes.Length >= 20)
-                {
-                    return (uint)((RawBytes[16] << 24) | (RawBytes[17] << 16) | (RawBytes[18] << 8) | RawBytes[19]);
-                }
                 return 0;
             }
             set
             {
-                if (Command == 6 && RawBytes.Length >= 20)
-                {
-                    RawBytes[16] = (byte)(value >> 24);
-                    RawBytes[17] = (byte)(value >> 16);
-                    RawBytes[18] = (byte)(value >> 8);
-                    RawBytes[19] = (byte)(value & 0xFF);
-                }
             }
         }
 
