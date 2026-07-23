@@ -52,11 +52,41 @@ namespace PkoProxyClient
         {
             get
             {
-                return Command == 6 && RawBytes.Length >= 16;
+                return Command != 6 && RawBytes.Length >= 12;
             }
         }
 
         public uint MainPacketCount
+        {
+            get
+            {
+                if (Command != 6 && RawBytes.Length >= 12)
+                {
+                    return (uint)((RawBytes[8] << 24) | (RawBytes[9] << 16) | (RawBytes[10] << 8) | RawBytes[11]);
+                }
+                return 0;
+            }
+            set
+            {
+                if (Command != 6 && RawBytes.Length >= 12)
+                {
+                    RawBytes[8] = (byte)(value >> 24);
+                    RawBytes[9] = (byte)(value >> 16);
+                    RawBytes[10] = (byte)(value >> 8);
+                    RawBytes[11] = (byte)(value & 0xFF);
+                }
+            }
+        }
+
+        public bool HasSecondaryPacketCount
+        {
+            get
+            {
+                return Command == 6 && RawBytes.Length >= 16;
+            }
+        }
+
+        public uint SecondaryPacketCount
         {
             get
             {
@@ -78,37 +108,24 @@ namespace PkoProxyClient
             }
         }
 
-        public bool HasSecondaryPacketCount
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public uint SecondaryPacketCount
-        {
-            get
-            {
-                return 0;
-            }
-            set
-            {
-            }
-        }
-
         public bool HasPacketCount
         {
             get
             {
-                return HasMainPacketCount;
+                return HasMainPacketCount || HasSecondaryPacketCount;
             }
         }
 
         public uint PacketCount
         {
-            get => MainPacketCount;
-            set => MainPacketCount = value;
+            get => HasSecondaryPacketCount ? SecondaryPacketCount : MainPacketCount;
+            set
+            {
+                if (HasSecondaryPacketCount)
+                    SecondaryPacketCount = value;
+                else
+                    MainPacketCount = value;
+            }
         }
 
         public PkoPacket(byte[] bytes)

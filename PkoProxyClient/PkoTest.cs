@@ -272,13 +272,13 @@ namespace PkoProxyClient
                     0x80, 0, 0, 0,       // Session (0x80000000)
                     0, 6,                // Command (6)
                     0, 0, 0, 123,        // Character World ID (123)
-                    0, 0, 0, 1,          // Main Packet Count (1)
+                    0, 0, 0, 1,          // Secondary Packet Count / sequence (1)
                     0, 0, 0, 2,          // Action specifics placeholder
                 };
                 var testPkt = new PkoPacket(mockPacketData);
-                if (testPkt.Size != 20 || testPkt.Session != 0x80000000 || testPkt.Command != 6 || testPkt.MainPacketCount != 1)
+                if (testPkt.Size != 20 || testPkt.Session != 0x80000000 || testPkt.Command != 6 || testPkt.SecondaryPacketCount != 1)
                 {
-                    LogFail($"PkoPacket parsing failed. Size: {testPkt.Size}, Session: {testPkt.Session:X}, Command: {testPkt.Command}, MainCount: {testPkt.MainPacketCount}");
+                    LogFail($"PkoPacket parsing failed. Size: {testPkt.Size}, Session: {testPkt.Session:X}, Command: {testPkt.Command}, SecCount: {testPkt.SecondaryPacketCount}");
                     return false;
                 }
 
@@ -286,8 +286,8 @@ namespace PkoProxyClient
                 testPkt.Size = 20;
                 testPkt.Session = 0x12345678;
                 testPkt.Command = 6;
-                testPkt.MainPacketCount = 42;
-                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 6 || testPkt.MainPacketCount != 42)
+                testPkt.SecondaryPacketCount = 42;
+                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 6 || testPkt.SecondaryPacketCount != 42)
                 {
                     LogFail("PkoPacket properties setter failed.");
                     return false;
@@ -307,26 +307,26 @@ namespace PkoProxyClient
                     0, 0, 0, 0,
                     0, 6,
                     0, 0, 0, 123, // Player World ID
-                    0, 0, 0, 50,  // initial mainPacketCount is 50
+                    0, 0, 0, 50,  // initial sequence/secondaryPacketCount is 50
                     0, 0, 0, 8    // Action specifics
                 };
                 var pSeq = new PkoPacket(testSeqBytes);
 
-                // Manually simulate what SendClientPacketAsync does under lock
-                if (pSeq.HasMainPacketCount)
+                // Manually simulate what SendClientPacketAsync does under lock for Command == 6
+                if (pSeq.HasSecondaryPacketCount)
                 {
-                    if (!testSession.MainPacketCountInitialized)
+                    if (!testSession.SecondaryPacketCountInitialized)
                     {
-                        if (pSeq.MainPacketCount > 0)
+                        if (pSeq.SecondaryPacketCount > 0)
                         {
-                            testSession.NextMainPacketCount = pSeq.MainPacketCount;
-                            testSession.MainPacketCountInitialized = true;
+                            testSession.NextSecondaryPacketCount = pSeq.SecondaryPacketCount;
+                            testSession.SecondaryPacketCountInitialized = true;
                         }
                     }
-                    pSeq.MainPacketCount = testSession.NextMainPacketCount++;
+                    pSeq.SecondaryPacketCount = testSession.NextSecondaryPacketCount++;
                 }
 
-                if (!testSession.MainPacketCountInitialized || testSession.NextMainPacketCount != 51 || pSeq.MainPacketCount != 50)
+                if (!testSession.SecondaryPacketCountInitialized || testSession.NextSecondaryPacketCount != 51 || pSeq.SecondaryPacketCount != 50)
                 {
                     LogFail($"ProxySession sequencing simulation failed.");
                     return false;
