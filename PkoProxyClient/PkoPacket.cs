@@ -48,23 +48,23 @@ namespace PkoProxyClient
             }
         }
 
-        public bool HasPacketCount => RawBytes.Length >= 12;
+        public bool HasPacketCount => Command == 6 && RawBytes.Length >= 16;
 
         public uint PacketCount
         {
             get
             {
-                if (RawBytes.Length < 12) return 0;
-                return (uint)((RawBytes[8] << 24) | (RawBytes[9] << 16) | (RawBytes[10] << 8) | RawBytes[11]);
+                if (!HasPacketCount) return 0;
+                return (uint)((RawBytes[12] << 24) | (RawBytes[13] << 16) | (RawBytes[14] << 8) | RawBytes[15]);
             }
             set
             {
-                if (RawBytes.Length >= 12)
+                if (HasPacketCount)
                 {
-                    RawBytes[8] = (byte)(value >> 24);
-                    RawBytes[9] = (byte)(value >> 16);
-                    RawBytes[10] = (byte)(value >> 8);
-                    RawBytes[11] = (byte)(value & 0xFF);
+                    RawBytes[12] = (byte)(value >> 24);
+                    RawBytes[13] = (byte)(value >> 16);
+                    RawBytes[14] = (byte)(value >> 8);
+                    RawBytes[15] = (byte)(value & 0xFF);
                 }
             }
         }
@@ -139,13 +139,13 @@ namespace PkoProxyClient
         public string ReadString()
         {
             ushort len = ReadUint16();
-            if (len <= 1)
+            if (len == 0)
                 return "";
 
-            if (_pos + len - 1 > _data.Length)
+            if (_pos + len > _data.Length)
                 throw new EndOfStreamException("Attempted to read past the end of the packet.");
 
-            string s = Encoding.ASCII.GetString(_data, _pos, len - 1);
+            string s = len > 1 ? Encoding.ASCII.GetString(_data, _pos, len - 1) : "";
             _pos += len;
             return s;
         }
