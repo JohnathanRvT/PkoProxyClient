@@ -27,18 +27,38 @@ namespace PkoProxyClient
     {
         public int ConnectionId { get; }
         public string Direction { get; } // "C -> S" or "S -> C"
-        public ushort PacketId { get; set; }
-        public uint Session { get; set; }
-        public byte[] DecryptedPacket { get; set; }
+        public PkoPacket Packet { get; }
+        public ushort PacketId
+        {
+            get => Packet.Command;
+            set => Packet.Command = value;
+        }
+        public uint Session
+        {
+            get => Packet.Session;
+            set => Packet.Session = value;
+        }
+        public byte[] DecryptedPacket
+        {
+            get => Packet.RawBytes;
+            set => Packet.RawBytes = value;
+        }
         public bool IsDropped { get; set; } = false;
+
+        public ProxyPacketContext(int connectionId, string direction, PkoPacket packet)
+        {
+            ConnectionId = connectionId;
+            Direction = direction ?? throw new ArgumentNullException(nameof(direction));
+            Packet = packet ?? throw new ArgumentNullException(nameof(packet));
+        }
 
         public ProxyPacketContext(int connectionId, string direction, ushort packetId, uint session, byte[] decryptedPacket)
         {
             ConnectionId = connectionId;
             Direction = direction ?? throw new ArgumentNullException(nameof(direction));
+            Packet = new PkoPacket(decryptedPacket);
             PacketId = packetId;
             Session = session;
-            DecryptedPacket = decryptedPacket ?? throw new ArgumentNullException(nameof(decryptedPacket));
         }
     }
 
@@ -77,6 +97,51 @@ namespace PkoProxyClient
         public uint PlayerWorldId { get; set; }
         public uint NextPacketCount { get; set; } = 0;
         public bool PacketCountInitialized { get; set; } = false;
+
+        private readonly object _sendLock = new object();
+
+        /// <summary>
+        /// Sequences, encrypts, and sends a decrypted client-to-server packet to the server stream.
+        /// </summary>
+        public async Task SendClientPacketAsync(byte[] decryptedPacket)
+        {
+            if (ServerStream == null) return;
+
+            // Clone to avoid modifying original plugin context buffers
+            byte[] copy = (byte[])decryptedPacket.Clone();
+            var pkt = new PkoPacket(copy);
+
+            lock (_sendLock)
+            {
+                // Keep the active SessionId updated
+                SessionId = pkt.Session;
+
+                // Sync packet length in header to reflect any plugin payload size modifications
+                pkt.Size = (ushort)copy.Length;
+
+                if (pkt.HasPacketCount)
+                {
+                    if (!PacketCountInitialized)
+                    {
+                        NextPacketCount = pkt.PacketCount;
+                        PacketCountInitialized = true;
+                    }
+
+                    pkt.PacketCount = NextPacketCount++;
+                }
+
+                // Encrypt payload if encryptor has been enabled
+                if (Encryptor != null && Encryptor.Enabled)
+                {
+                    byte[] payload = new byte[copy.Length - 6];
+                    Array.Copy(copy, 6, payload, 0, payload.Length);
+                    Encryptor.Encrypt(payload, EncryptType.CS);
+                    Array.Copy(payload, 0, copy, 6, payload.Length);
+                }
+            }
+
+            await ServerStream.WriteAsync(copy, 0, copy.Length);
+        }
     }
 
     /// <summary>
@@ -282,7 +347,6 @@ namespace PkoProxyClient
 
             uint targetPlayerId = 0;
             uint targetSessionId = 0;
-            uint countToUse = 0;
 
             lock (_lock)
             {
@@ -298,7 +362,6 @@ namespace PkoProxyClient
                 {
                     targetSessionId = session.SessionId;
                     session.PlayerWorldId = targetPlayerId;
-                    countToUse = session.NextPacketCount++;
                 }
             }
 
@@ -318,14 +381,14 @@ namespace PkoProxyClient
             if (pickItem != null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Looting Item: WorldId={pickItem.WorldId}, Handle={pickItem.Handle} | Count={countToUse}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Looting Item: WorldId={pickItem.WorldId}, Handle={pickItem.Handle}");
                 Console.ResetColor();
 
                 var writer = new PkoPacketWriter();
                 writer.WriteUint16(0); // size placeholder
                 writer.WriteUint32(targetSessionId);
                 writer.WriteUint16(6); // CMD_CM_BEGINACTION
-                writer.WriteUint32(countToUse); // write tracking packetCount
+                writer.WriteUint32(0); // write sequence placeholder (rewritten centrally by ProxySession)
                 writer.WriteUint32(targetPlayerId);
                 writer.WriteByte(8); // enumACTION_ITEM_PICK
                 writer.WriteUint32(pickItem.WorldId);
@@ -350,14 +413,14 @@ namespace PkoProxyClient
             if (attackMob != null)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Attacking Mob: {attackMob.Name} (WorldId={attackMob.WorldId}) | Count={countToUse}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Attacking Mob: {attackMob.Name} (WorldId={attackMob.WorldId})");
                 Console.ResetColor();
 
                 var writer = new PkoPacketWriter();
                 writer.WriteUint16(0); // size placeholder
                 writer.WriteUint32(targetSessionId);
                 writer.WriteUint16(6); // CMD_CM_BEGINACTION
-                writer.WriteUint32(countToUse); // write tracking packetCount
+                writer.WriteUint32(0); // write sequence placeholder (rewritten centrally by ProxySession)
                 writer.WriteUint32(targetPlayerId);
                 writer.WriteByte(2); // enumACTION_SKILL
                 writer.WriteByte(1); // chMove (direct physical attack)
@@ -525,24 +588,9 @@ namespace PkoProxyClient
                 ActiveSessions.TryGetValue(connectionId, out session);
             }
 
-            if (session != null && session.ServerStream != null && session.Encryptor != null)
+            if (session != null)
             {
-                byte[] packet = (byte[])decryptedPacket.Clone();
-
-                // Form length prefix
-                ushort size = (ushort)packet.Length;
-                packet[0] = (byte)(size >> 8);
-                packet[1] = (byte)(size & 0xFF);
-
-                if (session.Encryptor.Enabled)
-                {
-                    byte[] payload = new byte[packet.Length - 6];
-                    Array.Copy(packet, 6, payload, 0, payload.Length);
-                    session.Encryptor.Encrypt(payload, EncryptType.CS);
-                    Array.Copy(payload, 0, packet, 6, payload.Length);
-                }
-
-                await session.ServerStream.WriteAsync(packet, 0, packet.Length);
+                await session.SendClientPacketAsync(decryptedPacket);
             }
         }
 
@@ -675,45 +723,19 @@ namespace PkoProxyClient
                     Array.Copy(payload, 0, copy, 6, payload.Length);
                 }
 
+                var pkoPacket = new PkoPacket(copy);
+                ushort packetId = pkoPacket.Command;
+
+                // Handle specific handshake packets to capture info (requires original sequentially structured stream fields)
                 var pktReader = new PkoPacketReader(copy);
                 pktReader.ReadUint16(); // Skip size
                 pktReader.ReadUint32(); // Skip session
-                ushort packetId = pktReader.ReadUint16();
-
-                // Skip the 4-byte protection sequence number if it is present (which might be read by ReadUint32)
-                _ = pktReader.ReadUint32();
-
-                // Track Session ID, capture, and rewrite the sequential packetCount
-                bool forceReencrypt = false;
-                lock (ActiveSessions)
+                _ = pktReader.ReadUint16(); // Skip packetId
+                if (pkoPacket.HasPacketCount)
                 {
-                    if (ActiveSessions.TryGetValue(connId, out var activeSess))
-                    {
-                        activeSess.SessionId = session;
-
-                        // Check if packet contains packetCount (length must be at least 12 bytes)
-                        if (copy.Length >= 12)
-                        {
-                            uint clientCount = (uint)((copy[8] << 24) | (copy[9] << 16) | (copy[10] << 8) | copy[11]);
-                            if (!activeSess.PacketCountInitialized)
-                            {
-                                activeSess.NextPacketCount = clientCount;
-                                activeSess.PacketCountInitialized = true;
-                            }
-
-                            // Overwrite copy's packetCount with our synchronized tracker count
-                            uint countToUse = activeSess.NextPacketCount++;
-                            copy[8] = (byte)(countToUse >> 24);
-                            copy[9] = (byte)(countToUse >> 16);
-                            copy[10] = (byte)(countToUse >> 8);
-                            copy[11] = (byte)(countToUse & 0xFF);
-
-                            forceReencrypt = true;
-                        }
-                    }
+                    _ = pktReader.ReadUint32(); // Skip packetCount
                 }
 
-                // Handle specific handshake packets to capture info
                 if (packetId == 431) // AccountLogin
                 {
                     try
@@ -743,7 +765,7 @@ namespace PkoProxyClient
                 }
 
                 // Run plugins
-                var context = new ProxyPacketContext(connId, "C -> S", packetId, session, copy);
+                var context = new ProxyPacketContext(connId, "C -> S", pkoPacket);
                 foreach (var plugin in Plugins)
                 {
                     try { plugin.OnPacket(context); } catch { }
@@ -755,26 +777,22 @@ namespace PkoProxyClient
                     continue;
                 }
 
-                bool wasModified = forceReencrypt || !ByteArrayCompare(context.DecryptedPacket, copy);
-                if (wasModified)
+                // Forward packet to server via centralized SendClientPacketAsync
+                ProxySession? activeSess;
+                lock (ActiveSessions)
                 {
-                    copy = context.DecryptedPacket;
-                    ushort newSize = (ushort)copy.Length;
-                    copy[0] = (byte)(newSize >> 8);
-                    copy[1] = (byte)(newSize & 0xFF);
-
-                    packet = (byte[])copy.Clone();
-                    if (encryptor.Enabled)
-                    {
-                        byte[] payload = new byte[packet.Length - 6];
-                        Array.Copy(packet, 6, payload, 0, payload.Length);
-                        encryptor.Encrypt(payload, EncryptType.CS);
-                        Array.Copy(payload, 0, packet, 6, payload.Length);
-                    }
+                    ActiveSessions.TryGetValue(connId, out activeSess);
                 }
 
-                // Forward packet to server
-                await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+                if (activeSess != null)
+                {
+                    await activeSess.SendClientPacketAsync(context.DecryptedPacket);
+                }
+                else
+                {
+                    // Fallback to basic sending if session not registered yet
+                    await serverStream.WriteAsync(packet, 0, packet.Length, cancellationToken);
+                }
             }
         }
 

@@ -9,6 +9,73 @@ using System.Threading.Tasks;
 namespace PkoProxyClient
 {
     /// <summary>
+    /// Represents a high-level PKO packet with easy accessors for header fields like
+    /// Size, Session, Command (opcode), and optional PacketCount.
+    /// </summary>
+    public class PkoPacket
+    {
+        public byte[] RawBytes { get; set; }
+
+        public ushort Size
+        {
+            get => (ushort)((RawBytes[0] << 8) | RawBytes[1]);
+            set
+            {
+                RawBytes[0] = (byte)(value >> 8);
+                RawBytes[1] = (byte)(value & 0xFF);
+            }
+        }
+
+        public uint Session
+        {
+            get => (uint)((RawBytes[2] << 24) | (RawBytes[3] << 16) | (RawBytes[4] << 8) | RawBytes[5]);
+            set
+            {
+                RawBytes[2] = (byte)(value >> 24);
+                RawBytes[3] = (byte)(value >> 16);
+                RawBytes[4] = (byte)(value >> 8);
+                RawBytes[5] = (byte)(value & 0xFF);
+            }
+        }
+
+        public ushort Command
+        {
+            get => (ushort)((RawBytes[6] << 8) | RawBytes[7]);
+            set
+            {
+                RawBytes[6] = (byte)(value >> 8);
+                RawBytes[7] = (byte)(value & 0xFF);
+            }
+        }
+
+        public bool HasPacketCount => RawBytes.Length >= 12;
+
+        public uint PacketCount
+        {
+            get
+            {
+                if (RawBytes.Length < 12) return 0;
+                return (uint)((RawBytes[8] << 24) | (RawBytes[9] << 16) | (RawBytes[10] << 8) | RawBytes[11]);
+            }
+            set
+            {
+                if (RawBytes.Length >= 12)
+                {
+                    RawBytes[8] = (byte)(value >> 24);
+                    RawBytes[9] = (byte)(value >> 16);
+                    RawBytes[10] = (byte)(value >> 8);
+                    RawBytes[11] = (byte)(value & 0xFF);
+                }
+            }
+        }
+
+        public PkoPacket(byte[] bytes)
+        {
+            RawBytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
+        }
+    }
+
+    /// <summary>
     /// Decodes structured bytes from a PKO packet payload.
     /// PKO payloads are typically structured sequentially as:
     /// - 2-byte Length (Big-Endian)

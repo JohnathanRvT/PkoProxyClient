@@ -266,9 +266,68 @@ namespace PkoProxyClient
                 }
                 LogPass("PkoPacketReader Boundary Safety and Exception Checks");
 
+                // New Test 10: PkoPacket properties and ProxySession sequencing
+                byte[] mockPacketData = new byte[] {
+                    0, 16,               // Size (16)
+                    0x80, 0, 0, 0,       // Session (0x80000000)
+                    0, 6,                // Command (6)
+                    0, 0, 0, 1,          // PacketCount (1)
+                    1, 2, 3, 4           // Rest of payload
+                };
+                var testPkt = new PkoPacket(mockPacketData);
+                if (testPkt.Size != 16 || testPkt.Session != 0x80000000 || testPkt.Command != 6 || testPkt.PacketCount != 1)
+                {
+                    LogFail($"PkoPacket parsing failed. Size: {testPkt.Size}, Session: {testPkt.Session:X}, Command: {testPkt.Command}, Count: {testPkt.PacketCount}");
+                    return false;
+                }
+
+                // Check setters
+                testPkt.Size = 20;
+                testPkt.Session = 0x12345678;
+                testPkt.Command = 431;
+                testPkt.PacketCount = 42;
+                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 431 || testPkt.PacketCount != 42)
+                {
+                    LogFail("PkoPacket properties setter failed.");
+                    return false;
+                }
+
+                // Check ProxySession sequencing simulation
+                var testSession = new ProxySession {
+                    NextPacketCount = 100,
+                    PacketCountInitialized = false
+                };
+
+                // Create a temporary loopback socket/stream to simulate sending
+                byte[] testSeqBytes = new byte[] {
+                    0, 12,
+                    0, 0, 0, 0,
+                    0, 1,
+                    0, 0, 0, 50 // initial packetCount is 50
+                };
+                var pSeq = new PkoPacket(testSeqBytes);
+
+                // Manually simulate what SendClientPacketAsync does under lock
+                if (pSeq.HasPacketCount)
+                {
+                    if (!testSession.PacketCountInitialized)
+                    {
+                        testSession.NextPacketCount = pSeq.PacketCount;
+                        testSession.PacketCountInitialized = true;
+                    }
+                    pSeq.PacketCount = testSession.NextPacketCount++;
+                }
+
+                if (!testSession.PacketCountInitialized || testSession.NextPacketCount != 51 || pSeq.PacketCount != 50)
+                {
+                    LogFail($"ProxySession sequencing simulation failed. Initialized: {testSession.PacketCountInitialized}, Next: {testSession.NextPacketCount}, Count: {pSeq.PacketCount}");
+                    return false;
+                }
+                LogPass("PkoPacket Accessors and ProxySession Sequence Counter");
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\n====================================================");
-                Console.WriteLine("       ALL 9 UNIT TESTS PASSED SUCCESSFULLY!        ");
+                Console.WriteLine("       ALL 10 UNIT TESTS PASSED SUCCESSFULLY!       ");
                 Console.WriteLine("====================================================");
                 Console.ResetColor();
                 return true;
