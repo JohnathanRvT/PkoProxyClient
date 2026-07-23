@@ -31,7 +31,7 @@ public class ProxySession
 
     private readonly object _sendLock = new object();
 
-    public async Task SendClientPacketAsync(byte[] decryptedPacket)
+    public async Task SendClientPacketAsync(byte[] decryptedPacket, bool isInjected = false)
     {
         if (ServerStream == null) return;
 
@@ -68,7 +68,35 @@ public class ProxySession
                 }
                 pkt.SecondaryPacketCount = NextSecondaryPacketCount++;
             }
+        }
 
+        // Run plugins on injected packets so they appear in logs and hex dumps
+        if (isInjected)
+        {
+            var context = new ProxyPacketContext(ConnectionId, "C -> S", pkt) { IsInjected = true };
+            foreach (var plugin in PkoProxy.Plugins)
+            {
+                try
+                {
+                    plugin.OnPacket(context);
+                }
+                catch (Exception ex)
+                {
+                    ProxyLog.Write("Plugin", $"Plugin {plugin.Name} threw on injected packet: {ex.Message}", ConsoleColor.Red);
+                }
+            }
+
+            if (ProxyLog.LogRawHex)
+                ProxyLog.HexDump("Raw", context.DecryptedPacket, $"C -> S Injected {pkt.Command}");
+
+            copy = context.DecryptedPacket;
+            // update size in case plugins modified the injected packet
+            copy[0] = (byte)(copy.Length >> 8);
+            copy[1] = (byte)(copy.Length & 0xFF);
+        }
+
+        lock (_sendLock)
+        {
             if (Encryptor != null && Encryptor.Enabled)
             {
                 byte[] payload = new byte[copy.Length - 6];

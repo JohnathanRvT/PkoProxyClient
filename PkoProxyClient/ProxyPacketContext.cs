@@ -24,6 +24,7 @@ public class ProxyPacketContext
         set => Packet.RawBytes = value;
     }
     public bool IsDropped { get; set; } = false;
+    public bool IsInjected { get; set; } = false;
 
     public ProxyPacketContext(int connectionId, string direction, PkoPacket packet)
     {

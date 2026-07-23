@@ -271,14 +271,14 @@ namespace PkoProxyClient
                     0, 20,               // Size (20)
                     0x80, 0, 0, 0,       // Session (0x80000000)
                     0, 6,                // Command (6)
-                    0, 0, 0, 1,          // Main Packet Count (1)
                     0, 0, 0, 123,        // Character World ID (123)
-                    0, 0, 0, 2,          // Secondary Packet Count (2)
+                    0, 0, 0, 1,          // Main Packet Count (1)
+                    0, 0, 0, 2,          // Action specifics placeholder
                 };
                 var testPkt = new PkoPacket(mockPacketData);
-                if (testPkt.Size != 20 || testPkt.Session != 0x80000000 || testPkt.Command != 6 || testPkt.MainPacketCount != 1 || testPkt.SecondaryPacketCount != 2)
+                if (testPkt.Size != 20 || testPkt.Session != 0x80000000 || testPkt.Command != 6 || testPkt.MainPacketCount != 1)
                 {
-                    LogFail($"PkoPacket parsing failed. Size: {testPkt.Size}, Session: {testPkt.Session:X}, Command: {testPkt.Command}, MainCount: {testPkt.MainPacketCount}, SecCount: {testPkt.SecondaryPacketCount}");
+                    LogFail($"PkoPacket parsing failed. Size: {testPkt.Size}, Session: {testPkt.Session:X}, Command: {testPkt.Command}, MainCount: {testPkt.MainPacketCount}");
                     return false;
                 }
 
@@ -287,8 +287,7 @@ namespace PkoProxyClient
                 testPkt.Session = 0x12345678;
                 testPkt.Command = 6;
                 testPkt.MainPacketCount = 42;
-                testPkt.SecondaryPacketCount = 5;
-                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 6 || testPkt.MainPacketCount != 42 || testPkt.SecondaryPacketCount != 5)
+                if (testPkt.Size != 20 || testPkt.Session != 0x12345678 || testPkt.Command != 6 || testPkt.MainPacketCount != 42)
                 {
                     LogFail("PkoPacket properties setter failed.");
                     return false;
@@ -307,9 +306,9 @@ namespace PkoProxyClient
                     0, 20,
                     0, 0, 0, 0,
                     0, 6,
-                    0, 0, 0, 50,  // initial mainPacketCount is 50
                     0, 0, 0, 123, // Player World ID
-                    0, 0, 0, 8    // initial secondaryPacketCount is 8
+                    0, 0, 0, 50,  // initial mainPacketCount is 50
+                    0, 0, 0, 8    // Action specifics
                 };
                 var pSeq = new PkoPacket(testSeqBytes);
 
@@ -327,21 +326,7 @@ namespace PkoProxyClient
                     pSeq.MainPacketCount = testSession.NextMainPacketCount++;
                 }
 
-                if (pSeq.HasSecondaryPacketCount)
-                {
-                    if (!testSession.SecondaryPacketCountInitialized)
-                    {
-                        if (pSeq.SecondaryPacketCount > 0)
-                        {
-                            testSession.NextSecondaryPacketCount = pSeq.SecondaryPacketCount;
-                            testSession.SecondaryPacketCountInitialized = true;
-                        }
-                    }
-                    pSeq.SecondaryPacketCount = testSession.NextSecondaryPacketCount++;
-                }
-
-                if (!testSession.MainPacketCountInitialized || testSession.NextMainPacketCount != 51 || pSeq.MainPacketCount != 50 ||
-                    !testSession.SecondaryPacketCountInitialized || testSession.NextSecondaryPacketCount != 9 || pSeq.SecondaryPacketCount != 8)
+                if (!testSession.MainPacketCountInitialized || testSession.NextMainPacketCount != 51 || pSeq.MainPacketCount != 50)
                 {
                     LogFail($"ProxySession sequencing simulation failed.");
                     return false;
@@ -356,10 +341,9 @@ namespace PkoProxyClient
                 startMoveWriter.WriteUint16(0); // size
                 startMoveWriter.WriteUint32(0x80000000); // session
                 startMoveWriter.WriteUint16(6); // opcode (6)
-                startMoveWriter.WriteUint32(4); // Main Packet Count (4)
-                startMoveWriter.WriteUint32(12345); // Player World ID
-                startMoveWriter.WriteUint32(1); // Secondary Packet Count (1)
-                startMoveWriter.WriteByte(1); // actionType: Move (1)
+                startMoveWriter.WriteUint32(12345); // Player World ID (bytes 8-11)
+                startMoveWriter.WriteUint32(4); // Main Packet Count (bytes 12-15)
+                startMoveWriter.WriteByte(1); // actionType: Move (1) (byte 16)
                 startMoveWriter.WriteUint16(16); // TurnNum (2 points = 16 bytes)
                 // Point 1
                 startMoveWriter.WriteUint32LE(100);
