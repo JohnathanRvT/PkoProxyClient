@@ -268,14 +268,15 @@ namespace PkoProxyClient
 
                 // New Test 10: PkoPacket properties and ProxySession sequencing
                 byte[] mockPacketData = new byte[] {
-                    0, 16,               // Size (16)
+                    0, 20,               // Size (20)
                     0x80, 0, 0, 0,       // Session (0x80000000)
                     0, 6,                // Command (6)
+                    0, 0, 0, 123,        // Character World ID (123)
                     0, 0, 0, 1,          // PacketCount (1)
                     1, 2, 3, 4           // Rest of payload
                 };
                 var testPkt = new PkoPacket(mockPacketData);
-                if (testPkt.Size != 16 || testPkt.Session != 0x80000000 || testPkt.Command != 6 || testPkt.PacketCount != 1)
+                if (testPkt.Size != 20 || testPkt.Session != 0x80000000 || testPkt.Command != 6 || testPkt.PacketCount != 1)
                 {
                     LogFail($"PkoPacket parsing failed. Size: {testPkt.Size}, Session: {testPkt.Session:X}, Command: {testPkt.Command}, Count: {testPkt.PacketCount}");
                     return false;
@@ -298,12 +299,13 @@ namespace PkoProxyClient
                     PacketCountInitialized = false
                 };
 
-                // Create a temporary loopback socket/stream to simulate sending
+                // Create a temporary loopback socket/stream to simulate sending (CMD_CM_BEGINACTION = 6)
                 byte[] testSeqBytes = new byte[] {
-                    0, 12,
+                    0, 16,
                     0, 0, 0, 0,
-                    0, 1,
-                    0, 0, 0, 50 // initial packetCount is 50
+                    0, 6,
+                    0, 0, 0, 123, // Player World ID
+                    0, 0, 0, 50   // initial packetCount is 50
                 };
                 var pSeq = new PkoPacket(testSeqBytes);
 
@@ -333,8 +335,8 @@ namespace PkoProxyClient
                 startMoveWriter.WriteUint16(0); // size
                 startMoveWriter.WriteUint32(0x80000000); // session
                 startMoveWriter.WriteUint16(6); // opcode (6)
-                startMoveWriter.WriteUint32(1); // sequence (1)
                 startMoveWriter.WriteUint32(12345); // Player World ID
+                startMoveWriter.WriteUint32(1); // sequence (1)
                 startMoveWriter.WriteByte(1); // actionType: Move (1)
                 startMoveWriter.WriteUint16(16); // TurnNum (2 points = 16 bytes)
                 // Point 1
@@ -387,7 +389,27 @@ namespace PkoProxyClient
                 var seeContext = new ProxyPacketContext(1, "S -> C", 504, 0x80000000, seeData);
                 bot.OnPacket(seeContext);
 
-                LogPass("AutoBotPlugin Coordinate Tracking & CMD_MC_CHABEGINSEE parsing");
+                // 11c. Simulate CMD_MC_NOTIACTION (508) to verify position synchronization for player and mobs
+                var notiWriter = new PkoPacketWriter();
+                notiWriter.WriteUint16(0); // size
+                notiWriter.WriteUint32(0x80000000); // session
+                notiWriter.WriteUint16(508); // opcode (508)
+                notiWriter.WriteUint32(12345); // entityId (Player ID)
+                notiWriter.WriteUint32(1122); // packetId
+                notiWriter.WriteByte(1); // actionType (Move)
+                notiWriter.WriteUint16(0); // sState (0 = ON)
+                notiWriter.WriteUint16(8); // TurnNum (1 point = 8 bytes)
+                notiWriter.WriteUint32(9999); // X
+                notiWriter.WriteUint32(8888); // Y
+
+                byte[] notiData = notiWriter.ToArray();
+                notiData[0] = (byte)(notiData.Length >> 8);
+                notiData[1] = (byte)(notiData.Length & 0xFF);
+
+                var notiContext = new ProxyPacketContext(1, "S -> C", 508, 0x80000000, notiData);
+                bot.OnPacket(notiContext);
+
+                LogPass("AutoBotPlugin Coordinate Tracking & CMD_MC_CHABEGINSEE parsing & CMD_MC_NOTIACTION sync");
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\n====================================================");

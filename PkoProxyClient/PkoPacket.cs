@@ -48,23 +48,51 @@ namespace PkoProxyClient
             }
         }
 
-        public bool HasPacketCount => RawBytes.Length >= 12;
+        public bool HasPacketCount
+        {
+            get
+            {
+                if (Command == 6)
+                {
+                    return RawBytes.Length >= 16;
+                }
+                return RawBytes.Length >= 12;
+            }
+        }
 
         public uint PacketCount
         {
             get
             {
+                if (Command == 6)
+                {
+                    if (RawBytes.Length < 16) return 0;
+                    return (uint)((RawBytes[12] << 24) | (RawBytes[13] << 16) | (RawBytes[14] << 8) | RawBytes[15]);
+                }
                 if (RawBytes.Length < 12) return 0;
                 return (uint)((RawBytes[8] << 24) | (RawBytes[9] << 16) | (RawBytes[10] << 8) | RawBytes[11]);
             }
             set
             {
-                if (RawBytes.Length >= 12)
+                if (Command == 6)
                 {
-                    RawBytes[8] = (byte)(value >> 24);
-                    RawBytes[9] = (byte)(value >> 16);
-                    RawBytes[10] = (byte)(value >> 8);
-                    RawBytes[11] = (byte)(value & 0xFF);
+                    if (RawBytes.Length >= 16)
+                    {
+                        RawBytes[12] = (byte)(value >> 24);
+                        RawBytes[13] = (byte)(value >> 16);
+                        RawBytes[14] = (byte)(value >> 8);
+                        RawBytes[15] = (byte)(value & 0xFF);
+                    }
+                }
+                else
+                {
+                    if (RawBytes.Length >= 12)
+                    {
+                        RawBytes[8] = (byte)(value >> 24);
+                        RawBytes[9] = (byte)(value >> 16);
+                        RawBytes[10] = (byte)(value >> 8);
+                        RawBytes[11] = (byte)(value & 0xFF);
+                    }
                 }
             }
         }
