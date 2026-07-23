@@ -140,11 +140,13 @@ namespace PkoProxyClient
         {
             ushort len = ReadUint16();
             if (len <= 1)
+            {
+                // skip the null terminator
+                _pos += len;   // len is 1, so advances by 1
                 return "";
-
+            }
             if (_pos + len - 1 > _data.Length)
                 throw new EndOfStreamException("Attempted to read past the end of the packet.");
-
             string s = Encoding.ASCII.GetString(_data, _pos, len - 1);
             _pos += len;
             return s;
