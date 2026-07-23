@@ -9,6 +9,110 @@ using System.Threading.Tasks;
 namespace PkoProxyClient
 {
     /// <summary>
+    /// Represents a parsed PKO protocol packet, facilitating clean extraction of session, command, packetCount and payload fields.
+    /// Supports deserialization from unencrypted decrypted bytes and serialization back into binary form.
+    /// </summary>
+    public class PkoInterceptedPacket
+    {
+        public ushort Size { get; set; }
+        public uint Session { get; set; }
+        public ushort Command { get; set; }
+        public uint PacketCount { get; set; }
+        public byte[] Payload { get; set; }
+
+        public PkoInterceptedPacket(byte[] decryptedData)
+        {
+            if (decryptedData == null)
+            {
+                throw new ArgumentNullException(nameof(decryptedData));
+            }
+            if (decryptedData.Length < 6)
+            {
+                throw new ArgumentException("Packet data is too small to represent a valid PKO packet.");
+            }
+
+            Size = (ushort)((decryptedData[0] << 8) | decryptedData[1]);
+            Session = (uint)((decryptedData[2] << 24) | (decryptedData[3] << 16) | (decryptedData[4] << 8) | decryptedData[5]);
+
+            if (decryptedData.Length >= 8)
+            {
+                Command = (ushort)((decryptedData[6] << 8) | decryptedData[7]);
+            }
+            else
+            {
+                Command = 0;
+            }
+
+            if (decryptedData.Length >= 12)
+            {
+                PacketCount = (uint)((decryptedData[8] << 24) | (decryptedData[9] << 16) | (decryptedData[10] << 8) | decryptedData[11]);
+                Payload = new byte[decryptedData.Length - 12];
+                Array.Copy(decryptedData, 12, Payload, 0, Payload.Length);
+            }
+            else
+            {
+                PacketCount = 0;
+                Payload = new byte[Math.Max(0, decryptedData.Length - 8)];
+                if (Payload.Length > 0)
+                {
+                    Array.Copy(decryptedData, 8, Payload, 0, Payload.Length);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Serializes the parsed packet back into standard PKO unencrypted binary representation.
+        /// </summary>
+        public byte[] ToBytes()
+        {
+            int totalLength = 8 + (Payload != null ? Payload.Length : 0);
+            if (PacketCount > 0 || totalLength >= 12)
+            {
+                totalLength = 12 + (Payload != null ? Payload.Length : 0);
+            }
+
+            byte[] data = new byte[totalLength];
+
+            // Size
+            data[0] = (byte)(totalLength >> 8);
+            data[1] = (byte)(totalLength & 0xFF);
+
+            // Session
+            data[2] = (byte)(Session >> 24);
+            data[3] = (byte)(Session >> 16);
+            data[4] = (byte)(Session >> 8);
+            data[5] = (byte)(Session & 0xFF);
+
+            // Command
+            data[6] = (byte)(Command >> 8);
+            data[7] = (byte)(Command & 0xFF);
+
+            if (totalLength >= 12)
+            {
+                // PacketCount
+                data[8] = (byte)(PacketCount >> 24);
+                data[9] = (byte)(PacketCount >> 16);
+                data[10] = (byte)(PacketCount >> 8);
+                data[11] = (byte)(PacketCount & 0xFF);
+
+                if (Payload != null && Payload.Length > 0)
+                {
+                    Array.Copy(Payload, 0, data, 12, Payload.Length);
+                }
+            }
+            else
+            {
+                if (Payload != null && Payload.Length > 0)
+                {
+                    Array.Copy(Payload, 0, data, 8, Payload.Length);
+                }
+            }
+
+            return data;
+        }
+    }
+
+    /// <summary>
     /// Decodes structured bytes from a PKO packet payload.
     /// PKO payloads are typically structured sequentially as:
     /// - 2-byte Length (Big-Endian)
