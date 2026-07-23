@@ -4,6 +4,10 @@ This document details the reverse-engineered mechanics of **`CMD_CM_BEGINACTION`
 1. **`enumACTION_SKILL`** (Action ID `2`) — Including the critical `chMove` configuration and path sequence serialization.
 2. **`enumACTION_ITEM_PICK`** (Action ID `8`) — Including the server-side distance constraint (`defPICKUP_DISTANCE`) and proximity handling.
 
+Additionally, this document contains an in-depth investigation of stateful coordinate tracking for players, monsters, and items, detailing the exact wire layouts for:
+3. **`CMD_MC_CHABEGINSEE`** (Packet ID `504`) — For obtaining initial spawn and teleportation coordinates.
+4. **`CMD_MC_NOTIACTION`** (Packet ID `75`) — For monitoring real-time coordinate updates of moving entities.
+
 ---
 
 ## 1. Overview of `CMD_CM_BEGINACTION`
@@ -187,11 +191,83 @@ If the item is farther away than 350cm, the server silent-drops or rejects the p
 
 ---
 
-## 4. Remediation Blueprint & Proper Client Strategy
+## 4. Stateful Position Tracking (Server-to-Client Mechanics)
+
+To operate safely and dynamically, a proxy/bot client must maintain 100% correct coordinate situational awareness. This requires parsing the initialization packet (`CMD_MC_CHABEGINSEE`) and real-time movement packets (`CMD_MC_NOTIACTION`).
+
+### 4.1 Mob/Player Initial Coordinates via `CMD_MC_CHABEGINSEE` (Packet ID `504`)
+When an entity (monster, NPC, player) spawns or teleports into the player's vicinity, the server sends `CMD_MC_CHABEGINSEE`. Initial coordinates are nested inside `WriteBaseInfo(pk)`.
+
+#### Sequential Payload Structure of `CMD_MC_CHABEGINSEE`:
+To reliably parse the coordinates, a sequential packet reader must progress through the dynamic and static fields of the packet payload (starting directly after the 8-byte generic binary header):
+
+| Parsing Step | Data Type | Field Name / Action |
+|---|---|---|
+| 1 | `uint8` (Byte) | `chSeeType` (Skip/Read) |
+| 2 | `uint32` (uint) | `ulCat` (Skip) |
+| 3 | `uint32` (uint) | `ulWorldID` (**Track:** Entity Instance World ID) |
+| 4 | `uint32` (uint) | `ulMainChaID` |
+| 5 | `string` | `szMainChaName` (Utilizes PkoPacketReader.ReadString) |
+| 6 | `uint8` (Byte) | `chGMLv` |
+| 7 | `uint32` (uint) | `lHandle` |
+| 8 | `uint8` (Byte) | `chCtrlType` (Skip) |
+| 9 | `string` | `szName` (Read string, e.g., mob or player name) |
+| 10 | `string` | `szMotto` (Read string) |
+| 11 | `uint16` (ushort) | `sIcon` |
+| 12 | `uint32` (uint) | `ulGuildID` |
+| 13 | `string` | `szGuildName` (Read string) |
+| 14 | `string` | `szGuildMotto` (Read string) |
+| 15 | `string` | `szStallName` (Read string) |
+| 16 | `uint16` (ushort) | `sExistState` |
+| 17 | `uint32` (uint) | `lPosX` (**Track:** Mob/Player Initial X Coordinate) |
+| 18 | `uint32` (uint) | `lPosY` (**Track:** Mob/Player Initial Y Coordinate) |
+
+By implementing a sequential reader according to this pattern, the proxy can track both **mob positions** and the **player's own starting position** when entering maps or teleporting.
+
+---
+
+### 4.2 Dynamic Coordinate Updates via `CMD_MC_NOTIACTION` (Packet ID `75`)
+Whenever an entity (including the player themselves) moves in the world, the server broadcasts `CMD_MC_NOTIACTION` with `ActionType == enumACTION_MOVE`.
+
+#### Sequential Payload Structure of `CMD_MC_NOTIACTION`:
+Starting immediately after the 8-byte generic binary header:
+
+| Sequence | Data Type | Field Name | Description |
+|---|---|---|---|
+| 1 | `uint32` (uint) | `ulWorldID` | World ID of the moving character. |
+| 2 | `uint32` (uint) | `ulPacketID` | Action packet ID. |
+| 3 | `uint8` (Byte) | `chActionType` | Must be `1` (`enumACTION_MOVE`) for movement updates. |
+| 4 | `uint16` (ushort) | `sState` | Movement state (e.g., `1` for ongoing movement). |
+| 5 | `uint16` (ushort) | `sStopState` | **Conditional:** Only present if `sState != 1`. |
+| 6 | `uint16` (Big-Endian) | `ulTurnNum` | Length of the subsequent path byte sequence (`pos_num * 8`). |
+| 7 | `POINT[]` (Raw bytes) | `PathPoints` | Sequence of 8-byte structures (`uint32 x` and `uint32 y`) representing the coordinates of the path. |
+
+#### Tracking Implementation Logic:
+To keep coordinates of all surrounding entities up-to-date in real-time, the proxy/bot should:
+1. Intercept `CMD_MC_NOTIACTION` (Packet ID `75`).
+2. Verify that `chActionType == 1` (`enumACTION_MOVE`).
+3. Read the array of `PathPoints`. The last point in the sequence represents the final target destination coordinate:
+   ```csharp
+   int numPoints = ulTurnNum / 8;
+   if (numPoints > 0) {
+       // Seek to the last point of the path
+       int lastPointOffset = (numPoints - 1) * 8;
+       uint finalX = reader.ReadUint32At(lastPointOffset);
+       uint finalY = reader.ReadUint32At(lastPointOffset + 4);
+
+       // Update tracked entity coordinate state
+       UpdateEntityCoordinates(ulWorldID, finalX, finalY);
+   }
+   ```
+4. If `ulWorldID == PlayerWorldId`, update the bot's own internal `(playerX, playerY)` tracked positions!
+
+---
+
+## 5. Remediation Blueprint & Proper Client Strategy
 
 To resolve both issues in an automated bot or proxy sequence injector, the client/proxy must dynamically calculate distances and sequence movement paths before performing actions.
 
-### 4.1 Melee Attack & Skill Remediation
+### 5.1 Melee Attack & Skill Remediation
 To successfully execute a basic attack or a skill, the injector must write `chMove = 2` and supply a coordinate path.
 
 #### Fixed Attack Payload Structure:
@@ -220,7 +296,7 @@ writer.WriteUint32(0);                  // lTarInfo2 (Handle)
 
 ---
 
-### 4.2 Safe Looting Remediation (Move-to-Item First)
+### 5.2 Safe Looting Remediation (Move-to-Item First)
 Ground items do not support a `chMove` parameter inside `enumACTION_ITEM_PICK`. Therefore, to safely loot an item:
 1. The proxy must keep track of the player's current coordinates `(playerX, playerY)`.
 2. When an item is selected for looting:
