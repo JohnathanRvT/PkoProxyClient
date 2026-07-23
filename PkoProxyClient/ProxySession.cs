@@ -12,7 +12,7 @@ public class ProxySession
     public PacketEncryptor? Encryptor { get; set; }
     public uint SessionId { get; set; }
     public uint PlayerWorldId { get; set; }
-    public uint NextPacketCount { get; set; } = 0;
+    public uint NextPacketCount { get; set; } = 1;
     public bool PacketCountInitialized { get; set; } = false;
 
     private readonly object _sendLock = new object();
@@ -33,8 +33,11 @@ public class ProxySession
             {
                 if (!PacketCountInitialized)
                 {
-                    NextPacketCount = pkt.PacketCount;
-                    PacketCountInitialized = true;
+                    if (pkt.PacketCount > 0)
+                    {
+                        NextPacketCount = pkt.PacketCount;
+                        PacketCountInitialized = true;
+                    }
                 }
                 pkt.PacketCount = NextPacketCount++;
             }
