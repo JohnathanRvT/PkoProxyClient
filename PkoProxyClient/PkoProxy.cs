@@ -151,6 +151,8 @@ namespace PkoProxyClient
     {
         public uint WorldId { get; set; }
         public string Name { get; set; } = "";
+        public int X { get; set; }
+        public int Y { get; set; }
     }
 
     /// <summary>
@@ -178,6 +180,8 @@ namespace PkoProxyClient
         private readonly System.Collections.Generic.Dictionary<uint, MobInfo> _mobs = new System.Collections.Generic.Dictionary<uint, MobInfo>();
         private readonly System.Collections.Generic.Dictionary<uint, ItemInfo> _items = new System.Collections.Generic.Dictionary<uint, ItemInfo>();
         private uint _playerWorldId = 0;
+        private int _playerX = 0;
+        private int _playerY = 0;
         private int _lastConnectionId = 0;
         private readonly object _lock = new object();
         private readonly System.Threading.Timer _loopTimer;
@@ -191,19 +195,45 @@ namespace PkoProxyClient
         {
             _lastConnectionId = context.ConnectionId;
 
-            // Capture player world ID from CMD_CM_BEGINACTION (6)
+            // Capture player world ID and track coordinates from CMD_CM_BEGINACTION (6)
             if (context.Direction == "C -> S" && context.PacketId == 6)
             {
-                var pktReader = new PkoPacketReader(context.DecryptedPacket);
-                _ = pktReader.ReadUint16(); // skip size
-                _ = pktReader.ReadUint32(); // skip session
-                _ = pktReader.ReadUint16(); // skip packetId (6)
-                _ = pktReader.ReadUint32(); // skip packetCount (4 bytes)
-                uint charWorldId = pktReader.ReadUint32();
-                lock (_lock)
+                try
                 {
-                    _playerWorldId = charWorldId;
+                    var pktReader = new PkoPacketReader(context.DecryptedPacket);
+                    _ = pktReader.ReadUint16(); // skip size
+                    _ = pktReader.ReadUint32(); // skip session
+                    _ = pktReader.ReadUint16(); // skip packetId (6)
+                    _ = pktReader.ReadUint32(); // skip packetCount (4 bytes)
+                    uint charWorldId = pktReader.ReadUint32();
+                    lock (_lock)
+                    {
+                        _playerWorldId = charWorldId;
+                    }
+
+                    byte actionType = pktReader.ReadByte();
+                    if (actionType == 1) // enumACTION_MOVE (1)
+                    {
+                        ushort turnNumBytes = pktReader.ReadUint16();
+                        if (turnNumBytes >= 8)
+                        {
+                            // Skip to the last point (each point has size 8 bytes: X=4, Y=4)
+                            int pointsToSkip = (turnNumBytes / 8) - 1;
+                            if (pointsToSkip > 0)
+                            {
+                                _ = pktReader.ReadBytes(pointsToSkip * 8);
+                            }
+                            int lastX = (int)pktReader.ReadUint32();
+                            int lastY = (int)pktReader.ReadUint32();
+                            lock (_lock)
+                            {
+                                _playerX = lastX;
+                                _playerY = lastY;
+                            }
+                        }
+                    }
                 }
+                catch { }
             }
 
             // Capture /bot chat command inputs inside CMD_CM_SAY (1)
@@ -238,7 +268,7 @@ namespace PkoProxyClient
                         lock (_lock)
                         {
                             Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Status: Enabled={Enabled} | Known Mobs={_mobs.Count} | Known Items={_items.Count} | Player ID=0x{_playerWorldId:X}");
+                            Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Status: Enabled={Enabled} | Known Mobs={_mobs.Count} | Known Items={_items.Count} | Player ID=0x{_playerWorldId:X} | Coords=({_playerX}, {_playerY})");
                             Console.ResetColor();
                         }
                         context.IsDropped = true; // Drop command packet
@@ -268,10 +298,24 @@ namespace PkoProxyClient
                         _ = pktReader.ReadUint32(); // lHandle
                         _ = pktReader.ReadByte();   // chCtrlType
                         string szName = pktReader.ReadString();
+                        _ = pktReader.ReadString(); // szMotto
+                        _ = pktReader.ReadUint16(); // icon
+                        _ = pktReader.ReadUint32(); // guildID
+                        _ = pktReader.ReadString(); // guildName
+                        _ = pktReader.ReadString(); // guildMotto
+                        _ = pktReader.ReadString(); // stallName
+                        _ = pktReader.ReadUint16(); // existState
+                        int x = (int)pktReader.ReadUint32();
+                        int y = (int)pktReader.ReadUint32();
 
                         lock (_lock)
                         {
-                            _mobs[ulWorldID] = new MobInfo { WorldId = ulWorldID, Name = szName };
+                            _mobs[ulWorldID] = new MobInfo { WorldId = ulWorldID, Name = szName, X = x, Y = y };
+                            if (ulWorldID == _playerWorldId)
+                            {
+                                _playerX = x;
+                                _playerY = y;
+                            }
                         }
                     }
                     catch { }
@@ -380,21 +424,61 @@ namespace PkoProxyClient
 
             if (pickItem != null)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Looting Item: WorldId={pickItem.WorldId}, Handle={pickItem.Handle}");
-                Console.ResetColor();
+                bool hasCoords = false;
+                int currentX = 0;
+                int currentY = 0;
+                lock (_lock)
+                {
+                    hasCoords = (_playerX != 0 || _playerY != 0);
+                    currentX = _playerX;
+                    currentY = _playerY;
+                }
 
-                var writer = new PkoPacketWriter();
-                writer.WriteUint16(0); // size placeholder
-                writer.WriteUint32(targetSessionId);
-                writer.WriteUint16(6); // CMD_CM_BEGINACTION
-                writer.WriteUint32(0); // write sequence placeholder (rewritten centrally by ProxySession)
-                writer.WriteUint32(targetPlayerId);
-                writer.WriteByte(8); // enumACTION_ITEM_PICK
-                writer.WriteUint32(pickItem.WorldId);
-                writer.WriteUint32(pickItem.Handle);
+                double dist = hasCoords ? Math.Sqrt(Math.Pow(pickItem.X - currentX, 2) + Math.Pow(pickItem.Y - currentY, 2)) : 0;
 
-                _ = PkoProxy.InjectClientPacketAsync(_lastConnectionId, writer.ToArray());
+                if (!hasCoords || dist <= 350)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Looting Item (Dist={dist:F1}): WorldId={pickItem.WorldId}, Handle={pickItem.Handle}");
+                    Console.ResetColor();
+
+                    var writer = new PkoPacketWriter();
+                    writer.WriteUint16(0); // size placeholder
+                    writer.WriteUint32(targetSessionId);
+                    writer.WriteUint16(6); // CMD_CM_BEGINACTION
+                    writer.WriteUint32(0); // write sequence placeholder (rewritten centrally by ProxySession)
+                    writer.WriteUint32(targetPlayerId);
+                    writer.WriteByte(8); // enumACTION_ITEM_PICK
+                    writer.WriteUint32(pickItem.WorldId);
+                    writer.WriteUint32(pickItem.Handle);
+
+                    _ = PkoProxy.InjectClientPacketAsync(_lastConnectionId, writer.ToArray());
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Item too far (Dist={dist:F1}). Moving to: ({pickItem.X}, {pickItem.Y})");
+                    Console.ResetColor();
+
+                    var writer = new PkoPacketWriter();
+                    writer.WriteUint16(0); // size placeholder
+                    writer.WriteUint32(targetSessionId);
+                    writer.WriteUint16(6); // CMD_CM_BEGINACTION
+                    writer.WriteUint32(0); // sequence placeholder
+                    writer.WriteUint32(targetPlayerId);
+                    writer.WriteByte(1); // actionType: enumACTION_MOVE (1)
+                    writer.WriteUint16(8); // TurnNum (1 point = 8 bytes)
+                    writer.WriteUint32((uint)pickItem.X);
+                    writer.WriteUint32((uint)pickItem.Y);
+
+                    lock (_lock)
+                    {
+                        _playerX = pickItem.X;
+                        _playerY = pickItem.Y;
+                    }
+
+                    _ = PkoProxy.InjectClientPacketAsync(_lastConnectionId, writer.ToArray());
+                }
                 return;
             }
 
@@ -412,8 +496,16 @@ namespace PkoProxyClient
 
             if (attackMob != null)
             {
+                int targetX = 0;
+                int targetY = 0;
+                lock (_lock)
+                {
+                    targetX = (attackMob.X != 0 || attackMob.Y != 0) ? attackMob.X : _playerX;
+                    targetY = (attackMob.X != 0 || attackMob.Y != 0) ? attackMob.Y : _playerY;
+                }
+
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Attacking Mob: {attackMob.Name} (WorldId={attackMob.WorldId})");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] [AutoBot] Attacking Mob: {attackMob.Name} (WorldId={attackMob.WorldId}) at ({targetX}, {targetY})");
                 Console.ResetColor();
 
                 var writer = new PkoPacketWriter();
@@ -423,11 +515,23 @@ namespace PkoProxyClient
                 writer.WriteUint32(0); // write sequence placeholder (rewritten centrally by ProxySession)
                 writer.WriteUint32(targetPlayerId);
                 writer.WriteByte(2); // enumACTION_SKILL
-                writer.WriteByte(1); // chMove (direct physical attack)
+                writer.WriteByte(2); // chMove = 2 (pre-movement)
                 writer.WriteByte(0); // byFightID
+
+                // Point sequence path
+                writer.WriteUint16(8); // turnNumBytes: 8 (1 point)
+                writer.WriteUint32((uint)targetX);
+                writer.WriteUint32((uint)targetY);
+
                 writer.WriteUint32(0); // lSkillID (0 = basic attack)
                 writer.WriteUint32(attackMob.WorldId); // lTarInfo1 (target mob ID)
                 writer.WriteUint32(0); // lTarInfo2
+
+                lock (_lock)
+                {
+                    _playerX = targetX;
+                    _playerY = targetY;
+                }
 
                 _ = PkoProxy.InjectClientPacketAsync(_lastConnectionId, writer.ToArray());
             }
